@@ -4,11 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Colorway extends Model implements HasMedia
 {
@@ -31,19 +31,19 @@ class Colorway extends Model implements HasMedia
     }
 
     // ── Media ──────────────────────────────────────────
-    public function registerMediaCollections(?Media $media = null): void
+    public function registerMediaCollections(): void
     {
         $this->addMediaCollection('images');
         $this->addMediaCollection('primary')->singleFile();
     }
 
-    public function registerMediaConversions(?Media $media = null): void
+    public function registerMediaConversions(): void
     {
         $this->addMediaConversion('card')->width(600)->height(600);
         $this->addMediaConversion('zoom')->width(1200)->height(1200);
         $this->addMediaConversion('thumb')
-            ->width(300)
-            ->height(300);
+                      ->width(300)
+                      ->height(300);
     }
 
     // ── Relationships ──────────────────────────────────

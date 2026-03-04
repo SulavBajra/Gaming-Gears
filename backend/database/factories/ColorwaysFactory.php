@@ -5,9 +5,9 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\colorways>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Colorway>
  */
-class ColorwaysFactory extends Factory
+class ColorwayFactory extends Factory
 {
     /**
      * Define the model's default state.
