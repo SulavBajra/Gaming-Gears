@@ -17,9 +17,9 @@ class UserSeeder extends Seeder
         $admin = User::withTrashed()->updateOrCreate(
             ['email' => 'admin@example.com'],
             ['name' => 'Admin',
-            'password' => Hash::make('password'),]
+                'password' => Hash::make('password'), ]
         );
-        if($admin->trashed()){
+        if ($admin->trashed()) {
             $admin->restore();
         }
         $admin->assignRole('admin');
@@ -27,9 +27,9 @@ class UserSeeder extends Seeder
         $customer = User::withTrashed()->updateOrCreate(
             ['email' => 'customer@example.com'],
             ['name' => 'customer',
-            'password' => Hash::make('password'),]
+                'password' => Hash::make('password'), ]
         );
-        if($customer->trashed()){
+        if ($customer->trashed()) {
             $customer->restore();
         }
         $customer->assignRole('customer');

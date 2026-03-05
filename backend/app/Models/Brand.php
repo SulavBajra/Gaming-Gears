@@ -11,7 +11,9 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 
 class Brand extends Model implements HasMedia
 {
-    use HasFactory, InteractsWithMedia, SoftDeletes;
+    use HasFactory;
+    use InteractsWithMedia;
+    use SoftDeletes;
 
     protected $fillable = [
         'name',

@@ -13,7 +13,10 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 class Product extends Model implements HasMedia
 {
     /** @use HasFactory<\Database\Factories\ProductFactory> */
-    use HasFactory, InteractsWithMedia, SoftDeletes;
+    use HasFactory;
+
+    use InteractsWithMedia;
+    use SoftDeletes;
 
     protected $fillable = [
         'brand_id',
