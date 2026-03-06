@@ -141,7 +141,6 @@ const removeColorwayImage = (ci: number, ii: number) => {
     form.colorways[ci].imagePreviews.splice(ii, 1);
 };
 
-// ── Variant helpers ────────────────────────────────────
 const newVariant = (): Variant => ({
     sku: '',
     size: '',
@@ -512,7 +511,8 @@ const submit = () => {
                                         accept="image/*"
                                         multiple
                                         @change="
-                                            (e) => handleColorwayImages(e, ci)
+                                            (e: Event) =>
+                                                handleColorwayImages(e, ci)
                                         "
                                     />
                                     <div

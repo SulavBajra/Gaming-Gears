@@ -18,12 +18,12 @@ class BrandFactory extends Factory
     public function definition(): array
     {
         $brands = ['Nike', 'Adidas', 'New Balance', 'Puma', 'Reebok', 'Vans', 'Converse', 'Jordan'];
-        $name = $this->faker->unique()->randomElement($brands);
+        $name = fake()->unique()->randomElement($brands);
 
         return [
             'name' => $name,
             'slug' => Str::slug($name),
-            'description' => $this->faker->sentence(),
+            'description' => fake()->sentence(),
             'is_active' => true,
         ];
     }

@@ -18,9 +18,9 @@ class UpdateBrandRequest extends FormRequest
 
         return [
             'name' => ['required', 'string', 'max:255', Rule::unique('brands', 'name')->ignore($brandId)],
-            'description' => 'nullable|string',
-            'is_active' => 'boolean',
-            'logo' => 'nullable|image|max:2048',
+            'description' => ['nullable', 'string'],
+            'is_active' => ['boolean'],
+            'logo' => ['nullable', 'image', 'max:2048'],
         ];
     }
 }

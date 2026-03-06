@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
-import { LayoutGrid, Box } from 'lucide-vue-next';
+import { LayoutGrid, Box, User } from 'lucide-vue-next';
 import { route } from 'ziggy-js';
 import AppLogo from '@/components/AppLogo.vue';
 import NavUser from '@/components/NavUser.vue';
@@ -37,6 +37,20 @@ const data = {
                 {
                     title: 'Manage Products',
                     route: 'products.index',
+                },
+                {
+                    title: 'Manage Brands',
+                    route: 'brands.index',
+                },
+            ],
+        },
+        {
+            title: 'Users',
+            icon: User,
+            items: [
+                {
+                    title: 'Manage Users',
+                    route: 'users.index',
                 },
                 {
                     title: 'Manage Brands',

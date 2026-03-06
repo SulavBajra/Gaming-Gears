@@ -18,17 +18,17 @@ class ProductVariantFactory extends Factory
      */
     public function definition(): array
     {
-        $price = $this->faker->randomElement([89.99, 99.99, 119.99, 139.99, 159.99, 189.99]);
+        $price = fake()->randomElement([89.99, 99.99, 119.99, 139.99, 159.99, 189.99]);
 
         return [
             'product_id' => Product::factory(),
             'colorway_id' => Colorway::factory(),
-            'sku' => strtoupper($this->faker->unique()->bothify('??-####-??')),
-            'size' => $this->faker->randomElement([6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10, 10.5, 11, 12, 13]),
-            'width' => $this->faker->randomElement([null, null, null, 'D', '2E', '4E']),
+            'sku' => strtoupper(fake()->unique()->bothify('??-####-??')),
+            'size' => fake()->randomElement([6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10, 10.5, 11, 12, 13]),
+            'width' => fake()->randomElement([null, null, null, 'D', '2E', '4E']),
             'price' => $price,
-            'compare_at_price' => $this->faker->boolean(30) ? $price * 1.2 : null, // 30% on sale
-            'stock_qty' => $this->faker->numberBetween(0, 50),
+            'compare_at_price' => fake()->boolean(30) ? $price * 1.2 : null, // 30% on sale
+            'stock_qty' => fake()->numberBetween(0, 50),
             'is_active' => true,
         ];
     }

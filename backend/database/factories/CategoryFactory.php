@@ -18,7 +18,7 @@ class CategoryFactory extends Factory
      */
     public function definition(): array
     {
-        $name = $this->faker->unique()->randomElement([
+        $name = fake()->unique()->randomElement([
             'Running', 'Basketball', 'Lifestyle', 'Skateboarding',
             'Training', 'Soccer', 'Tennis', 'Hiking',
         ]);
@@ -27,8 +27,8 @@ class CategoryFactory extends Factory
             'parent_id' => null,
             'name' => $name,
             'slug' => Str::slug($name),
-            'description' => $this->faker->sentence(),
-            'sort_order' => $this->faker->numberBetween(0, 10),
+            'description' => fake()->sentence(),
+            'sort_order' => fake()->numberBetween(0, 10),
             'is_active' => true,
         ];
     }
@@ -37,7 +37,7 @@ class CategoryFactory extends Factory
     {
         return $this->state([
             'parent_id' => $parent->id,
-            'slug' => Str::slug($parent->name.'-'.$this->faker->word()),
+            'slug' => Str::slug($parent->name.'-'.fake()->word()),
         ]);
     }
 

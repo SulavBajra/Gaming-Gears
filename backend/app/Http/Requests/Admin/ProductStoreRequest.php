@@ -22,16 +22,16 @@ class ProductStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255|unique:products,name',
-            'description' => 'nullable|string',
-            'brand_id' => 'required|exists:brands,id',
-            'category_id' => 'required|exists:categories,id',
-            'gender_id' => 'required|exists:genders,id',
-            'is_active' => 'boolean',
-            'thumbnail' => 'nullable|image|max:2048',
-            'colorway_images' => 'nullable|array',
-            'colorway_images.*' => 'array',
-            'colorway_images.*.*' => 'image|max:2048',
+            'name' => ['required', 'string', 'max:255', 'unique:products,name'],
+            'description' => ['nullable', 'string'],
+            'brand_id' => ['required', 'exists:brands,id'],
+            'category_id' => ['required', 'exists:categories,id'],
+            'gender_id' => ['required', 'exists:genders,id'],
+            'is_active' => ['boolean'],
+            'thumbnail' => ['nullable', 'image', 'max:2048'],
+            'colorway_images' => ['nullable', 'array'],
+            'colorway_images.*' => ['array'],
+            'colorway_images.*.*' => ['image', 'max:2048'],
         ];
     }
 }

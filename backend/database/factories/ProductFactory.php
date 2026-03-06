@@ -20,18 +20,18 @@ class ProductFactory extends Factory
      */
     public function definition(): array
     {
-        $name = $this->faker->randomElement([
+        $name = fake()->randomElement([
             'Air Force 1', 'Ultra Boost', 'Chuck Taylor', 'Old Skool',
             'Classic Leather', 'Air Max 90', 'Stan Smith', '574',
-        ]).' '.$this->faker->bothify('##??');
+        ]).' '.fake()->bothify('##??');
 
         return [
             'brand_id' => Brand::factory(),
             'category_id' => Category::factory(),
             'gender_id' => Gender::factory(),
             'name' => $name,
-            'slug' => Str::slug($name.'-'.$this->faker->unique()->numberBetween(1000, 9999)),
-            'description' => $this->faker->paragraph(),
+            'slug' => Str::slug($name.'-'.fake()->unique()->numberBetween(1000, 9999)),
+            'description' => fake()->paragraph(),
             'is_active' => true,
         ];
     }

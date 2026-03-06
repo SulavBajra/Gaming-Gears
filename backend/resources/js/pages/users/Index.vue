@@ -2,7 +2,6 @@
 import { Head, Link, router } from '@inertiajs/vue3';
 import { Pencil, Plus, Trash } from 'lucide-vue-next';
 import { route } from 'ziggy-js';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
     Card,
@@ -40,38 +39,34 @@ import {
 } from '@/components/ui/table';
 import AppLayout from '@/layouts/AppLayout.vue';
 import type { BreadcrumbItem } from '@/types';
-import type { Product } from '@/types/index';
+import type { User } from '@/types/index';
 
-interface PaginatedProducts {
-    data: Product[];
-    current_page: number;
-    last_page: number;
-    per_page: number;
-    total: number;
+interface PaginatedUsers {
+    data: User[];
+    meta: {
+        current_page: number;
+        last_page: number;
+        per_page: number;
+        total: number;
+    };
     links: { url: string | null; label: string; active: boolean }[];
 }
 
-defineProps<{ products: PaginatedProducts }>();
+defineProps<{ users: PaginatedUsers }>();
 
 const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Products', href: route('products.index') },
+    { title: 'Users', href: route('users.index') },
 ];
 
-const formatPrice = (min: number | null, max: number | null): string => {
-    if (min === null) return '—';
-    if (min === max) return `Rs. ${Number(min).toFixed(2)}`;
-    return `Rs. ${Number(min).toFixed(2)} – Rs. ${Number(max).toFixed(2)}`;
-};
-
-const deleteProduct = (id: number) => {
-    router.delete(route('products.destroy', id), {
+const deleteUser = (id: number) => {
+    router.delete(route('users.destroy', id), {
         preserveScroll: true,
     });
 };
 
 const goToPage = (page: number) => {
     router.get(
-        route('products.index'),
+        route('users.index'),
         { page },
         { preserveScroll: true, preserveState: true },
     );
@@ -79,23 +74,23 @@ const goToPage = (page: number) => {
 </script>
 
 <template>
-    <Head title="Products" />
+    <Head title="Users" />
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="m-4">
             <Card>
                 <CardHeader class="flex flex-row items-center justify-between">
                     <div>
                         <CardTitle class="text-xl text-primary"
-                            >Products</CardTitle
+                            >Users</CardTitle
                         >
                         <CardDescription
                             ><p class="text-sm text-muted-foreground">
-                                Manage all of {{ products.total }} products here
+                                Manage all of {{ users.meta.total }} users here
                             </p></CardDescription
                         >
                     </div>
-                    <Link :href="route('products.create')">
-                        <Button> <Plus class="h-2 w-4" /> Add Product</Button>
+                    <Link :href="route('users.create')">
+                        <Button> <Plus class="h-2 w-4" /> Add Users</Button>
                     </Link>
                 </CardHeader>
                 <CardContent>
@@ -104,11 +99,8 @@ const goToPage = (page: number) => {
                             <TableRow>
                                 <TableHead>S.N</TableHead>
                                 <TableHead>Name</TableHead>
-                                <TableHead>Brand</TableHead>
-                                <TableHead>Category</TableHead>
-                                <TableHead>Price Range</TableHead>
-                                <TableHead>Stock</TableHead>
-                                <TableHead>Status</TableHead>
+                                <TableHead>Email</TableHead>
+                                <TableHead>Roles</TableHead>
                                 <TableHead class="text-right"
                                     >Actions</TableHead
                                 >
@@ -116,78 +108,40 @@ const goToPage = (page: number) => {
                         </TableHeader>
                         <TableBody>
                             <TableRow
-                                v-for="(product, index) in products.data"
-                                :key="product.id"
+                                v-for="(user, index) in users.data"
+                                :key="user.id"
                             >
                                 <TableCell class="text-muted-foreground">
                                     {{
-                                        (products.current_page - 1) *
-                                            products.per_page +
+                                        (users.meta.current_page - 1) *
+                                            users.meta.per_page +
                                         index +
                                         1
                                     }}
                                 </TableCell>
                                 <TableCell class="font-medium">{{
-                                    product.name
+                                    user.name
                                 }}</TableCell>
-                                <TableCell>{{ product.brand.name }}</TableCell>
-                                <TableCell>{{
-                                    product.category.name
-                                }}</TableCell>
-                                <TableCell>
-                                    {{
-                                        formatPrice(
-                                            product.product_variants_min_price,
-                                            product.product_variants_max_price,
-                                        )
-                                    }}
-                                </TableCell>
+                                <TableCell>{{ user.email }}</TableCell>
                                 <TableCell>
                                     <span
-                                        :class="
-                                            product.product_variants_sum_stock_qty ===
-                                            0
-                                                ? 'font-medium text-destructive'
-                                                : ''
-                                        "
+                                        v-for="r in user.roles"
+                                        :key="r"
+                                        class="mr-1 rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary"
                                     >
-                                        {{
-                                            product.product_variants_sum_stock_qty ??
-                                            0
-                                        }}
+                                        {{ r }}
                                     </span>
-                                </TableCell>
-                                <TableCell>
-                                    <Badge
-                                        :variant="
-                                            product.is_active
-                                                ? 'default'
-                                                : 'secondary'
-                                        "
-                                    >
-                                        {{
-                                            product.is_active
-                                                ? 'Active'
-                                                : 'Inactive'
-                                        }}
-                                    </Badge>
                                 </TableCell>
                                 <TableCell class="text-right">
                                     <div class="flex justify-end gap-2">
                                         <Link
-                                            :href="
-                                                route(
-                                                    'products.edit',
-                                                    product.id,
-                                                )
-                                            "
+                                            :href="route('users.edit', user.id)"
                                         >
                                             <Button variant="ghost" size="sm"
                                                 ><Pencil
                                                     class="h-4 w-4 text-shadow-green-800"
                                             /></Button>
                                         </Link>
-
                                         <Dialog>
                                             <DialogTrigger as-child>
                                                 <Button
@@ -201,12 +155,12 @@ const goToPage = (page: number) => {
                                             >
                                                 <DialogHeader>
                                                     <DialogTitle
-                                                        >Delete product
+                                                        >Delete User
                                                         ?</DialogTitle
                                                     >
                                                     <DialogDescription>
                                                         Are you sure you want to
-                                                        delete this product
+                                                        delete this user
                                                         permanently. This cannot
                                                         be undone.
                                                     </DialogDescription>
@@ -223,9 +177,7 @@ const goToPage = (page: number) => {
                                                         variant="destructive"
                                                         size="sm"
                                                         @click="
-                                                            deleteProduct(
-                                                                product.id,
-                                                            )
+                                                            deleteUser(user.id)
                                                         "
                                                     >
                                                         <Trash />
@@ -245,9 +197,9 @@ const goToPage = (page: number) => {
                         class="flex w-full max-w-md flex-wrap justify-center gap-2"
                     >
                         <Pagination
-                            :total="products.total"
-                            :items-per-page="products.per_page"
-                            :page="products.current_page"
+                            :total="users.meta.total"
+                            :items-per-page="users.meta.per_page"
+                            :page="users.meta.current_page"
                             :sibling-count="1"
                             show-edges
                             @update:page="goToPage"
@@ -270,7 +222,7 @@ const goToPage = (page: number) => {
                                         <Button
                                             :variant="
                                                 item.value ===
-                                                products.current_page
+                                                users.meta.current_page
                                                     ? 'default'
                                                     : 'outline'
                                             "
