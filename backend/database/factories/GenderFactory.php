@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Gender>
@@ -16,8 +17,11 @@ class GenderFactory extends Factory
      */
     public function definition(): array
     {
+        $name = fake()->randomElement(['Mens', 'Womens', 'Unisex', 'Kids']);
+
         return [
-            //
+            'name' => $name,
+            'slug' => Str::slug($name),
         ];
     }
 }

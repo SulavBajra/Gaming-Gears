@@ -11,7 +11,9 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 
 class Brand extends Model implements HasMedia
 {
-    use HasFactory, InteractsWithMedia, SoftDeletes;
+    use HasFactory;
+    use InteractsWithMedia;
+    use SoftDeletes;
 
     protected $fillable = [
         'name',
@@ -32,6 +34,15 @@ class Brand extends Model implements HasMedia
     {
         $this->addMediaCollection('logo')->singleFile();
     }
+
+    protected function logoUrl(): \Illuminate\Database\Eloquent\Casts\Attribute
+    {
+        return \Illuminate\Database\Eloquent\Casts\Attribute::make(get: function () {
+            return $this->getFirstMediaUrl('logo') ?: null;
+        });
+    }
+
+    protected $appends = ['logo_url'];
 
     // ── Relationships ──────────────────────────────────
     /** @return HasMany<Product> */

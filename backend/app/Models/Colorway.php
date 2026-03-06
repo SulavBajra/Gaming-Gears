@@ -8,10 +8,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class Colorway extends Model implements HasMedia
 {
-    use HasFactory, InteractsWithMedia;
+    use HasFactory;
+    use InteractsWithMedia;
 
     protected $fillable = [
         'product_id',
@@ -30,13 +32,13 @@ class Colorway extends Model implements HasMedia
     }
 
     // ── Media ──────────────────────────────────────────
-    public function registerMediaCollections(): void
+    public function registerMediaCollections(?Media $media = null): void
     {
         $this->addMediaCollection('images');
         $this->addMediaCollection('primary')->singleFile();
     }
 
-    public function registerMediaConversions(): void
+    public function registerMediaConversions(?Media $media = null): void
     {
         $this->addMediaConversion('card')->width(600)->height(600);
         $this->addMediaConversion('zoom')->width(1200)->height(1200);
