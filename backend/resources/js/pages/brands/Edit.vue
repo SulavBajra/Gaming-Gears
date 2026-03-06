@@ -10,9 +10,6 @@ import {
     CardHeader,
     CardTitle,
 } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import AppLayout from '@/layouts/AppLayout.vue';
-import type { BreadcrumbItem } from '@/types';
 import {
     Field,
     FieldDescription,
@@ -21,12 +18,15 @@ import {
     FieldLabel,
     FieldSet,
 } from '@/components/ui/field';
+import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
+import AppLayout from '@/layouts/AppLayout.vue';
+import type { BreadcrumbItem } from '@/types';
 
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Brands', href: route('brands.index') },
-    { title: 'Add Brand', href: route('brands.create') },
+    { title: 'Edit Brand', href: '#' },
 ];
 
 interface Brand {

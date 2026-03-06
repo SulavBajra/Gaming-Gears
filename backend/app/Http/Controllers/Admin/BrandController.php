@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Admin\StoreBrandRequest;
-use App\Http\Requests\Admin\UpdateBrandRequest;
+use App\Http\Requests\Admin\BrandStoreRequest;
+use App\Http\Requests\Admin\BrandUpdateRequest;
 use App\Models\Brand;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
@@ -32,7 +32,7 @@ class BrandController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreBrandRequest $request)
+    public function store(BrandStoreRequest $request)
     {
         $brand = Brand::create([
             'name' => $request->name,
@@ -69,7 +69,7 @@ class BrandController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateBrandRequest $request, Brand $brand)
+    public function update(BrandUpdateRequest $request, Brand $brand)
     {
         $brand->update([
             'name' => $request->name,

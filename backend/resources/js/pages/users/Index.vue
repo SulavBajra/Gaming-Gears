@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Head, Link, router } from '@inertiajs/vue3';
+import { usePoll } from '@inertiajs/vue3';
 import { Pencil, Plus, Trash } from 'lucide-vue-next';
 import { route } from 'ziggy-js';
 import { Button } from '@/components/ui/button';
@@ -40,6 +41,8 @@ import {
 import AppLayout from '@/layouts/AppLayout.vue';
 import type { BreadcrumbItem } from '@/types';
 import type { User } from '@/types/index';
+
+usePoll(2000);
 
 interface PaginatedUsers {
     data: User[];

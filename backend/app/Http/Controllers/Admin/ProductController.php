@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\ProductStoreRequest;
 use App\Models\Brand;
 use App\Models\Category;
@@ -11,10 +10,13 @@ use App\Models\Product;
 use App\Services\ProductService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use App\Http\Controllers\Controller;
 
 class ProductController extends Controller
 {
-    public function __construct(private readonly ProductService $productService) {}
+    public function __construct(private readonly ProductService $productService)
+    {
+    }
 
     /**
      * @return \Inertia\Response
