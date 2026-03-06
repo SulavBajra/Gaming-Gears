@@ -4,7 +4,24 @@ import { Pencil, Plus, Trash } from 'lucide-vue-next';
 import { route } from 'ziggy-js';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+    Card,
+    CardContent,
+    CardHeader,
+    CardFooter,
+    CardTitle,
+    CardDescription,
+} from '@/components/ui/card';
+import {
+    Dialog,
+    DialogClose,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from '@/components/ui/dialog';
 import {
     Pagination,
     PaginationContent,
@@ -52,9 +69,15 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 const formatPrice = (min: number | null, max: number | null): string => {
-    if (!min) return '—';
-    if (min === max) return `$${Number(min).toFixed(2)}`;
-    return `Rs.${Number(min).toFixed(2)} – Rs.${Number(max).toFixed(2)}`;
+    if (min === null) return '—';
+    if (min === max) return `Rs. ${Number(min).toFixed(2)}`;
+    return `Rs. ${Number(min).toFixed(2)} – Rs. ${Number(max).toFixed(2)}`;
+};
+
+const deleteProduct = (id: number) => {
+    router.delete(route('products.destroy', id), {
+        preserveScroll: true,
+    });
 };
 
 const goToPage = (page: number) => {
@@ -76,12 +99,14 @@ const goToPage = (page: number) => {
                         <CardTitle class="text-xl text-primary"
                             >Products</CardTitle
                         >
-                        <p class="text-sm text-muted-foreground">
-                            Manage all of {{ products.total }} products here
-                        </p>
+                        <CardDescription
+                            ><p class="text-sm text-muted-foreground">
+                                Manage all of {{ products.total }} products here
+                            </p></CardDescription
+                        >
                     </div>
                     <Link :href="route('products.create')">
-                        <Button> <Plus class="h-4 w-4" /> Add Product</Button>
+                        <Button> <Plus class="h-2 w-4" /> Add Product</Button>
                     </Link>
                 </CardHeader>
                 <CardContent>
@@ -159,7 +184,7 @@ const goToPage = (page: number) => {
                                     </Badge>
                                 </TableCell>
                                 <TableCell class="text-right">
-                                    <div>
+                                    <div class="flex justify-end gap-2">
                                         <Link
                                             :href="
                                                 route(
@@ -173,27 +198,63 @@ const goToPage = (page: number) => {
                                                     class="h-4 w-4 text-shadow-green-800"
                                             /></Button>
                                         </Link>
-                                        <Link
-                                            :href="
-                                                route(
-                                                    'products.destroy',
-                                                    product.id,
-                                                )
-                                            "
-                                            method="delete"
-                                            as="button"
-                                        >
-                                            <Button variant="ghost" size="sm"
-                                                ><Trash class="text-red-500"
-                                            /></Button>
-                                        </Link>
+
+                                        <Dialog>
+                                            <DialogTrigger as-child>
+                                                <Button
+                                                    variant="destructive"
+                                                    size="sm"
+                                                    ><Trash
+                                                /></Button>
+                                            </DialogTrigger>
+                                            <DialogContent
+                                                class="sm:max-w-[425px]"
+                                            >
+                                                <DialogHeader>
+                                                    <DialogTitle
+                                                        >Delete product
+                                                        ?</DialogTitle
+                                                    >
+                                                    <DialogDescription>
+                                                        Are you sure you want to
+                                                        delete this product
+                                                        permanently. This cannot
+                                                        be undone.
+                                                    </DialogDescription>
+                                                </DialogHeader>
+                                                <DialogFooter>
+                                                    <DialogClose as-child>
+                                                        <Button
+                                                            variant="secondary"
+                                                        >
+                                                            Cancel
+                                                        </Button>
+                                                    </DialogClose>
+                                                    <Button
+                                                        variant="destructive"
+                                                        size="sm"
+                                                        @click="
+                                                            deleteProduct(
+                                                                product.id,
+                                                            )
+                                                        "
+                                                    >
+                                                        <Trash />
+                                                        Delete
+                                                    </Button>
+                                                </DialogFooter>
+                                            </DialogContent>
+                                        </Dialog>
                                     </div>
                                 </TableCell>
                             </TableRow>
                         </TableBody>
                     </Table>
-
-                    <div class="mt-6 flex items-center justify-between">
+                </CardContent>
+                <CardFooter class="flex justify-center">
+                    <div
+                        class="flex w-full max-w-md flex-wrap justify-center gap-2"
+                    >
                         <Pagination
                             :total="products.total"
                             :items-per-page="products.per_page"
@@ -240,7 +301,7 @@ const goToPage = (page: number) => {
                             </PaginationContent>
                         </Pagination>
                     </div>
-                </CardContent>
+                </CardFooter>
             </Card>
         </div>
     </AppLayout>

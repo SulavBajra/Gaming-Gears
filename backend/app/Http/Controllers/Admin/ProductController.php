@@ -1,13 +1,23 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Requests\Admin\ProductStoreRequest;
+use App\Models\Brand;
+use App\Models\Category;
+use App\Models\Gender;
 use App\Models\Product;
+use App\Services\ProductService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use App\Http\Controllers\Controller;
 
 class ProductController extends Controller
 {
+    public function __construct(private readonly ProductService $productService)
+    {
+    }
+
     /**
      * @return \Inertia\Response
      *                           Display a listing of the resource.
@@ -15,14 +25,14 @@ class ProductController extends Controller
     public function index()
     {
         $products = Product::latest()->with('brand', 'category')
-             ->withMin('productVariants', 'price')
-             ->withMax('productVariants', 'price')
-             ->withSum('productVariants', 'stock_qty')
-             ->paginate(8);
+            ->withMin('productVariants', 'price')
+            ->withMax('productVariants', 'price')
+            ->withSum('productVariants', 'stock_qty')
+            ->paginate(8);
 
-         return Inertia::render('products/Index', [
-             'products' => $products,
-         ]);
+        return Inertia::render('products/Index', [
+            'products' => $products,
+        ]);
     }
 
     /**
@@ -30,17 +40,25 @@ class ProductController extends Controller
      */
     public function create()
     {
-        return Inertia::render('products/Create');
+        $brands = Brand::where('is_active', 1)->select('id', 'name')->get();
+        $categories = Category::where('is_active', 1)->select('id', 'name')->get();
+        $genders = Gender::select('id', 'name')->get();
+
+        return Inertia::render('products/Create', [
+            'brands' => $brands,
+            'categories' => $categories,
+            'genders' => $genders,
+        ]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(ProductStoreRequest $request)
     {
-        $product = Product::create($request->validated());
+        $this->productService->store($request);
 
-        return to_route('products.index');
+        return to_route('products.index')->with('success', 'Product created successfully');
     }
 
     /**

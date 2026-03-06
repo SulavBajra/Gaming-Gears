@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             RolePermissionSeeder::class,
             UserSeeder::class,
+            BrandsSeeder::class,
         ]);
         Gender::factory()->createMany([
             ['name' => 'Mens',   'slug' => 'mens'],

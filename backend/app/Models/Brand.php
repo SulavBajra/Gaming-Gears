@@ -35,6 +35,13 @@ class Brand extends Model implements HasMedia
         $this->addMediaCollection('logo')->singleFile();
     }
 
+    public function getLogoUrlAttribute(): ?string
+    {
+        return $this->getFirstMediaUrl('logo') ?: null;
+    }
+
+    protected $appends = ['logo_url'];
+
     // ── Relationships ──────────────────────────────────
     /** @return HasMany<Product> */
     public function products(): HasMany

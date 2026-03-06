@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
-import { LayoutGrid } from 'lucide-vue-next';
+import { LayoutGrid, Box } from 'lucide-vue-next';
 import { route } from 'ziggy-js';
 import AppLogo from '@/components/AppLogo.vue';
 import NavUser from '@/components/NavUser.vue';
@@ -17,6 +17,7 @@ import {
     SidebarMenuSubButton,
     SidebarMenuSubItem,
     SidebarRail,
+    SidebarFooter,
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes';
 
@@ -26,16 +27,20 @@ const data = {
     navMain: [
         {
             title: 'Dashboard',
-            href: dashboard(),
+            route: 'dashboard',
             icon: LayoutGrid,
         },
         {
             title: 'Products',
-            icon: LayoutGrid,
+            icon: Box,
             items: [
                 {
                     title: 'Manage Products',
-                    href: route('products.index'),
+                    route: 'products.index',
+                },
+                {
+                    title: 'Manage Brands',
+                    route: 'brands.index',
                 },
             ],
         },
@@ -62,20 +67,30 @@ const data = {
                     <SidebarMenuItem
                         v-for="item in data.navMain"
                         :key="item.title"
+                        :class="{
+                            'bg-sidebar-accent':
+                                item.route && route().current(item.route),
+                        }"
                     >
                         <SidebarMenuButton as-child>
-                            <Link :href="item.href" class="font-medium">
+                            <Link :href="item.route ? route(item.route) : '#'">
                                 <component :is="item.icon" class="size-4" />
                                 {{ item.title }}
                             </Link>
                         </SidebarMenuButton>
+
                         <SidebarMenuSub v-if="item.items?.length">
                             <SidebarMenuSubItem
                                 v-for="childItem in item.items"
                                 :key="childItem.title"
                             >
-                                <SidebarMenuSubButton as-child>
-                                    <Link :href="childItem.href">
+                                <SidebarMenuSubButton
+                                    as-child
+                                    :is-active="
+                                        route().current(childItem.route)
+                                    "
+                                >
+                                    <Link :href="route(childItem.route)">
                                         {{ childItem.title }}
                                     </Link>
                                 </SidebarMenuSubButton>
@@ -85,9 +100,9 @@ const data = {
                 </SidebarMenu>
             </SidebarGroup>
         </SidebarContent>
-        <SidebarRail />
         <SidebarFooter>
             <NavUser />
         </SidebarFooter>
+        <SidebarRail />
     </Sidebar>
 </template>
