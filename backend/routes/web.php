@@ -11,6 +11,8 @@ Route::inertia('/', 'Dashboard', [
     'canRegister' => Features::enabled(Features::registration()),
 ])->name('home');
 
+Route::inertia('/api', 'api/Home');
+
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::inertia('dashboard', 'Dashboard')->name('dashboard');
     Route::resource('products', ProductController::class);
