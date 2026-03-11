@@ -35,6 +35,13 @@ class ProductHomeResource extends JsonResource
                 'name' => $this->gender->name,
                 'slug' => $this->gender->slug,
             ],
+            'media' => $this->media->map(function ($media) {
+                return [
+                    'id' => $media->id,
+                    'collection_name' => $media->collection_name,
+                    'original_url' => $media->getUrl(),
+                ];
+            }),
         ];
     }
 }

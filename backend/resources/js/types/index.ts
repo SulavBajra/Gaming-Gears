@@ -26,6 +26,13 @@ export interface User {
     roles: string[];
 }
 
+export interface ProductMedia {
+    id: number;
+    collection_name: string;
+    original_url: string;
+    preview_url: string;
+}
+
 export interface ProductHome {
     id: number;
     name: string;
@@ -35,4 +42,5 @@ export interface ProductHome {
     brand: { id: number; name: string; slug: string };
     category: { id: number; name: string; slug: string };
     gender: { id: number; name: string; slug: string };
+    media: ProductMedia[];
 }

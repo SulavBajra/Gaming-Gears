@@ -45,7 +45,6 @@ onMounted(async () => {
                     d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
                 />
             </svg>
-            {{ console.log(products) }}
         </div>
 
         <p v-else-if="error" class="py-20 text-center text-sm text-destructive">
