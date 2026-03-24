@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\MediaLibrary\HasMedia;
@@ -16,23 +17,23 @@ class Product extends Model implements HasMedia
 {
     /** @use HasFactory<\Database\Factories\ProductFactory> */
     use HasFactory;
-
     use InteractsWithMedia;
     use SoftDeletes;
 
     protected $fillable = [
         'brand_id',
-        'category_id',
-        'gender_id',
         'name',
         'slug',
         'description',
         'is_active',
+        'is_featured',
+        'tags',
     ];
 
     public function registerMediaCollections(): void
     {
         $this->addMediaCollection('thumbnail')->singleFile();
+        $this->addMediaCollection('gallery');
     }
 
     public function registerMediaConversions(?Media $media = null): void
@@ -52,41 +53,44 @@ class Product extends Model implements HasMedia
     }
 
     /**
-     * @return BelongsTo<Category>
+     * @return BelongsToMany<Category>
      */
-    public function category(): BelongsTo
+    public function categories(): BelongsToMany
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsToMany(Category::class)
+            ->withPivot('is_primary')
+            ->withTimestamps();
     }
 
-    /**
-     * @return BelongsTo<Gender>
-     */
-    public function gender(): BelongsTo
+    public function variants(): HasMany
     {
-        return $this->belongsTo(Gender::class);
+        return $this->hasMany(ProductVariant::class)
+            ->orderBy('sort_order');
     }
 
-    /**
-     * @return HasMany<Colorway>
-     */
-    public function colorways(): HasMany
+    public function activeVariants(): HasMany
     {
-        return $this->hasMany(Colorway::class);
-    }
-
-    /**
-     * @return HasMany<ProductVariant>
-     */
-    public function productVariants(): HasMany
-    {
-        return $this->hasMany(ProductVariant::class);
+        return $this->hasMany(ProductVariant::class)
+            ->where('is_active', true)
+            ->orderBy('sort_order');
     }
 
     protected function casts(): array
     {
         return [
             'is_active' => 'boolean',
+            'is_featured' => 'boolean',
+            'tags' => 'array',
         ];
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', true);
+    }
+
+    public function scopeFeatured($query)
+    {
+        return $query->where('is_featured', true);
     }
 }

@@ -11,4 +11,5 @@ Route::get('/home', [ProductHomeController::class, 'index'])->name('api.home');
 
 Route::middleware(['auth:sanctum', 'role:customer'])->group(function () {
     Route::post('/logout', LogoutController::class)->name('api.logout');
+    Route::get('/shop',);
 });

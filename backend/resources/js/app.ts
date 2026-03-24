@@ -6,7 +6,7 @@ import '../css/app.css';
 import { ZiggyVue } from 'ziggy-js';
 import { initializeTheme } from '@/composables/useAppearance';
 
-const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
+const appName = import.meta.env.VITE_APP_NAME || 'GameGears';
 
 createInertiaApp({
     title: (title) => (title ? `${title} - ${appName}` : appName),

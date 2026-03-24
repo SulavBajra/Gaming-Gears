@@ -20,4 +20,16 @@ class ProductHomeController extends Controller
         // return response()->json($products);
         return ProductHomeResource::collection($products);
     }
+
+    public function slider()
+    {
+        $products = Product::with('media')
+            ->where('is_active', 1)
+            ->where('is_featured', 1)
+            ->latest()
+            ->limit(5)
+            ->get();
+
+        return ProductHomeResource::collection($products);
+    }
 }
