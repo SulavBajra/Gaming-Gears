@@ -14,8 +14,8 @@ use Spatie\Sluggable\SlugOptions;
 class Category extends Model
 {
     use HasFactory;
-    use SoftDeletes;
     use HasSlug;
+    use SoftDeletes;
 
     protected $fillable = [
         'parent_id',
@@ -31,7 +31,8 @@ class Category extends Model
         return ['is_active' => 'boolean'];
     }
 
-    public function scopeActive($query)
+    #[\Illuminate\Database\Eloquent\Attributes\Scope]
+    protected function active($query)
     {
         return $query->where('is_active', true);
     }

@@ -2,10 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Models\Brand;
+use App\Models\Category;
 use App\Models\Product;
 use App\Models\ProductVariant;
-use App\Models\Category;
-use App\Models\Brand;
 use Illuminate\Database\Seeder;
 
 class ProductSeeder extends Seeder
@@ -28,8 +28,8 @@ class ProductSeeder extends Seeder
                 'brand' => $logitech,
                 'category' => $keyboards,
                 'variants' => [
-                    ['name' => 'Red Switch', 'price' => 15000],
-                    ['name' => 'Blue Switch', 'price' => 14500],
+                    ['name' => 'Red Switch', 'price' => 15000, 'stock_quantity' => 100],
+                    ['name' => 'Blue Switch', 'price' => 14500, 'stock_quantity' => 100],
                 ],
             ],
             [
@@ -37,8 +37,8 @@ class ProductSeeder extends Seeder
                 'brand' => $razer,
                 'category' => $mice,
                 'variants' => [
-                    ['name' => 'Standard', 'price' => 8500],
-                    ['name' => 'Wireless', 'price' => 12000],
+                    ['name' => 'Standard', 'price' => 8500, 'stock_quantity' => 100],
+                    ['name' => 'Wireless', 'price' => 12000, 'stock_quantity' => 100],
                 ],
             ],
             [
@@ -46,8 +46,8 @@ class ProductSeeder extends Seeder
                 'brand' => $steelseries,
                 'category' => $headsets,
                 'variants' => [
-                    ['name' => 'Black', 'price' => 18000],
-                    ['name' => 'White', 'price' => 18500],
+                    ['name' => 'Black', 'price' => 18000, 'stock_quantity' => 100],
+                    ['name' => 'White', 'price' => 18500, 'stock_quantity' => 100],
                 ],
             ],
         ];

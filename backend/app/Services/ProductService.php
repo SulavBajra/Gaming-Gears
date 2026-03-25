@@ -2,34 +2,60 @@
 
 namespace App\Services;
 
-use App\Models\Product;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
+use App\Models\Product;
 
 class ProductService
 {
     public function store(Request $request): Product
     {
-        $product = $this->createProduct($request);
+        $validated = $request->validated();
+
+        $product = $this->createProduct($validated);
+        $this->attachCategories($validated, $product);
+        $this->createVariants($validated, $product);
         $this->handleThumbnail($request, $product);
-        $this->createColorways($request, $product);
 
         return $product;
     }
 
     // ── Private helpers ────────────────────────────────
 
-    private function createProduct(Request $request): Product
+    private function createProduct(array $validated): Product
     {
         return Product::create([
-            'name' => $request->name,
-            'slug' => Str::slug($request->name),
-            'description' => $request->description,
-            'brand_id' => $request->brand_id,
-            'category_id' => $request->category_id,
-            'gender_id' => $request->gender_id,
-            'is_active' => $request->boolean('is_active', true),
+            'name'        => $validated['name'],
+            'description' => $validated['description'] ?? null,
+            'brand_id'    => $validated['brand_id'],
+            'is_active'   => $validated['is_active'],
+            'is_featured' => $validated['is_featured'],
+            'tags'        => $validated['tags'] ?? [],
         ]);
+    }
+
+    private function attachCategories(array $validated, Product $product): void
+    {
+        // First category is treated as primary
+        $syncData = collect($validated['category_ids'])
+            ->mapWithKeys(fn ($id, $index) => [
+                $id => ['is_primary' => $index === 0],
+            ])
+            ->all();
+
+        $product->categories()->attach($syncData);
+    }
+
+    private function createVariants(array $validated, Product $product): void
+    {
+        foreach ($validated['variants_decoded'] as $index => $variant) {
+            $product->variants()->create([
+                'name'           => $variant['name'],
+                'price'          => $variant['price'],
+                'stock_quantity' => $variant['stock_quantity'] ?? 0,
+                'is_active'      => $variant['is_active'] ?? true,
+                'sort_order'     => $index,
+            ]);
+        }
     }
 
     private function handleThumbnail(Request $request, Product $product): void
@@ -37,61 +63,6 @@ class ProductService
         if ($request->hasFile('thumbnail')) {
             $product->addMediaFromRequest('thumbnail')
                 ->toMediaCollection('thumbnail');
-        }
-    }
-
-    private function createColorways(Request $request, Product $product): void
-    {
-        $colorwaysMeta = json_decode($request->input('colorways'), true) ?? [];
-
-        foreach ($colorwaysMeta as $ci => $data) {
-            $colorway = $product->colorways()->create([
-                'name' => $data['name'],
-                'colorway_code' => $data['colorway_code'] ?? null,
-                'release_date' => $data['release_date'] ?: null,
-                'is_limited_edition' => $data['is_limited_edition'] ?? false,
-            ]);
-
-            $this->handleColorwayImages($request, $colorway, $ci);
-            $this->createVariants($colorway, $product->id, $data['variants'] ?? []);
-        }
-    }
-
-    private function handleColorwayImages(Request $request, $colorway, int $ci): void
-    {
-        if (! $request->hasFile("colorway_images.{$ci}")) {
-            return;
-        }
-
-        $files = $request->file("colorway_images.{$ci}");
-
-        // First image goes to 'primary', all images go to 'images'
-        foreach ($files as $index => $image) {
-            $colorway->addMedia($image)
-                ->toMediaCollection('images');
-
-            if ($index === 0) {
-                // Re-add as primary (singleFile will replace on next upload)
-                $colorway->addMedia(
-                    $request->file("colorway_images.{$ci}")[0]
-                )->toMediaCollection('primary');
-            }
-        }
-    }
-
-    private function createVariants($colorway, int $productId, array $variants): void
-    {
-        foreach ($variants as $data) {
-            $colorway->variants()->create([
-                'product_id' => $productId,
-                'sku' => $data['sku'],
-                'size' => $data['size'],
-                'width' => $data['width'] ?: null,
-                'price' => $data['price'],
-                'compare_at_price' => $data['compare_at_price'] ?: null,
-                'stock_qty' => $data['stock_qty'] ?? 0,
-                'is_active' => $data['is_active'] ?? true,
-            ]);
         }
     }
 }

@@ -3,12 +3,13 @@
 namespace App\Http\Requests\Api;
 
 use Illuminate\Auth\Events\Lockout;
+use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Contracts\Validation\Validator;
 use Override;
 
 class LoginRequest extends FormRequest
@@ -24,12 +25,12 @@ class LoginRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
         return [
-            'email' => ['required', 'email','string',],
+            'email' => ['required', 'email', 'string'],
             'password' => ['required', 'string', 'min:8'],
         ];
     }
@@ -37,13 +38,14 @@ class LoginRequest extends FormRequest
     public function throttleKey(): string
     {
         $email = is_string($this->input('email')) ? $this->input('email') : 'invalid';
-        return Str::transliterate(Str::lower($email . '|' . $this->ip()));
+
+        return Str::transliterate(Str::lower($email.'|'.$this->ip()));
     }
 
     public function ensureIsNotRateLimited(): void
     {
-        if (!RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
-            return ;
+        if (! RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
+            return;
         }
 
         event(new Lockout($this));
