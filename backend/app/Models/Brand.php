@@ -33,7 +33,6 @@ class Brand extends Model implements HasMedia
         ];
     }
 
-    // ── Media ──────────────────────────────────────────
     public function registerMediaCollections(): void
     {
         $this->addMediaCollection('logo')->singleFile();

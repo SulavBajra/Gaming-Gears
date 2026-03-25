@@ -15,8 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('brand_id')->nullable()->constrained()->nullOnDelete();
             $table->string('name');
-            $table->string('slug');
-            $table->unique(['brand_id', 'slug']);
+            $table->string('slug')->unique();
             $table->text('description')->nullable();
             $table->boolean('is_active')->default(true);
             $table->boolean('is_featured')->default(false);

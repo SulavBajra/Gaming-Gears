@@ -43,11 +43,21 @@ class ProductVariant extends Model
 
     public function inStock(): bool
     {
-        return $this->stock_quantity > 0;
+        return $this->is_active && $this->stock_quantity > 0;
     }
 
     public function isLowStock(): bool
     {
         return $this->stock_quantity <= $this->low_stock_threshold;
+    }
+
+    public function minPrice(): ?float
+    {
+        return $this->variants()->min('price');
+    }
+
+    public function maxPrice(): ?float
+    {
+        return $this->variants()->max('price');
     }
 }

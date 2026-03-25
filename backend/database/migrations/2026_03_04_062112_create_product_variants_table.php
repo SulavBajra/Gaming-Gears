@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('product_variants', function (Blueprint $table) {
             $table->id();
             $table->foreignId('product_id')->constrained()->cascadeOnDelete();
+            $table->unique(['product_id', 'name']);
             $table->string('name');
             $table->integer('stock_quantity')->default(0);
             $table->decimal('price', 10, 2);
@@ -22,8 +23,7 @@ return new class extends Migration
             $table->boolean('is_active')->default(true);
             $table->integer('sort_order')->default(0);
             $table->timestamps();
-            $table->index('product_id');
-            $table->index('is_active');
+            $table->index(['product_id', 'is_active']);
         });
     }
 
