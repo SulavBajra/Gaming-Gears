@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import AppLayout from '@/components/layout/AppLayout.vue'
+import AppLayout from '../components/layout/AppLayout.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -15,8 +15,18 @@ const router = createRouter({
         },
         {
           path: 'shop',
-          name: 'product',
+          name: 'shop',
+          component: () => import('@/views/ShopView.vue'),
+        },
+        {
+          path: '/shop/:slug',
+          name: 'product.show',
           component: () => import('@/views/ProductView.vue'),
+        },
+        {
+          path: 'about',
+          name: 'about',
+          component: () => import('@/views/AboutView.vue'),
         },
       ],
     },

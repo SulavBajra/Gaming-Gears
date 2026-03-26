@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import Hero from '../components/pages/Hero.vue'
-import ProductGrid from '../components/pages/ProductGrid.vue'
+import HomeProduct from '../components/pages/HomeProduct.vue'
 </script>
-
 <template>
   <main>
     <Hero />
-    <ProductGrid />
+    <HomeProduct />
   </main>
 </template>
