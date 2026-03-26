@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
 /**
- * @extends Factory<\App\Models\Brand>
+ * @extends Factory<Brand>
  */
 class BrandFactory extends Factory
 {
@@ -34,26 +34,26 @@ class BrandFactory extends Factory
             'Zowie',
         ];
 
-        $name = $this->faker->unique()->randomElement($knownBrands);
+        $name = fake()->unique()->randomElement($knownBrands);
 
         // Add a suffix sometimes to avoid collisions if seeding many
-        if ($this->faker->boolean(35)) {
-            $name .= ' ' . $this->faker->randomElement(['Pro', 'Gaming', 'Studio', 'Gear', 'Works']);
+        if (fake()->boolean(35)) {
+            $name .= ' '.fake()->randomElement(['Pro', 'Gaming', 'Studio', 'Gear', 'Works']);
         }
 
         return [
             'name' => $name,
 
             // Spatie Sluggable can create this, but we must ensure uniqueness during seeding.
-            'slug' => Str::slug($name) . '-' . $this->faker->unique()->numberBetween(1000, 999999),
+            'slug' => Str::slug($name).'-'.fake()->unique()->numberBetween(1000, 999999),
 
-            'description' => $this->faker->optional(0.75)->paragraphs(2, true),
+            'description' => fake()->optional(0.75)->paragraphs(2, true),
 
             // Either null or a plausible website
-            'website' => $this->faker->optional(0.65)->url(),
+            'website' => fake()->optional(0.65)->url(),
 
             // Most brands active
-            'is_active' => $this->faker->boolean(90),
+            'is_active' => fake()->boolean(90),
         ];
     }
 

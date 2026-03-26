@@ -10,14 +10,17 @@ class ProductHomeController extends Controller
 {
     public function index()
     {
-        $products = Product::with([
-            'category:id,name,slug',
-            'brand:id,name,slug',
-            'gender:id,name,slug',
-            'media'
-        ])->where('is_active', 1)
-        ->withMin('productVariants', 'price')->latest()->paginate(10);
-        // return response()->json($products);
+        $products = Product::query()
+            ->active()
+            ->with([
+                'categories:id,name,slug',
+                'brand:id,name,slug',
+                'media' => fn ($q) => $q->where('collection_name', 'thumbnail'),
+            ])
+            ->withMin('variants', 'price')
+            ->latest()
+            ->limit(4)->get();
+
         return ProductHomeResource::collection($products);
     }
 

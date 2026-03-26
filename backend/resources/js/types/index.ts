@@ -8,10 +8,9 @@ export interface Product {
     slug: string;
     is_active: boolean;
     brand: { name: string };
-    category: { name: string };
-    product_variants_min_price: number | null;
-    product_variants_max_price: number | null;
-    product_variants_sum_stock_qty: number;
+    categories: { name: string };
+    variants_max_price: number | null;
+    variants_sum_stock_quantity: number;
 }
 
 export interface Role {

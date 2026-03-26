@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -14,8 +15,8 @@ use Spatie\Sluggable\SlugOptions;
 class Category extends Model
 {
     use HasFactory;
-    use SoftDeletes;
     use HasSlug;
+    use SoftDeletes;
 
     protected $fillable = [
         'parent_id',
@@ -31,7 +32,8 @@ class Category extends Model
         return ['is_active' => 'boolean'];
     }
 
-    public function scopeActive($query)
+    #[Scope]
+    protected function active($query)
     {
         return $query->where('is_active', true);
     }

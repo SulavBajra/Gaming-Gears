@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -14,9 +16,9 @@ use Spatie\Sluggable\SlugOptions;
 class Brand extends Model implements HasMedia
 {
     use HasFactory;
+    use HasSlug;
     use InteractsWithMedia;
     use SoftDeletes;
-    use HasSlug;
 
     protected $fillable = [
         'name',
@@ -38,9 +40,9 @@ class Brand extends Model implements HasMedia
         $this->addMediaCollection('logo')->singleFile();
     }
 
-    protected function logoUrl(): \Illuminate\Database\Eloquent\Casts\Attribute
+    protected function logoUrl(): Attribute
     {
-        return \Illuminate\Database\Eloquent\Casts\Attribute::make(get: function () {
+        return Attribute::make(get: function () {
             return $this->getFirstMediaUrl('logo') ?: null;
         });
     }
@@ -64,7 +66,8 @@ class Brand extends Model implements HasMedia
             ->saveSlugsTo('slug');
     }
 
-    public function scopeActive($query)
+    #[Scope]
+    protected function active($query)
     {
         return $query->where('is_active', true);
     }

@@ -23,6 +23,7 @@ class LoginController extends Controller
         RateLimiter::clear($request->throttleKey());
 
         $token = $user->createToken('api-token')->plainTextToken;
+
         return response()->json([
             'token' => $token,
             'token_type' => 'Bearer',

@@ -11,14 +11,15 @@ use App\Models\Product;
 use App\Services\ProductService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class ProductController extends Controller
 {
     public function __construct(private readonly ProductService $productService) {}
 
     /**
-     * @return \Inertia\Response
-     *                           Display a listing of the resource.
+     * @return Response
+     *                  Display a listing of the resource.
      */
     public function index()
     {
