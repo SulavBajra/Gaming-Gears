@@ -13,15 +13,19 @@ return new class extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('brand_id')->constrained('brands')->cascadeOnDelete();
-            $table->foreignId('category_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('gender_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('brand_id')->nullable()->constrained()->nullOnDelete();
             $table->string('name');
-            $table->string('slug')->unique();
+            $table->string('slug');
+            $table->unique(['brand_id', 'slug']);
             $table->text('description')->nullable();
             $table->boolean('is_active')->default(true);
+            $table->boolean('is_featured')->default(false);
+            $table->json('tags')->nullable();
             $table->timestamps();
             $table->softDeletes();
+            $table->index(['is_active', 'is_featured']);
+            $table->index('slug');
+            $table->index('brand_id');
         });
     }
 

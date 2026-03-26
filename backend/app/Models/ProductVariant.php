@@ -11,24 +11,25 @@ class ProductVariant extends Model
     use HasFactory;
 
     protected $fillable = [
+        'name',
         'product_id',
-        'colorway_id',
-        'sku',
-        'size',
-        'width',
         'price',
-        'compare_at_price',
-        'stock_qty',
+        'weight',
+        'stock_quantity',
+        'low_stock_threshold',
         'is_active',
+        'sort_order',
     ];
 
     protected function casts(): array
     {
         return [
-            'size' => 'decimal:1',
             'price' => 'decimal:2',
-            'compare_at_price' => 'decimal:2',
             'is_active' => 'boolean',
+            'weight' => 'decimal:2',
+            'stock_quantity' => 'integer',
+            'low_stock_threshold' => 'integer',
+            'sort_order' => 'integer',
         ];
     }
 
@@ -40,34 +41,13 @@ class ProductVariant extends Model
         return $this->belongsTo(Product::class);
     }
 
-    /**
-     * @return BelongsTo<Colorway>
-     */
-    public function colorway(): BelongsTo
-    {
-        return $this->belongsTo(Colorway::class);
-    }
-
-    // ── Helpers ────────────────────────────────────────
-    public function isOnSale(): bool
-    {
-        return ! is_null($this->compare_at_price)
-            && $this->compare_at_price > $this->price;
-    }
-
-    public function discountPercentage(): ?int
-    {
-        if (! $this->isOnSale()) {
-            return null;
-        }
-
-        return (int) round(
-            (($this->compare_at_price - $this->price) / $this->compare_at_price) * 100
-        );
-    }
-
     public function inStock(): bool
     {
-        return $this->stock_qty > 0;
+        return $this->stock_quantity > 0;
+    }
+
+    public function isLowStock(): bool
+    {
+        return $this->stock_quantity <= $this->low_stock_threshold;
     }
 }

@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import TheWelcome from '../components/TheWelcome.vue'
+import Slider from '../components/pages/Slider.vue'
+import ProductGrid from '../components/pages/ProductGrid.vue'
 </script>
 
 <template>
   <main>
-    <TheWelcome />
+    <Slider />
+    <ProductGrid />
   </main>
 </template>
