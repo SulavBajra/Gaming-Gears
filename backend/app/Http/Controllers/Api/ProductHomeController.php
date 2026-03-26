@@ -14,9 +14,10 @@ class ProductHomeController extends Controller
             'category:id,name,slug',
             'brand:id,name,slug',
             'gender:id,name,slug',
-            'media'
+            'media',
         ])->where('is_active', 1)
-        ->withMin('productVariants', 'price')->latest()->paginate(10);
+            ->withMin('productVariants', 'price')->latest()->paginate(10);
+
         // return response()->json($products);
         return ProductHomeResource::collection($products);
     }
