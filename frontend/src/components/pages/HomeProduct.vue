@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import ProductGrid from './ProductGrid.vue'
+import CategoryGrid from './CategoryGrid.vue'
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
-import type { HomeProduct } from '@/components/types'
+import type { Category, HomeProduct } from '@/components/types'
 
+const categories = ref<Category[]>([])
 const products = ref<HomeProduct[]>([])
 const loading = ref(true)
 const api = axios.create({
@@ -20,12 +22,22 @@ onMounted(async () => {
 })
 </script>
 <template>
+  <section class="categories">
+    <h1 class="product-heading">Our Categories</h1>
+    <CategoryGrid />
+  </section>
   <section class="recent-products">
     <h1 class="product-heading">Recent Products</h1>
     <ProductGrid v-if="products.length" :products="products" />
   </section>
 </template>
 <style scoped>
+.categories {
+  background-color: var(--bg);
+  border-top: dashed #ffff;
+  padding-top: 1.5rem;
+}
+
 .recent-products {
   background-color: var(--bg);
   border-top: dashed #ffff;
