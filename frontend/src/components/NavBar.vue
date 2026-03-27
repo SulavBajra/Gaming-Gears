@@ -1,41 +1,161 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
+import { ShoppingCart, Search } from '@lucide/vue'
 </script>
 
 <template>
-  <div class="wrapper">
-    <nav class="text-black">
-      <RouterLink to="/">Home</RouterLink>
-      <RouterLink to="/shop">Products</RouterLink>
+  <header class="site-header">
+    <nav class="navbar">
+      <div class="nav-logo">
+        <RouterLink to="/" class="logo-link">Game Gears</RouterLink>
+      </div>
+
+      <ul class="nav-links">
+        <li><RouterLink to="/" class="nav-item">Home</RouterLink></li>
+        <li><RouterLink to="/shop" class="nav-item">Shop</RouterLink></li>
+        <li><RouterLink to="/about" class="nav-item">About</RouterLink></li>
+      </ul>
+
+      <div class="nav-actions">
+        <button class="icon-btn" aria-label="Search">
+          <Search />
+        </button>
+        <button class="icon-btn" aria-label="Cart">
+          <ShoppingCart />
+          <span class="cart-badge">3</span>
+        </button>
+      </div>
     </nav>
-  </div>
-  <RouterView />
+  </header>
 </template>
+
 <style scoped>
-.wrapper {
-  padding: 5px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-nav {
-  display: flex;
-  flex-wrap: row;
-  align-items: center;
-  justify-content: space-around;
-  width: 50%;
-  gap: 1rem;
-  padding: 10px;
-  border: 1px solid beige;
-  border-radius: 20px;
+@import url('https://fonts.googleapis.com/css2?family=Iosevka+Charon:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&family=Oswald:wght@200..700&display=swap');
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--bg);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
 }
 
-nav a {
+.navbar {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  height: 64px;
+}
+
+/* Logo */
+.nav-logo {
+  justify-self: start;
+}
+
+.logo-link {
+  font-family: 'Iosevka Charon', serif;
+  font-size: 1.6rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  color: var(--accent);
   text-decoration: none;
-  color: black;
+  transition: color 0.2s;
 }
 
-nav a:hover {
-  color: #42b983;
+.logo-link:hover {
+  color: var(--accent);
+}
+
+/* Nav links */
+.nav-links {
+  display: flex;
+  gap: 2.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  justify-self: center;
+}
+
+.nav-item {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-decoration: none;
+  position: relative;
+  padding-bottom: 2px;
+  transition: color 0.2s;
+}
+
+.nav-item::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--accent);
+  transition: width 0.25s ease;
+}
+
+.nav-item:hover,
+.nav-item.router-link-active {
+  color: var(--ink);
+}
+
+.nav-item:hover::after,
+.nav-item.router-link-active::after {
+  width: 100%;
+}
+
+/* Actions */
+.nav-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-self: end;
+  align-items: center;
+}
+
+.icon-btn {
+  position: relative;
+  background: none;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  color: var(--muted);
+  border-radius: 8px;
+  transition:
+    color 0.2s,
+    background 0.2s;
+  display: flex;
+  align-items: center;
+}
+
+.icon-btn:hover {
+  color: var(--ink);
+  background: var(--border);
+}
+
+.cart-badge {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  background: var(--accent);
+  color: white;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.6rem;
+  font-weight: 400;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 </style>

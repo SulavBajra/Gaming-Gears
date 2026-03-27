@@ -1,16 +1,23 @@
 <script setup lang="ts">
-import NavBar from './components/NavBar.vue'
+import { RouterView } from 'vue-router'
 </script>
 
 <template>
-  <header>
-    <NavBar />
-  </header>
+  <RouterView />
 </template>
+
 <style>
 * {
   box-sizing: border-box;
   padding: 0;
   margin: 0;
+}
+
+:root {
+  --ink: #1a1a1a;
+  --muted: #8a8a8a;
+  --accent: #c8a96e;
+  --bg: #253439;
+  --border: #e8e4df;
 }
 </style>

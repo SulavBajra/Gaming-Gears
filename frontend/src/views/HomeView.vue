@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import Slider from '../components/pages/Slider.vue'
+import Hero from '../components/pages/Hero.vue'
 import ProductGrid from '../components/pages/ProductGrid.vue'
 </script>
 
 <template>
   <main>
-    <Slider />
+    <Hero />
     <ProductGrid />
   </main>
 </template>
