@@ -9,7 +9,6 @@ export interface Product {
     is_active: boolean;
     brand: { name: string };
     categories: { name: string };
-    variants_min_price: number | null;
     variants_max_price: number | null;
     variants_sum_stock_quantity: number;
 }

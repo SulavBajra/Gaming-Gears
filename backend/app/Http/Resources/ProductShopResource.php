@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ProductHomeResource extends JsonResource
+class ProductShopResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -39,6 +39,13 @@ class ProductHomeResource extends JsonResource
             }),
 
             'thumbnail' => $this->getFirstMediaUrl('thumbnail'),
+            'gallery' => $this->getMedia('gallery')->map(fn($m) => $m->getUrl())->values(),
+            'variants' => $this->variants->map(fn($v) => [
+                'id' => $v->id,
+                'name' => $v->name,
+                'price' => (float)$v->price,
+                'stock' => $v->stock_quantity,
+            ])
         ];
     }
 }

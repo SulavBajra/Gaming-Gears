@@ -14,7 +14,7 @@ import { RouterView } from 'vue-router'
 }
 
 :root {
-  --ink: #1a1a1a;
+  --ink: #ffff;
   --muted: #8a8a8a;
   --accent: #c8a96e;
   --bg: #253439;
