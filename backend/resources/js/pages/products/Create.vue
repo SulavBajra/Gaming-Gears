@@ -1,34 +1,35 @@
 <script setup lang="ts">
 import { Head, useForm } from '@inertiajs/vue3';
-import { Plus, Trash2, ChevronRight, ChevronLeft } from 'lucide-vue-next';
+import {
+    Plus,
+    Trash2,
+    ChevronRight,
+    ChevronLeft,
+    Package,
+    Layers,
+    ImagePlus,
+    X,
+    Tag,
+} from 'lucide-vue-next';
 import { ref, computed } from 'vue';
 import { route } from 'ziggy-js';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
     Card,
     CardContent,
-    CardDescription,
     CardHeader,
     CardTitle,
+    CardDescription,
 } from '@/components/ui/card';
-import {
-    Field,
-    FieldError,
-    FieldGroup,
-    FieldLabel,
-    FieldSet,
-    FieldDescription,
-} from '@/components/ui/field';
+import { Field, FieldLabel, FieldError, FieldSet } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import {
     Select,
-    SelectContent,
-    SelectItem,
     SelectTrigger,
     SelectValue,
+    SelectContent,
+    SelectItem,
 } from '@/components/ui/select';
-import { Separator } from '@/components/ui/separator';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import AppLayout from '@/layouts/AppLayout.vue';
@@ -42,66 +43,44 @@ interface Category {
     id: number;
     name: string;
 }
-interface Gender {
-    id: number;
-    name: string;
-}
 
-const props = defineProps<{
-    brands: Brand[];
-    categories: Category[];
-    genders: Gender[];
-}>();
+const props = defineProps<{ brands: Brand[]; categories: Category[] }>();
 
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Products', href: route('products.index') },
     { title: 'Add Product', href: route('products.create') },
 ];
 
-// ── Step management ────────────────────────────────────
 const currentStep = ref(1);
-const totalSteps = 3;
+const totalSteps = 2;
 
-const stepLabels = ['Product Info', 'Colorways', 'Variants'];
-
-// ── Colorway & Variant types ───────────────────────────
 interface Variant {
-    sku: string;
-    size: string;
-    width: string;
+    name: string;
     price: string;
-    compare_at_price: string;
-    stock_qty: string;
+    stock_quantity: string;
     is_active: boolean;
 }
 
-interface Colorway {
-    name: string;
-    colorway_code: string;
-    release_date: string;
-    is_limited_edition: boolean;
-    images: File[];
-    imagePreviews: string[];
-    variants: Variant[];
-}
-
-// ── Form ───────────────────────────────────────────────
-const thumbnailPreview = ref<string | null>(null);
-
 const form = useForm({
-    // Step 1
     name: '',
     description: '',
     brand_id: '',
-    category_id: '',
-    gender_id: '',
+    category_ids: [] as string[],
     is_active: true,
+    is_featured: false,
+    tags: [] as string[],
     thumbnail: null as File | null,
-    // Step 2 & 3 — sent as JSON
-    colorways: [] as Colorway[],
+    variants: [
+        {
+            name: '',
+            price: '',
+            stock_quantity: '0',
+            is_active: true,
+        } as Variant,
+    ],
 });
 
-// ── Thumbnail ──────────────────────────────────────────
+const thumbnailPreview = ref<string | null>(null);
 const handleThumbnail = (e: Event) => {
     const file = (e.target as HTMLInputElement).files?.[0];
     if (file) {
@@ -109,92 +88,57 @@ const handleThumbnail = (e: Event) => {
         thumbnailPreview.value = URL.createObjectURL(file);
     }
 };
-
 const removeThumbnail = () => {
     form.thumbnail = null;
     thumbnailPreview.value = null;
 };
 
-// ── Colorway helpers ───────────────────────────────────
-const newColorway = (): Colorway => ({
-    name: '',
-    colorway_code: '',
-    release_date: '',
-    is_limited_edition: false,
-    images: [],
-    imagePreviews: [],
-    variants: [newVariant()],
-});
+const addVariant = () =>
+    form.variants.push({
+        name: '',
+        price: '',
+        stock_quantity: '0',
+        is_active: true,
+    });
+const removeVariant = (i: number) => form.variants.splice(i, 1);
 
-const addColorway = () => form.colorways.push(newColorway());
-
-const removeColorway = (ci: number) => form.colorways.splice(ci, 1);
-
-const handleColorwayImages = (e: Event, ci: number) => {
-    const files = Array.from((e.target as HTMLInputElement).files ?? []);
-    form.colorways[ci].images = files;
-    form.colorways[ci].imagePreviews = files.map((f) => URL.createObjectURL(f));
+// ── Tags helpers ─────────────────────────────────
+const tagInput = ref('');
+const addTag = () => {
+    const tag = tagInput.value.trim().toLowerCase();
+    if (tag && !form.tags.includes(tag)) {
+        form.tags.push(tag);
+    }
+    tagInput.value = '';
+};
+const removeTag = (i: number) => form.tags.splice(i, 1);
+const handleTagKeydown = (e: KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ',') {
+        e.preventDefault();
+        addTag();
+    }
 };
 
-const removeColorwayImage = (ci: number, ii: number) => {
-    form.colorways[ci].images.splice(ii, 1);
-    form.colorways[ci].imagePreviews.splice(ii, 1);
-};
-
-const newVariant = (): Variant => ({
-    sku: '',
-    size: '',
-    width: '',
-    price: '',
-    compare_at_price: '',
-    stock_qty: '0',
-    is_active: true,
-});
-
-const addVariant = (ci: number) =>
-    form.colorways[ci].variants.push(newVariant());
-const removeVariant = (ci: number, vi: number) =>
-    form.colorways[ci].variants.splice(vi, 1);
-
-// ── Step validation (basic) ────────────────────────────
 const step1Valid = computed(
-    () => form.name && form.brand_id && form.category_id && form.gender_id,
+    () => form.name && form.brand_id && form.category_ids.length > 0,
 );
-
 const step2Valid = computed(
-    () => form.colorways.length > 0 && form.colorways.every((c) => c.name),
+    () =>
+        form.variants.length > 0 &&
+        form.variants.every((v) => v.name && v.price),
 );
 
-// ── Submit ─────────────────────────────────────────────
 const submit = () => {
-    // Build FormData manually to handle nested files
     const data = new FormData();
     data.append('name', form.name);
     data.append('description', form.description);
     data.append('brand_id', form.brand_id);
-    data.append('category_id', form.category_id);
-    data.append('gender_id', form.gender_id);
+    form.category_ids.forEach((id) => data.append('category_ids[]', id));
     data.append('is_active', form.is_active ? '1' : '0');
-
+    data.append('is_featured', form.is_featured ? '1' : '0');
+    form.tags.forEach((tag) => data.append('tags[]', tag));
     if (form.thumbnail) data.append('thumbnail', form.thumbnail);
-
-    const colorwaysMeta = form.colorways.map((c) => ({
-        name: c.name,
-        colorway_code: c.colorway_code,
-        release_date: c.release_date,
-        is_limited_edition: c.is_limited_edition,
-        variants: c.variants,
-        image_count: c.images.length,
-    }));
-    data.append('colorways', JSON.stringify(colorwaysMeta));
-
-    // Append colorway images flat: colorway_images[0][0], colorway_images[0][1]...
-    form.colorways.forEach((c, ci) => {
-        c.images.forEach((img, ii) => {
-            data.append(`colorway_images[${ci}][${ii}]`, img);
-        });
-    });
-
+    data.append('variants', JSON.stringify(form.variants));
     form.transform(() => data).post(route('products.store'), {
         forceFormData: true,
     });
@@ -204,517 +148,373 @@ const submit = () => {
 <template>
     <Head title="Add Product" />
     <AppLayout :breadcrumbs="breadcrumbs">
-        <div class="m-4">
+        <div class="m-4 max-w-3xl">
             <Card>
-                <CardHeader>
-                    <CardTitle>Add Product</CardTitle>
-                    <CardDescription>Create a new product</CardDescription>
-
-                    <!-- Step indicator -->
-                    <div class="mt-4 flex items-center gap-2">
-                        <template v-for="(label, i) in stepLabels" :key="i">
-                            <div class="flex items-center gap-2">
-                                <div
-                                    :class="[
-                                        'flex h-7 w-7 items-center justify-center rounded-full text-xs font-semibold',
-                                        currentStep === i + 1
-                                            ? 'bg-primary text-primary-foreground'
-                                            : currentStep > i + 1
-                                              ? 'bg-primary/20 text-primary'
-                                              : 'bg-muted text-muted-foreground',
-                                    ]"
-                                >
-                                    {{ i + 1 }}
-                                </div>
-                                <span
-                                    :class="[
-                                        'text-sm',
-                                        currentStep === i + 1
-                                            ? 'font-medium text-primary'
-                                            : 'text-muted-foreground',
-                                    ]"
-                                    >{{ label }}</span
-                                >
+                <CardHeader class="pb-4">
+                    <div class="flex items-start justify-between">
+                        <div>
+                            <CardTitle class="text-xl text-primary"
+                                >Add Product</CardTitle
+                            >
+                            <CardDescription
+                                >Fill in the details below to create a new
+                                product.</CardDescription
+                            >
+                        </div>
+                        <!-- Step indicator -->
+                        <div class="flex items-center gap-2 text-sm">
+                            <div
+                                class="flex h-7 w-7 items-center justify-center rounded-full text-xs font-semibold transition-colors"
+                                :class="
+                                    currentStep >= 1
+                                        ? 'bg-primary text-primary-foreground'
+                                        : 'bg-muted text-muted-foreground'
+                                "
+                            >
+                                1
                             </div>
-                            <ChevronRight
-                                v-if="i < stepLabels.length - 1"
-                                class="h-4 w-4 text-muted-foreground"
-                            />
-                        </template>
+                            <div class="h-px w-6 bg-border" />
+                            <div
+                                class="flex h-7 w-7 items-center justify-center rounded-full text-xs font-semibold transition-colors"
+                                :class="
+                                    currentStep >= 2
+                                        ? 'bg-primary text-primary-foreground'
+                                        : 'bg-muted text-muted-foreground'
+                                "
+                            >
+                                2
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step label -->
+                    <div
+                        class="mt-3 flex items-center gap-2 text-sm text-muted-foreground"
+                    >
+                        <Package v-if="currentStep === 1" class="h-4 w-4" />
+                        <Layers v-else class="h-4 w-4" />
+                        <span class="font-medium text-foreground">
+                            {{
+                                currentStep === 1 ? 'Product Info' : 'Variants'
+                            }}
+                        </span>
+                        <span
+                            >— Step {{ currentStep }} of {{ totalSteps }}</span
+                        >
                     </div>
                 </CardHeader>
 
                 <CardContent>
                     <form @submit.prevent="submit">
-                        <!-- ── Step 1: Product Info ── -->
+                        <!-- Step 1: Product Info -->
                         <div v-if="currentStep === 1">
-                            <FieldSet>
-                                <FieldGroup>
-                                    <Field>
-                                        <FieldLabel for="name"
-                                            >Product Name</FieldLabel
+                            <FieldSet class="space-y-5">
+                                <div class="grid grid-cols-2 gap-4">
+                                    <Field class="col-span-2">
+                                        <FieldLabel
+                                            >Product Name
+                                            <span class="text-destructive"
+                                                >*</span
+                                            ></FieldLabel
                                         >
                                         <Input
-                                            id="name"
                                             v-model="form.name"
-                                            autocomplete="off"
-                                            placeholder="e.g. Air Max 90"
-                                            :aria-invalid="!!form.errors.name"
+                                            placeholder="e.g. Logitech G Pro X"
                                         />
                                         <FieldError v-if="form.errors.name">{{
                                             form.errors.name
                                         }}</FieldError>
                                     </Field>
 
-                                    <div
-                                        class="grid grid-cols-1 gap-4 sm:grid-cols-3"
-                                    >
-                                        <Field>
-                                            <FieldLabel>Brand</FieldLabel>
-                                            <Select v-model="form.brand_id">
-                                                <SelectTrigger
-                                                    :aria-invalid="
-                                                        !!form.errors.brand_id
-                                                    "
-                                                >
-                                                    <SelectValue
-                                                        placeholder="Select brand"
-                                                    />
-                                                </SelectTrigger>
-                                                <SelectContent>
-                                                    <SelectItem
-                                                        v-for="brand in props.brands"
-                                                        :key="brand.id"
-                                                        :value="
-                                                            String(brand.id)
-                                                        "
-                                                    >
-                                                        {{ brand.name }}
-                                                    </SelectItem>
-                                                </SelectContent>
-                                            </Select>
-                                            <FieldError
-                                                v-if="form.errors.brand_id"
-                                                >{{
-                                                    form.errors.brand_id
-                                                }}</FieldError
-                                            >
-                                        </Field>
-
-                                        <Field>
-                                            <FieldLabel>Category</FieldLabel>
-                                            <Select v-model="form.category_id">
-                                                <SelectTrigger
-                                                    :aria-invalid="
-                                                        !!form.errors
-                                                            .category_id
-                                                    "
-                                                >
-                                                    <SelectValue
-                                                        placeholder="Select category"
-                                                    />
-                                                </SelectTrigger>
-                                                <SelectContent>
-                                                    <SelectItem
-                                                        v-for="category in props.categories"
-                                                        :key="category.id"
-                                                        :value="
-                                                            String(category.id)
-                                                        "
-                                                    >
-                                                        {{ category.name }}
-                                                    </SelectItem>
-                                                </SelectContent>
-                                            </Select>
-                                            <FieldError
-                                                v-if="form.errors.category_id"
-                                                >{{
-                                                    form.errors.category_id
-                                                }}</FieldError
-                                            >
-                                        </Field>
-
-                                        <Field>
-                                            <FieldLabel>Gender</FieldLabel>
-                                            <Select v-model="form.gender_id">
-                                                <SelectTrigger
-                                                    :aria-invalid="
-                                                        !!form.errors.gender_id
-                                                    "
-                                                >
-                                                    <SelectValue
-                                                        placeholder="Select gender"
-                                                    />
-                                                </SelectTrigger>
-                                                <SelectContent>
-                                                    <SelectItem
-                                                        v-for="gender in props.genders"
-                                                        :key="gender.id"
-                                                        :value="
-                                                            String(gender.id)
-                                                        "
-                                                    >
-                                                        {{ gender.name }}
-                                                    </SelectItem>
-                                                </SelectContent>
-                                            </Select>
-                                            <FieldError
-                                                v-if="form.errors.gender_id"
-                                                >{{
-                                                    form.errors.gender_id
-                                                }}</FieldError
-                                            >
-                                        </Field>
-                                    </div>
-
                                     <Field>
-                                        <FieldLabel for="description"
-                                            >Description</FieldLabel
+                                        <FieldLabel
+                                            >Brand
+                                            <span class="text-destructive"
+                                                >*</span
+                                            ></FieldLabel
                                         >
-                                        <Textarea
-                                            id="description"
-                                            v-model="form.description"
-                                            placeholder="Optional product description"
-                                            rows="4"
-                                        />
-                                    </Field>
-
-                                    <Field>
-                                        <FieldLabel for="thumbnail"
-                                            >Thumbnail</FieldLabel
-                                        >
-                                        <div class="flex items-center gap-4">
-                                            <div
-                                                class="flex h-24 w-24 shrink-0 items-center justify-center overflow-hidden rounded-lg border bg-muted"
-                                            >
-                                                <img
-                                                    v-if="thumbnailPreview"
-                                                    :src="thumbnailPreview"
-                                                    class="h-full w-full object-cover"
+                                        <Select v-model="form.brand_id">
+                                            <SelectTrigger>
+                                                <SelectValue
+                                                    placeholder="Select brand"
                                                 />
-                                                <span
-                                                    v-else
-                                                    class="text-xs text-muted-foreground"
-                                                    >Preview</span
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem
+                                                    v-for="b in props.brands"
+                                                    :key="b.id"
+                                                    :value="String(b.id)"
+                                                    >{{ b.name }}</SelectItem
                                                 >
-                                            </div>
-                                            <div class="flex flex-col gap-2">
-                                                <Input
-                                                    id="thumbnail"
-                                                    type="file"
-                                                    accept="image/*"
-                                                    class="max-w-xs"
-                                                    @change="handleThumbnail"
-                                                />
-                                                <button
-                                                    v-if="thumbnailPreview"
-                                                    type="button"
-                                                    class="text-left text-xs text-destructive hover:underline"
-                                                    @click="removeThumbnail"
-                                                >
-                                                    Remove
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <FieldDescription
-                                            >Max 2MB. Main product
-                                            image.</FieldDescription
-                                        >
+                                            </SelectContent>
+                                        </Select>
                                         <FieldError
-                                            v-if="form.errors.thumbnail"
+                                            v-if="form.errors.brand_id"
                                             >{{
-                                                form.errors.thumbnail
+                                                form.errors.brand_id
                                             }}</FieldError
                                         >
                                     </Field>
 
-                                    <Field orientation="horizontal">
-                                        <Switch
-                                            id="is_active"
-                                            v-model="form.is_active"
-                                        />
-                                        <FieldLabel for="is_active"
-                                            >Active</FieldLabel
+                                    <Field>
+                                        <FieldLabel
+                                            >Categories
+                                            <span class="text-destructive"
+                                                >*</span
+                                            ></FieldLabel
                                         >
-                                    </Field>
-                                </FieldGroup>
-                            </FieldSet>
-                        </div>
-
-                        <!-- ── Step 2: Colorways ── -->
-                        <div v-if="currentStep === 2" class="space-y-6">
-                            <div
-                                v-for="(colorway, ci) in form.colorways"
-                                :key="ci"
-                                class="rounded-lg border p-4"
-                            >
-                                <div
-                                    class="mb-4 flex items-center justify-between"
-                                >
-                                    <h3 class="font-medium">
-                                        Colorway {{ ci + 1 }}
-                                    </h3>
-                                    <button
-                                        type="button"
-                                        class="text-destructive hover:text-destructive/80"
-                                        @click="removeColorway(ci)"
-                                    >
-                                        <Trash2 class="h-4 w-4" />
-                                    </button>
-                                </div>
-
-                                <div
-                                    class="grid grid-cols-1 gap-4 sm:grid-cols-2"
-                                >
-                                    <Field>
-                                        <FieldLabel>Colorway Name</FieldLabel>
-                                        <Input
-                                            v-model="colorway.name"
-                                            placeholder="e.g. Bred, University Blue"
-                                        />
-                                    </Field>
-                                    <Field>
-                                        <FieldLabel>Colorway Code</FieldLabel>
-                                        <Input
-                                            v-model="colorway.colorway_code"
-                                            placeholder="e.g. 554724-065"
-                                        />
-                                    </Field>
-                                    <Field>
-                                        <FieldLabel>Release Date</FieldLabel>
-                                        <Input
-                                            v-model="colorway.release_date"
-                                            type="date"
-                                        />
-                                    </Field>
-                                    <Field
-                                        orientation="horizontal"
-                                        class="self-end pb-2"
-                                    >
-                                        <Switch
-                                            :id="`limited-${ci}`"
-                                            v-model="
-                                                colorway.is_limited_edition
-                                            "
-                                        />
-                                        <FieldLabel :for="`limited-${ci}`"
-                                            >Limited Edition</FieldLabel
+                                        <Select
+                                            v-model="form.category_ids"
+                                            multiple
                                         >
+                                            <SelectTrigger>
+                                                <SelectValue
+                                                    placeholder="Select categories"
+                                                />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem
+                                                    v-for="c in props.categories"
+                                                    :key="c.id"
+                                                    :value="String(c.id)"
+                                                    >{{ c.name }}</SelectItem
+                                                >
+                                            </SelectContent>
+                                        </Select>
                                     </Field>
                                 </div>
 
-                                <!-- Colorway images -->
-                                <Field class="mt-4">
-                                    <FieldLabel>Colorway Images</FieldLabel>
-                                    <Input
-                                        type="file"
-                                        accept="image/*"
-                                        multiple
-                                        @change="
-                                            (e: Event) =>
-                                                handleColorwayImages(e, ci)
-                                        "
+                                <Field>
+                                    <FieldLabel>Description</FieldLabel>
+                                    <Textarea
+                                        v-model="form.description"
+                                        rows="3"
+                                        placeholder="Brief product description..."
                                     />
+                                </Field>
+
+                                <!-- Thumbnail upload -->
+                                <Field>
+                                    <FieldLabel>Thumbnail</FieldLabel>
                                     <div
-                                        v-if="colorway.imagePreviews.length"
-                                        class="mt-3 flex flex-wrap gap-2"
+                                        v-if="!thumbnailPreview"
+                                        class="relative"
                                     >
-                                        <div
-                                            v-for="(
-                                                src, ii
-                                            ) in colorway.imagePreviews"
-                                            :key="ii"
-                                            class="relative h-20 w-20 overflow-hidden rounded-lg border"
+                                        <label
+                                            class="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border border-dashed border-border bg-muted/30 py-8 text-sm text-muted-foreground transition-colors hover:bg-muted/50"
                                         >
-                                            <img
-                                                :src="src"
-                                                class="h-full w-full object-cover"
-                                            />
-                                            <button
-                                                type="button"
-                                                class="absolute top-1 right-1 flex h-5 w-5 items-center justify-center rounded-full bg-black/60 text-xs text-white"
-                                                @click="
-                                                    removeColorwayImage(ci, ii)
-                                                "
+                                            <ImagePlus class="h-6 w-6" />
+                                            <span>Click to upload image</span>
+                                            <span class="text-xs"
+                                                >PNG, JPG, WEBP</span
                                             >
-                                                ✕
-                                            </button>
+                                            <input
+                                                type="file"
+                                                accept="image/*"
+                                                class="sr-only"
+                                                @change="handleThumbnail"
+                                            />
+                                        </label>
+                                    </div>
+                                    <div v-else class="relative inline-block">
+                                        <img
+                                            :src="thumbnailPreview"
+                                            class="h-28 w-28 rounded-lg object-cover ring-1 ring-border"
+                                        />
+                                        <button
+                                            type="button"
+                                            @click="removeThumbnail"
+                                            class="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-destructive text-destructive-foreground shadow"
+                                        >
+                                            <X class="h-3 w-3" />
+                                        </button>
+                                    </div>
+                                </Field>
+
+                                <Field>
+                                    <div class="flex items-center gap-3">
+                                        <Switch v-model="form.is_active" />
+                                        <div>
+                                            <p class="text-sm font-medium">
+                                                Active
+                                            </p>
+                                            <p
+                                                class="text-xs text-muted-foreground"
+                                            >
+                                                Product will be visible in the
+                                                store
+                                            </p>
                                         </div>
                                     </div>
                                 </Field>
+
+                                <Field>
+                                    <div class="flex items-center gap-3">
+                                        <Switch v-model="form.is_featured" />
+                                        <div>
+                                            <p class="text-sm font-medium">
+                                                Featured
+                                            </p>
+                                            <p
+                                                class="text-xs text-muted-foreground"
+                                            >
+                                                Highlight this product on the
+                                                storefront
+                                            </p>
+                                        </div>
+                                    </div>
+                                </Field>
+
+                                <Field>
+                                    <FieldLabel>
+                                        <div class="flex items-center gap-1.5">
+                                            <Tag class="h-3.5 w-3.5" />
+                                            Tags
+                                        </div>
+                                    </FieldLabel>
+                                    <!-- Tag pills -->
+                                    <div
+                                        v-if="form.tags.length"
+                                        class="mb-2 flex flex-wrap gap-1.5"
+                                    >
+                                        <span
+                                            v-for="(tag, i) in form.tags"
+                                            :key="tag"
+                                            class="flex items-center gap-1 rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-primary"
+                                        >
+                                            {{ tag }}
+                                            <button
+                                                type="button"
+                                                @click="removeTag(i)"
+                                                class="ml-0.5 opacity-60 hover:opacity-100"
+                                            >
+                                                <X class="h-3 w-3" />
+                                            </button>
+                                        </span>
+                                    </div>
+                                    <div class="flex gap-2">
+                                        <Input
+                                            v-model="tagInput"
+                                            placeholder="e.g. gaming, pro (press Enter)"
+                                            @keydown="handleTagKeydown"
+                                        />
+                                        <Button
+                                            type="button"
+                                            variant="outline"
+                                            size="sm"
+                                            @click="addTag"
+                                        >
+                                            <Plus class="h-4 w-4" />
+                                        </Button>
+                                    </div>
+                                    <p
+                                        class="mt-1 text-xs text-muted-foreground"
+                                    >
+                                        Press Enter or comma to add a tag
+                                    </p>
+                                </Field>
+                            </FieldSet>
+                        </div>
+
+                        <!-- Step 2: Variants -->
+                        <div v-if="currentStep === 2" class="space-y-3">
+                            <div
+                                v-for="(variant, i) in form.variants"
+                                :key="i"
+                                class="rounded-lg border bg-muted/20 p-4"
+                            >
+                                <div
+                                    class="mb-3 flex items-center justify-between"
+                                >
+                                    <span
+                                        class="text-sm font-medium text-muted-foreground"
+                                        >Variant {{ i + 1 }}</span
+                                    >
+                                    <button
+                                        v-if="form.variants.length > 1"
+                                        type="button"
+                                        class="flex h-6 w-6 items-center justify-center rounded text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
+                                        @click="removeVariant(i)"
+                                    >
+                                        <Trash2 class="h-3.5 w-3.5" />
+                                    </button>
+                                </div>
+
+                                <div class="grid grid-cols-3 gap-3">
+                                    <Field>
+                                        <FieldLabel
+                                            >Name
+                                            <span class="text-destructive"
+                                                >*</span
+                                            ></FieldLabel
+                                        >
+                                        <Input
+                                            v-model="variant.name"
+                                            placeholder="e.g. Black"
+                                        />
+                                    </Field>
+                                    <Field>
+                                        <FieldLabel
+                                            >Price (Rs.)
+                                            <span class="text-destructive"
+                                                >*</span
+                                            ></FieldLabel
+                                        >
+                                        <Input
+                                            type="number"
+                                            step="0.01"
+                                            v-model="variant.price"
+                                            placeholder="0.00"
+                                        />
+                                    </Field>
+                                    <Field>
+                                        <FieldLabel>Stock</FieldLabel>
+                                        <Input
+                                            type="number"
+                                            v-model="variant.stock_quantity"
+                                            placeholder="0"
+                                        />
+                                    </Field>
+                                </div>
+
+                                <div class="mt-3 flex items-center gap-2">
+                                    <Switch v-model="variant.is_active" />
+                                    <span class="text-sm text-muted-foreground"
+                                        >Active</span
+                                    >
+                                </div>
                             </div>
 
                             <Button
                                 type="button"
                                 variant="outline"
-                                class="w-full"
-                                @click="addColorway"
+                                size="sm"
+                                @click="addVariant"
                             >
-                                <Plus class="mr-2 h-4 w-4" /> Add Colorway
+                                <Plus class="mr-1.5 h-4 w-4" /> Add Variant
                             </Button>
                         </div>
 
-                        <!-- ── Step 3: Variants ── -->
-                        <div v-if="currentStep === 3" class="space-y-8">
-                            <div
-                                v-for="(colorway, ci) in form.colorways"
-                                :key="ci"
-                            >
-                                <div class="mb-3 flex items-center gap-2">
-                                    <h3 class="font-medium">
-                                        {{
-                                            colorway.name ||
-                                            `Colorway ${ci + 1}`
-                                        }}
-                                    </h3>
-                                    <Badge variant="outline"
-                                        >{{
-                                            colorway.variants.length
-                                        }}
-                                        variant{{
-                                            colorway.variants.length !== 1
-                                                ? 's'
-                                                : ''
-                                        }}</Badge
-                                    >
-                                </div>
-
-                                <div class="space-y-3">
-                                    <div
-                                        v-for="(
-                                            variant, vi
-                                        ) in colorway.variants"
-                                        :key="vi"
-                                        class="rounded-lg border p-4"
-                                    >
-                                        <div
-                                            class="mb-3 flex items-center justify-between"
-                                        >
-                                            <span
-                                                class="text-sm text-muted-foreground"
-                                                >Variant {{ vi + 1 }}</span
-                                            >
-                                            <button
-                                                v-if="
-                                                    colorway.variants.length > 1
-                                                "
-                                                type="button"
-                                                class="text-destructive"
-                                                @click="removeVariant(ci, vi)"
-                                            >
-                                                <Trash2 class="h-4 w-4" />
-                                            </button>
-                                        </div>
-
-                                        <div
-                                            class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6"
-                                        >
-                                            <Field>
-                                                <FieldLabel>SKU</FieldLabel>
-                                                <Input
-                                                    v-model="variant.sku"
-                                                    placeholder="e.g. NK-AM90-10"
-                                                />
-                                            </Field>
-                                            <Field>
-                                                <FieldLabel
-                                                    >Size (US)</FieldLabel
-                                                >
-                                                <Input
-                                                    v-model="variant.size"
-                                                    type="number"
-                                                    min="0"
-                                                    step="0.5"
-                                                    placeholder="10"
-                                                />
-                                            </Field>
-                                            <Field>
-                                                <FieldLabel>Width</FieldLabel>
-                                                <Input
-                                                    v-model="variant.width"
-                                                    placeholder="D, 2E..."
-                                                />
-                                            </Field>
-                                            <Field>
-                                                <FieldLabel>Price</FieldLabel>
-                                                <Input
-                                                    v-model="variant.price"
-                                                    type="number"
-                                                    min="0"
-                                                    step="0.01"
-                                                    placeholder="120.00"
-                                                />
-                                            </Field>
-                                            <Field>
-                                                <FieldLabel
-                                                    >Compare At</FieldLabel
-                                                >
-                                                <Input
-                                                    v-model="
-                                                        variant.compare_at_price
-                                                    "
-                                                    type="number"
-                                                    step="0.01"
-                                                    placeholder="150.00"
-                                                />
-                                            </Field>
-                                            <Field>
-                                                <FieldLabel>Stock</FieldLabel>
-                                                <Input
-                                                    v-model="variant.stock_qty"
-                                                    type="number"
-                                                    min="0"
-                                                    placeholder="0"
-                                                />
-                                            </Field>
-                                        </div>
-
-                                        <div class="mt-3">
-                                            <Field orientation="horizontal">
-                                                <Switch
-                                                    :id="`variant-active-${ci}-${vi}`"
-                                                    v-model="variant.is_active"
-                                                />
-                                                <FieldLabel
-                                                    :for="`variant-active-${ci}-${vi}`"
-                                                    >Active</FieldLabel
-                                                >
-                                            </Field>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <Button
-                                    type="button"
-                                    variant="outline"
-                                    size="sm"
-                                    class="mt-2"
-                                    @click="addVariant(ci)"
-                                >
-                                    <Plus class="mr-1 h-3 w-3" /> Add Size
-                                </Button>
-
-                                <Separator
-                                    v-if="ci < form.colorways.length - 1"
-                                    class="mt-6"
-                                />
-                            </div>
-                        </div>
-
-                        <!-- ── Navigation ── -->
-                        <div class="mt-6 flex justify-between">
+                        <!-- Navigation -->
+                        <div
+                            class="mt-8 flex items-center justify-between border-t pt-5"
+                        >
                             <Button
                                 v-if="currentStep > 1"
                                 type="button"
-                                variant="outline"
+                                variant="ghost"
                                 @click="currentStep--"
                             >
                                 <ChevronLeft class="mr-1 h-4 w-4" /> Back
                             </Button>
                             <div v-else />
 
-                            <div class="flex gap-3">
-                                <Button variant="outline" as-child>
+                            <div class="flex gap-2">
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    as-child
+                                >
                                     <a :href="route('products.index')"
                                         >Cancel</a
                                     >
@@ -722,10 +522,7 @@ const submit = () => {
                                 <Button
                                     v-if="currentStep < totalSteps"
                                     type="button"
-                                    :disabled="
-                                        (currentStep === 1 && !step1Valid) ||
-                                        (currentStep === 2 && !step2Valid)
-                                    "
+                                    :disabled="currentStep === 1 && !step1Valid"
                                     @click="currentStep++"
                                 >
                                     Next <ChevronRight class="ml-1 h-4 w-4" />
@@ -733,11 +530,11 @@ const submit = () => {
                                 <Button
                                     v-else
                                     type="submit"
-                                    :disabled="form.processing"
+                                    :disabled="!step2Valid || form.processing"
                                 >
                                     {{
                                         form.processing
-                                            ? 'Saving...'
+                                            ? 'Saving…'
                                             : 'Save Product'
                                     }}
                                 </Button>

@@ -19,9 +19,6 @@ import UserMenuContent from '@/components/UserMenuContent.vue';
 const page = usePage();
 const user = computed(() => (page.props.auth as any)?.user ?? null);
 const { isMobile, state } = useSidebar();
-console.log('page.props:', JSON.stringify(page.props));
-console.log('auth:', (page.props as any).auth);
-console.log('user:', user.value);
 </script>
 
 <template>
