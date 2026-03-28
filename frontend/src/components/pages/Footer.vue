@@ -27,7 +27,7 @@ const socials = ['X', 'in', 'GH']
       <div class="company-section">
         <div class="logo-mark">
           <span class="logo-icon">◈</span>
-          <span class="logo-name">SneakPeak</span>
+          <span class="logo-name">Game Gears</span>
         </div>
 
         <p class="tagline">Premium gaming gear for competitive performance.</p>

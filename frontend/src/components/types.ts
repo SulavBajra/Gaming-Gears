@@ -22,6 +22,13 @@ export interface Brand {
   slug: string
 }
 
+export interface Variant {
+  id: number
+  name: string
+  price: number
+  stock: number
+}
+
 export interface ProductView {
   id: number
   name: string
@@ -32,4 +39,6 @@ export interface ProductView {
   categories: Category[]
   brand: Brand | null
   thumbnail: string
+  gallery: string[]
+  variants: Variant[]
 }

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
-import { ShoppingCart, Search } from '@lucide/vue'
+import { ShoppingCart, Search, CircleUserRound } from '@lucide/vue'
 </script>
 
 <template>
@@ -23,6 +23,9 @@ import { ShoppingCart, Search } from '@lucide/vue'
         <button class="icon-btn" aria-label="Cart">
           <ShoppingCart />
           <span class="cart-badge">3</span>
+        </button>
+        <button class="icon-btn" aria-label="Profile">
+          <CircleUserRound />
         </button>
       </div>
     </nav>

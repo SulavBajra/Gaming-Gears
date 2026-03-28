@@ -33,19 +33,7 @@ class CategorySeeder extends Seeder
             ],
             'Accessories' => [
                 'Mouse Pads',
-                'Wrist Rests',
-                'Cable Management',
                 'Headset Stands',
-            ],
-            'Chairs' => [
-                'Gaming Chairs',
-                'Ergonomic Chairs',
-            ],
-            'Monitors' => [
-                '144Hz',
-                '240Hz',
-                '4K',
-                'Ultrawide',
             ],
         ];
 
