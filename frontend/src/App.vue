@@ -11,6 +11,7 @@ import { RouterView } from 'vue-router'
   box-sizing: border-box;
   padding: 0;
   margin: 0;
+  background-color: var(--bg);
 }
 
 :root {
