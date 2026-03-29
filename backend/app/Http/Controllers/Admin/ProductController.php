@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\ProductStoreRequest;
 use App\Models\Brand;
 use App\Models\Category;
-use App\Models\Gender;
 use App\Models\Product;
 use App\Services\ProductService;
 use Illuminate\Http\Request;
@@ -41,12 +40,10 @@ class ProductController extends Controller
     {
         $brands = Brand::where('is_active', 1)->select('id', 'name')->get();
         $categories = Category::where('is_active', 1)->select('id', 'name')->get();
-        $genders = Gender::select('id', 'name')->get();
 
         return Inertia::render('products/Create', [
             'brands' => $brands,
             'categories' => $categories,
-            'genders' => $genders,
         ]);
     }
 
