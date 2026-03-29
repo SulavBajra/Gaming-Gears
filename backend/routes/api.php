@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\CartController;
 use App\Http\Controllers\Api\LoginController;
 use App\Http\Controllers\Api\LogoutController;
 use App\Http\Controllers\Api\ProductHomeController;
@@ -13,5 +14,5 @@ Route::get('/shop/category/{category:slug}', [ShopController::class, 'similar'])
 
 Route::middleware(['auth:sanctum', 'role:customer'])->group(function () {
     Route::post('/logout', LogoutController::class)->name('api.logout');
-    Route::get('/shop');
+    Route::post('/cart', [CartController::class, 'addToCart']);
 });

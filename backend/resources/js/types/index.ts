@@ -8,7 +8,7 @@ export interface Product {
     slug: string;
     is_active: boolean;
     brand: { name: string };
-    categories: { name: string };
+    categories: { name: string; parent_id: number };
     variants_max_price: number | null;
     variants_sum_stock_quantity: number;
 }

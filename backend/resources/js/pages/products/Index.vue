@@ -53,6 +53,12 @@ interface PaginatedProducts {
 
 defineProps<{ products: PaginatedProducts }>();
 
+const Category: Record<number, string> = {
+    1: 'Keyboard',
+    7: 'Mice',
+    13: 'Headsets',
+};
+
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Products', href: route('products.index') },
 ];
@@ -131,9 +137,9 @@ const goToPage = (page: number) => {
                                 <TableCell>{{ product.brand.name }}</TableCell>
                                 <TableCell>
                                     {{
-                                        product.categories.find(
-                                            (c) => c.pivot.is_primary,
-                                        )?.name ?? '—'
+                                        Category[
+                                            product.categories.parent_id
+                                        ] ?? '—'
                                     }}
                                 </TableCell>
                                 <TableCell>
