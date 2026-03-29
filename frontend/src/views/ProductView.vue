@@ -38,6 +38,11 @@ const nextImage = () => {
   activeImageIndex.value = (activeImageIndex.value + 1) % allImages.value.length
 }
 
+const addToCart = () => {
+  if (selectedVariant.value) {
+  }
+}
+
 const fetchProduct = async (slug: string) => {
   loading.value = true
   activeImageIndex.value = 0
@@ -166,7 +171,7 @@ watch(
           </div>
         </div>
 
-        <button class="add-to-cart" :disabled="!selectedVariant">
+        <button class="add-to-cart" :disabled="!selectedVariant" :onClick="addToCart">
           <ShoppingCart :size="18" />
           <span>Add to Cart</span>
         </button>

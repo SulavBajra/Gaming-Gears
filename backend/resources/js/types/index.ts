@@ -8,7 +8,7 @@ export interface Product {
     slug: string;
     is_active: boolean;
     brand: { name: string };
-    categories: { name: string; parent_id: number };
+    categories: Category[];
     variants_max_price: number | null;
     variants_sum_stock_quantity: number;
 }
@@ -16,6 +16,13 @@ export interface Product {
 export interface Role {
     id: number;
     name: string;
+}
+
+export interface Category {
+    id: number;
+    name: string;
+    slug: string;
+    parent_id: number | null;
 }
 
 export interface User {

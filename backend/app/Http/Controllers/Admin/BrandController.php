@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\BrandStoreRequest;
 use App\Http\Requests\Admin\BrandUpdateRequest;
 use App\Models\Brand;
+use App\Models\Product;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 
@@ -77,6 +78,10 @@ class BrandController extends Controller
             'description' => $request->description,
             'is_active' => $request->boolean('is_active', true),
         ]);
+
+        if (!$brand->is_active) {
+            Product::where('brand_id', $brand->id)->update(['is_active' => false]);
+        }
 
         if ($request->hasFile('logo')) {
             $brand
