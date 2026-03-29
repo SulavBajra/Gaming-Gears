@@ -17,8 +17,9 @@ class ShopController extends Controller
             'variants',
             'media',
         ])->loadMin('variants', 'price');
+
         return new ProductShopResource($product);
-        //return response()->json($product);
+        // return response()->json($product);
     }
 
     public function similar(Category $category)
@@ -26,7 +27,7 @@ class ShopController extends Controller
         // Get products that belong to this category, optionally exclude a specific product
         $products = Product::with(['categories', 'brand', 'media', 'variants'])
             ->withMin('variants', 'price')
-            ->whereHas('categories', fn($q) => $q->where('id', $category->id))
+            ->whereHas('categories', fn ($q) => $q->where('id', $category->id))
             ->active()
             ->limit(6)
             ->get();

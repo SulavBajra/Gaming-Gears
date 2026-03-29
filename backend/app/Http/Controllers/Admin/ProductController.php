@@ -23,10 +23,10 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::latest()->with('brand', 'category')
-            ->withMin('productVariants', 'price')
-            ->withMax('productVariants', 'price')
-            ->withSum('productVariants', 'stock_qty')
+        $products = Product::latest()->with('brand', 'categories')
+            ->withMin('variants', 'price')
+            ->withMax('variants', 'price')
+            ->withSum('variants', 'stock_quantity')
             ->paginate(8);
 
         return Inertia::render('products/Index', [

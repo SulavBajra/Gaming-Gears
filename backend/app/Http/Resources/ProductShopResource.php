@@ -20,10 +20,10 @@ class ProductShopResource extends JsonResource
             'slug' => $this->slug,
             'description' => $this->description ?? '',
             'tags' => $this->tags ?? [],
-            'price' => (float) $this->variants_min_price ?? 0,
+            'price' => (float) ($this->variants_min_price ?? 0),
 
             'categories' => $this->whenLoaded('categories', function () {
-                return $this->categories->map(fn($c) => [
+                return $this->categories->map(fn ($c) => [
                     'id' => $c->id,
                     'name' => $c->name,
                     'slug' => $c->slug,
@@ -39,13 +39,16 @@ class ProductShopResource extends JsonResource
             }),
 
             'thumbnail' => $this->getFirstMediaUrl('thumbnail'),
-            'gallery' => $this->getMedia('gallery')->map(fn($m) => $m->getUrl())->values(),
-            'variants' => $this->variants->map(fn($v) => [
-                'id' => $v->id,
-                'name' => $v->name,
-                'price' => (float)$v->price,
-                'stock' => $v->stock_quantity,
-            ])
+            'gallery' => $this->getMedia('gallery')->map(fn ($m) => $m->getUrl('preview'))->values(),
+            'variants' => $this->whenLoaded(
+                'variants',
+                fn () => $this->activeVariants->map(fn ($v) => [
+                    'id' => $v->id,
+                    'name' => $v->name,
+                    'price' => (float) $v->price,
+                    'stock_quantity' => $v->stock_quantity,
+                ])
+            ),
         ];
     }
 }

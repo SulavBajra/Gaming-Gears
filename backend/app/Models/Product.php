@@ -108,4 +108,14 @@ class Product extends Model implements HasMedia
     {
         return $query->where('is_featured', true);
     }
+
+    public function minPrice(): ?float
+    {
+        return $this->variants()->min('price');
+    }
+
+    public function maxPrice(): ?float
+    {
+        return $this->variants()->max('price');
+    }
 }

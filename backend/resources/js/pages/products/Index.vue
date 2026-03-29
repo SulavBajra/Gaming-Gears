@@ -53,14 +53,18 @@ interface PaginatedProducts {
 
 defineProps<{ products: PaginatedProducts }>();
 
+const Category: Record<number, string> = {
+    1: 'Keyboard',
+    7: 'Mice',
+    13: 'Headsets',
+};
+
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Products', href: route('products.index') },
 ];
 
-const formatPrice = (min: number | null, max: number | null): string => {
-    if (min === null) return '—';
-    if (min === max) return `Rs. ${Number(min).toFixed(2)}`;
-    return `Rs. ${Number(min).toFixed(2)} – Rs. ${Number(max).toFixed(2)}`;
+const formatPrice = (max: number | null): string => {
+    return `Rs. ${Number(max).toFixed(2)}`;
 };
 
 const deleteProduct = (id: number) => {
@@ -131,28 +135,29 @@ const goToPage = (page: number) => {
                                     product.name
                                 }}</TableCell>
                                 <TableCell>{{ product.brand.name }}</TableCell>
-                                <TableCell>{{
-                                    product.category.name
-                                }}</TableCell>
                                 <TableCell>
                                     {{
-                                        formatPrice(
-                                            product.product_variants_min_price,
-                                            product.product_variants_max_price,
-                                        )
+                                        Category[
+                                            product.categories.parent_id
+                                        ] ?? '—'
+                                    }}
+                                </TableCell>
+                                <TableCell>
+                                    {{
+                                        formatPrice(product.variants_max_price)
                                     }}
                                 </TableCell>
                                 <TableCell>
                                     <span
                                         :class="
-                                            product.product_variants_sum_stock_qty ===
+                                            product.variants_sum_stock_quantity ===
                                             0
                                                 ? 'font-medium text-destructive'
                                                 : ''
                                         "
                                     >
                                         {{
-                                            product.product_variants_sum_stock_qty ??
+                                            product.variants_sum_stock_quantity ??
                                             0
                                         }}
                                     </span>

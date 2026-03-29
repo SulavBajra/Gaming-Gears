@@ -19,7 +19,7 @@ class ProductHomeController extends Controller
             ])
             ->withMin('variants', 'price')
             ->latest()
-            ->limit(4)->get();
+            ->limit(8)->get();
 
         return ProductHomeResource::collection($products);
     }
