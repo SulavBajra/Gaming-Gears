@@ -3,7 +3,7 @@ import { RouterView } from 'vue-router'
 </script>
 
 <template>
-  <RouterView />
+  <RouterView class="base-view" />
 </template>
 
 <style>
@@ -11,7 +11,6 @@ import { RouterView } from 'vue-router'
   box-sizing: border-box;
   padding: 0;
   margin: 0;
-  background-color: var(--bg);
 }
 
 :root {
@@ -20,5 +19,9 @@ import { RouterView } from 'vue-router'
   --accent: #c8a96e;
   --bg: #253439;
   --border: #e8e4df;
+}
+
+.base-view {
+  background-color: var(--bg);
 }
 </style>
