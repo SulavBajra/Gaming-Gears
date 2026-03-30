@@ -18,5 +18,7 @@ export function useAuth() {
     user.value = null
   }
 
-  return { user, fetchUser, logout }
+  const setUser = (userData: { id: number; name: string; email: string }, token: string) => {}
+
+  return { user, fetchUser, logout, setUser }
 }

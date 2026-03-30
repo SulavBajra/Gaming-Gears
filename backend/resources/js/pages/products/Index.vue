@@ -136,7 +136,6 @@ const goToPage = (page: number) => {
                                 }}</TableCell>
                                 <TableCell>{{ product.brand.name }}</TableCell>
                                 <TableCell>
-                                    {{ console.log(product) }}
                                     {{
                                         product?.categories?.[0]?.parent_id !==
                                         null
