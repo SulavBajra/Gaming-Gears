@@ -93,6 +93,25 @@ const removeThumbnail = () => {
     thumbnailPreview.value = null;
 };
 
+interface GalleryFile {
+    file: File;
+    preview: string;
+}
+const galleryFiles = ref<GalleryFile[]>([]);
+
+const handleGallery = (e: Event) => {
+    const files = Array.from((e.target as HTMLInputElement).files ?? []);
+    for (const file of files) {
+        galleryFiles.value.push({ file, preview: URL.createObjectURL(file) });
+    }
+    (e.target as HTMLInputElement).value = '';
+};
+
+const removeGalleryImage = (i: number) => {
+    URL.revokeObjectURL(galleryFiles.value[i].preview);
+    galleryFiles.value.splice(i, 1);
+};
+
 const addVariant = () =>
     form.variants.push({
         name: '',
@@ -138,6 +157,7 @@ const submit = () => {
     data.append('is_featured', form.is_featured ? '1' : '0');
     form.tags.forEach((tag) => data.append('tags[]', tag));
     if (form.thumbnail) data.append('thumbnail', form.thumbnail);
+    galleryFiles.value.forEach(({ file }) => data.append('gallery[]', file));
     data.append('variants', JSON.stringify(form.variants));
     form.transform(() => data).post(route('products.store'), {
         forceFormData: true,
@@ -328,6 +348,73 @@ const submit = () => {
                                         >
                                             <X class="h-3 w-3" />
                                         </button>
+                                    </div>
+                                </Field>
+                                <!-- Gallery upload -->
+                                <Field>
+                                    <FieldLabel>Gallery</FieldLabel>
+
+                                    <!-- Existing images grid -->
+                                    <div
+                                        v-if="galleryFiles.length"
+                                        class="mb-3 flex flex-wrap gap-2"
+                                    >
+                                        <div
+                                            v-for="(img, i) in galleryFiles"
+                                            :key="i"
+                                            class="relative"
+                                        >
+                                            <img
+                                                :src="img.preview"
+                                                class="h-20 w-20 rounded-lg object-cover ring-1 ring-border"
+                                            />
+                                            <button
+                                                type="button"
+                                                @click="removeGalleryImage(i)"
+                                                class="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-destructive text-destructive-foreground shadow"
+                                            >
+                                                <X class="h-3 w-3" />
+                                            </button>
+                                        </div>
+
+                                        <!-- Compact "add more" tile -->
+                                        <label
+                                            class="flex h-20 w-20 cursor-pointer flex-col items-center justify-center gap-1 rounded-lg border border-dashed border-border bg-muted/30 text-xs text-muted-foreground transition-colors hover:bg-muted/50"
+                                        >
+                                            <ImagePlus class="h-5 w-5" />
+                                            <span>Add</span>
+                                            <input
+                                                type="file"
+                                                accept="image/*"
+                                                multiple
+                                                class="sr-only"
+                                                @change="handleGallery"
+                                            />
+                                        </label>
+                                    </div>
+
+                                    <!-- Empty state drop zone -->
+                                    <div v-else class="relative">
+                                        <label
+                                            class="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border border-dashed border-border bg-muted/30 py-8 text-sm text-muted-foreground transition-colors hover:bg-muted/50"
+                                        >
+                                            <ImagePlus class="h-6 w-6" />
+                                            <span
+                                                >Click to upload gallery
+                                                images</span
+                                            >
+                                            <span class="text-xs"
+                                                >PNG, JPG, WEBP — multiple
+                                                allowed</span
+                                            >
+                                            <input
+                                                type="file"
+                                                accept="image/*"
+                                                multiple
+                                                class="sr-only"
+                                                @change="handleGallery"
+                                            />
+                                        </label>
                                     </div>
                                 </Field>
 

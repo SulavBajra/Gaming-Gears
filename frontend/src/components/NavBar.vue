@@ -30,7 +30,7 @@ const { user } = useAuth()
         <button v-if="user" class="icon-btn" aria-label="Profile">
           <CircleUserRound />
         </button>
-        <RouterLink v-else to="/login" class="icon-btn" aria-label="Login">Login</RouterLink>
+        <RouterLink v-else to="/login" class="icon-btn-login" aria-label="Login">Login</RouterLink>
       </div>
     </nav>
   </header>
@@ -164,5 +164,12 @@ const { user } = useAuth()
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.icon-btn-login,
+.icon-btn-login:active {
+  text-decoration: none;
+  color: var(--muted);
+  padding-left: 10px;
 }
 </style>

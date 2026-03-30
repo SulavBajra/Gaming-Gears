@@ -136,16 +136,16 @@ const goToPage = (page: number) => {
                                 }}</TableCell>
                                 <TableCell>{{ product.brand.name }}</TableCell>
                                 <TableCell>
+                                    {{ console.log(product) }}
                                     {{
                                         product?.categories?.[0]?.parent_id !==
-                                            null &&
-                                        product?.categories?.[0]?.parent_id !==
-                                            undefined
+                                        null
                                             ? category[
                                                   product.categories[0]
                                                       .parent_id as number
                                               ]
-                                            : '—'
+                                            : (product?.categories?.[0]?.name ??
+                                              '—')
                                     }}
                                 </TableCell>
                                 <TableCell>

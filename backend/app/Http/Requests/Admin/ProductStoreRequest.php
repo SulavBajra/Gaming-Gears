@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests\Admin;
 
-use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class ProductStoreRequest extends FormRequest
@@ -12,11 +11,6 @@ class ProductStoreRequest extends FormRequest
         return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
         return [
@@ -30,9 +24,9 @@ class ProductStoreRequest extends FormRequest
             'tags' => ['nullable', 'array'],
             'tags.*' => ['string', 'max:50'],
             'thumbnail' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
-
+            'gallery' => ['nullable', 'array'],
+            'gallery.*' => ['image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
             'variants' => ['required', 'string'], // JSON string from FormData
-            // Individual variant rules are validated after decoding — see prepareForValidation()
             'variants_decoded' => ['required', 'array', 'min:1'],
             'variants_decoded.*.name' => ['required', 'string', 'max:255'],
             'variants_decoded.*.price' => ['required', 'numeric', 'min:0'],

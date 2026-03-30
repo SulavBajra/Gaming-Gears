@@ -79,9 +79,7 @@ class BrandController extends Controller
             'is_active' => $request->boolean('is_active', true),
         ]);
 
-        if (!$brand->is_active) {
-            Product::where('brand_id', $brand->id)->update(['is_active' => false]);
-        }
+        Product::where('brand_id', $brand->id)->update(['is_active' => $request->boolean('is_active', true)]);
 
         if ($request->hasFile('logo')) {
             $brand

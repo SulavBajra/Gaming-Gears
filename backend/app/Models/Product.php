@@ -47,7 +47,7 @@ class Product extends Model implements HasMedia
         $this->addMediaConversion('preview')
             ->fit(Fit::Contain, 300, 300)
             ->nonQueued()
-            ->performOnCollections('thumbnail');
+            ->performOnCollections('thumbnail', 'gallery');
     }
 
     public function getSlugOptions(): SlugOptions

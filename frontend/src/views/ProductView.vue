@@ -237,7 +237,7 @@ watch(
   top: 40px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 25px;
 }
 
 .image-wrap {
@@ -333,7 +333,7 @@ watch(
 /* ── Thumbnails ── */
 .thumbnails {
   display: flex;
-  gap: 8px;
+  gap: 20px;
   flex-wrap: wrap;
 }
 
@@ -386,7 +386,7 @@ watch(
 
 .product-title {
   font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(2rem, 4vw, 2.8rem);
+  font-size: clamp(2rem, 4vw, 2rem);
   font-weight: 600;
   line-height: 1.15;
   color: #f0ebe2;
@@ -411,6 +411,7 @@ watch(
 }
 
 .product-description {
+  text-align: justify;
   font-size: 0.925rem;
   font-weight: 300;
   line-height: 1.8;
@@ -435,7 +436,7 @@ watch(
 
 .price-value {
   font-family: 'Cormorant Garamond', serif;
-  font-size: 2.4rem;
+  font-size: 35px;
   font-weight: 600;
   color: #f0ebe2;
   line-height: 1;
