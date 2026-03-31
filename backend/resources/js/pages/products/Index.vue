@@ -53,7 +53,7 @@ interface PaginatedProducts {
 
 defineProps<{ products: PaginatedProducts }>();
 
-const Category: Record<number, string> = {
+const category: Record<number, string> = {
     1: 'Keyboard',
     7: 'Mice',
     13: 'Headsets',
@@ -136,10 +136,16 @@ const goToPage = (page: number) => {
                                 }}</TableCell>
                                 <TableCell>{{ product.brand.name }}</TableCell>
                                 <TableCell>
+                                    {{ console.log(product) }}
                                     {{
-                                        Category[
-                                            product.categories.parent_id
-                                        ] ?? '—'
+                                        product?.categories?.[0]?.parent_id !==
+                                        null
+                                            ? category[
+                                                  product.categories[0]
+                                                      .parent_id as number
+                                              ]
+                                            : (product?.categories?.[0]?.name ??
+                                              '—')
                                     }}
                                 </TableCell>
                                 <TableCell>

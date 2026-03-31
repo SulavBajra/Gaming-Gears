@@ -47,7 +47,7 @@ class Product extends Model implements HasMedia
         $this->addMediaConversion('preview')
             ->fit(Fit::Contain, 300, 300)
             ->nonQueued()
-            ->performOnCollections('thumbnail');
+            ->performOnCollections('thumbnail', 'gallery');
     }
 
     public function getSlugOptions(): SlugOptions
@@ -98,9 +98,9 @@ class Product extends Model implements HasMedia
     }
 
     #[Scope]
-    protected function active($query)
+    protected function active()
     {
-        return $query->where('is_active', true);
+        return $this->where('is_active', true);
     }
 
     #[Scope]

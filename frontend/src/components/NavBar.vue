@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
 import { ShoppingCart, Search, CircleUserRound } from '@lucide/vue'
+import { useAuth } from '@/composables/useAuth'
+
+const { user } = useAuth()
 </script>
 
 <template>
@@ -24,9 +27,10 @@ import { ShoppingCart, Search, CircleUserRound } from '@lucide/vue'
           <ShoppingCart />
           <span class="cart-badge">3</span>
         </button>
-        <button class="icon-btn" aria-label="Profile">
+        <button v-if="user" class="icon-btn" aria-label="Profile">
           <CircleUserRound />
         </button>
+        <RouterLink v-else to="/login" class="icon-btn-login" aria-label="Login">Login</RouterLink>
       </div>
     </nav>
   </header>
@@ -160,5 +164,12 @@ import { ShoppingCart, Search, CircleUserRound } from '@lucide/vue'
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.icon-btn-login,
+.icon-btn-login:active {
+  text-decoration: none;
+  color: var(--muted);
+  padding-left: 10px;
 }
 </style>
