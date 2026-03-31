@@ -1,100 +1,118 @@
-# Sneaker-Store Backend
+# Gaming-Gears
 
-Laravel backend for the Sneaker-Store project.
+Full‑stack web application with a **Laravel 12** backend (Inertia + Vue, Vite) and a separate **Vue 3 + Vite** frontend.
 
-This backend appears to be a Laravel app with modern frontend tooling (Vite + Inertia/Vue dependencies are present in `backend/package.json`).
+## Tech Stack
+- **Backend:** PHP 8.3+, Laravel 12, Inertia.js, Fortify, Sanctum
+- **Frontend (standalone):** Vue 3, Vite, PrimeVue, TailwindCSS
+- **Database:** SQLite (simple local) or MySQL (Docker/Sail default)
+
+## Repository Structure
+- `backend/` — Laravel application (also includes Vite assets)
+- `frontend/` — standalone Vue 3 application
 
 ---
 
 ## Requirements
+### Backend
+- **PHP:** 8.3+
+- **Composer**
+- **Node.js:** (recommended 20+)
+- **npm**
+- **Database:**
+  - **SQLite** (quick local dev), or
+  - **MySQL** (via Docker compose / Sail)
 
-- PHP (version compatible with the Laravel version used in this repo)
-- Composer
-- Node.js (for Vite / frontend assets in the Laravel app)
-- A database:
-  - Default `.env.example` uses `DB_CONNECTION=sqlite`
+Optional:
+- **Docker + Docker Compose** (for the `backend/compose.yaml` setup)
 
-Optional (if you use Docker):
-- Docker + Docker Compose (a `compose.yaml` exists in this folder)
+### Frontend (standalone)
+- **Node.js:** `^20.19.0 || >=22.12.0` (as defined in `frontend/package.json`)
+- **npm/pnpm** (project template docs mention pnpm, but `package.json` works with npm too)
 
 ---
 
-## Setup (local)
+## Setup & Run (Local)
 
-### 1) Install PHP dependencies
+### 1) Clone
+```bash
+git clone https://github.com/SulavBajra/Gaming-Gears.git
+cd Gaming-Gears
+```
 
+### 2) Backend (Laravel) — Local (SQLite)
 ```bash
 cd backend
 composer install
-```
-
-### 2) Environment configuration
-
-Copy the example environment file:
-
-```bash
 cp .env.example .env
-```
-
-Generate the application key:
-
-```bash
 php artisan key:generate
-```
 
-### 3) Database
-
-#### Option A: SQLite (default)
-Your `.env.example` defaults to:
-
-- `DB_CONNECTION=sqlite`
-
-Make sure the SQLite database file exists (commonly `backend/database/database.sqlite`):
-
-```bash
+# SQLite database file
+mkdir -p database
 touch database/database.sqlite
-```
 
-Then run migrations:
-
-```bash
 php artisan migrate
+npm install
 ```
 
-#### Option B: MySQL/Postgres
-Update `.env` with your DB settings (host, port, username, password, database name), then:
-
-```bash
-php artisan migrate
-```
-
----
-
-## Running the app (local)
-
-### Terminal 1: Laravel server
-
+Run the backend:
+- Terminal 1:
 ```bash
 php artisan serve
 ```
+- Terminal 2 (Vite assets):
+```bash
+npm run dev
+```
 
-By default, Laravel serves on:
-
+Backend URL (default):
 - http://127.0.0.1:8000
 
-### Terminal 2: Vite dev server (assets)
+### Alternative: Backend one-command dev (Laravel concurrently)
+From `backend/`:
+```bash
+composer run dev
+```
+This runs Laravel server + queue listener + logs (pail) + Vite together.
+
+---
+
+## Setup & Run (Docker)
+The backend includes a Sail-style `compose.yaml` at `backend/compose.yaml`.
+
+From `backend/`:
+```bash
+docker compose up --build
+```
+Default ports:
+- App: `APP_PORT` (defaults to **80**) → http://localhost
+- Vite: `VITE_PORT` (defaults to **5173**)
+- phpMyAdmin: http://localhost:8080
+- MySQL: `FORWARD_DB_PORT` (defaults to **3306**)
+
+> Note: Make sure your `.env` in `backend/` has `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD` set for MySQL.
+
+---
+
+## Frontend (Standalone Vue App)
+This is a separate Vue 3 project in `frontend/`.
 
 ```bash
+cd frontend
 npm install
 npm run dev
 ```
 
+Build & preview:
+```bash
+npm run build
+npm run preview
+```
+
 ---
 
-## Useful commands
-
-### PHP / Laravel
-
+## Useful Commands
+### Backend (from `backend/`)
 ```bash
 php artisan migrate
 php artisan migrate:fresh --seed
@@ -102,8 +120,7 @@ php artisan route:list
 php artisan tinker
 ```
 
-### Node / Vite (see `backend/package.json` scripts)
-
+### Backend Vite (from `backend/`)
 ```bash
 npm run dev
 npm run build
@@ -112,52 +129,25 @@ npm run format
 npm run types:check
 ```
 
----
-
-## Docker (optional)
-
-A `compose.yaml` file exists in `backend/`. If you want to run via Docker, review and adjust it for your environment, then run:
-
+### Frontend (from `frontend/`)
 ```bash
-docker compose up --build
+npm run dev
+npm run build
+npm run preview
+npm run lint
 ```
 
-(Exact services/ports depend on the `compose.yaml` configuration.)
-
 ---
 
-## Environment variables
-
-The template is in:
-
+## Environment Variables
+Backend environment template:
 - `backend/.env.example`
 
-At minimum you will usually need:
-
+Minimum values:
 - `APP_KEY` (generated via `php artisan key:generate`)
-- Database settings (`DB_CONNECTION`, etc.)
-
----
-
-## Troubleshooting
-
-### `APP_KEY` is missing
-Run:
-
-```bash
-php artisan key:generate
-```
-
-### Assets not updating / Vite issues
-Make sure you’re running:
-
-```bash
-npm install
-npm run dev
-```
+- DB settings (`DB_CONNECTION`, etc.)
 
 ---
 
 ## License
-
 Add a `LICENSE` file if you plan to distribute this project.
