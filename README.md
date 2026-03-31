@@ -1,38 +1,39 @@
-# Gaming-Gears
+# Gaming Gears
 
-Full‑stack web application with a **Laravel 12** backend (Inertia + Vue, Vite) and a separate **Vue 3 + Vite** frontend.
+Full‑stack project with two apps:
+
+- **Admin Panel:** `backend/` (Laravel 12 + Inertia.js + Vue, Vite)
+- **E-commerce Storefront:** `frontend/` (Vue 3 + Vite)
 
 ## Tech Stack
-- **Backend:** PHP 8.3+, Laravel 12, Inertia.js, Fortify, Sanctum
-- **Frontend (standalone):** Vue 3, Vite, PrimeVue, TailwindCSS
-- **Database:** SQLite (simple local) or MySQL (Docker/Sail default)
+- **Backend (Admin):** PHP 8.3+, Laravel 12, Inertia.js, Fortify, Sanctum
+- **Frontend (Storefront):** Vue 3, Vite, PrimeVue, TailwindCSS
+- **Database:** SQLite (local) or MySQL (Docker/Sail)
 
 ## Repository Structure
-- `backend/` — Laravel application (also includes Vite assets)
-- `frontend/` — standalone Vue 3 application
+- `backend/` — Laravel application (Admin panel) + Vite assets
+- `frontend/` — standalone Vue 3 storefront
 
 ---
 
 ## Requirements
-### Backend
-- **PHP:** 8.3+
-- **Composer**
-- **Node.js:** (recommended 20+)
-- **npm**
-- **Database:**
-  - **SQLite** (quick local dev), or
-  - **MySQL** (via Docker compose / Sail)
+### Admin (backend)
+- PHP **8.3+**
+- Composer
+- Node.js (recommended **20+**)
+- npm
+- Database: SQLite or MySQL
 
 Optional:
-- **Docker + Docker Compose** (for the `backend/compose.yaml` setup)
+- Docker + Docker Compose (for `backend/compose.yaml`)
 
-### Frontend (standalone)
-- **Node.js:** `^20.19.0 || >=22.12.0` (as defined in `frontend/package.json`)
-- **npm/pnpm** (project template docs mention pnpm, but `package.json` works with npm too)
+### Storefront (frontend)
+- Node.js: `^20.19.0 || >=22.12.0` (from `frontend/package.json`)
+- npm (or pnpm)
 
 ---
 
-## Setup & Run (Local)
+## Setup & Run
 
 ### 1) Clone
 ```bash
@@ -40,7 +41,11 @@ git clone https://github.com/SulavBajra/Gaming-Gears.git
 cd Gaming-Gears
 ```
 
-### 2) Backend (Laravel) — Local (SQLite)
+---
+
+## Admin Panel (Laravel + Inertia) — `backend/`
+
+### Local (SQLite)
 ```bash
 cd backend
 composer install
@@ -55,31 +60,27 @@ php artisan migrate
 npm install
 ```
 
-Run the backend:
+Run (two terminals):
 - Terminal 1:
 ```bash
 php artisan serve
 ```
-- Terminal 2 (Vite assets):
+- Terminal 2:
 ```bash
 npm run dev
 ```
 
-Backend URL (default):
+Admin URL (default):
 - http://127.0.0.1:8000
 
-### Alternative: Backend one-command dev (Laravel concurrently)
+### One-command dev (recommended)
 From `backend/`:
 ```bash
 composer run dev
 ```
-This runs Laravel server + queue listener + logs (pail) + Vite together.
+This runs Laravel server + queue + logs (pail) + Vite together.
 
----
-
-## Setup & Run (Docker)
-The backend includes a Sail-style `compose.yaml` at `backend/compose.yaml`.
-
+### Docker (Sail-style)
 From `backend/`:
 ```bash
 docker compose up --build
@@ -90,12 +91,11 @@ Default ports:
 - phpMyAdmin: http://localhost:8080
 - MySQL: `FORWARD_DB_PORT` (defaults to **3306**)
 
-> Note: Make sure your `.env` in `backend/` has `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD` set for MySQL.
+> Ensure `backend/.env` has `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD` set when using MySQL.
 
 ---
 
-## Frontend (Standalone Vue App)
-This is a separate Vue 3 project in `frontend/`.
+## Storefront (Vue 3) — `frontend/`
 
 ```bash
 cd frontend
@@ -140,11 +140,11 @@ npm run lint
 ---
 
 ## Environment Variables
-Backend environment template:
+Backend template:
 - `backend/.env.example`
 
-Minimum values:
-- `APP_KEY` (generated via `php artisan key:generate`)
+Minimum:
+- `APP_KEY`
 - DB settings (`DB_CONNECTION`, etc.)
 
 ---
