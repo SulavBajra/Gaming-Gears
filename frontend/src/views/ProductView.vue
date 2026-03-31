@@ -1,17 +1,18 @@
 <script setup lang="ts">
 import { ref, onMounted, watch, computed } from 'vue'
 import { useRoute } from 'vue-router'
-import axios from 'axios'
 import ProductGrid from '@/components/pages/ProductGrid.vue'
 import type { HomeProduct, ProductView } from '@/components/types'
 import { ShoppingCart, ChevronLeft, ChevronRight } from '@lucide/vue'
 import placeholder from '@/assets/placeholder.jpg'
-
-const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL,
-})
+import { useAuth } from '@/composables/useAuth'
+import { useCart } from '@/composables/useCart'
+import axiosClient from '@/axios'
 
 const route = useRoute()
+const { user } = useAuth()
+const { add } = useCart()
+const quantity = ref(1)
 const product = ref<ProductView | null>(null)
 const similarProducts = ref<HomeProduct[]>([])
 const selectedVariantId = ref<number | null>(null)
@@ -38,21 +39,27 @@ const nextImage = () => {
   activeImageIndex.value = (activeImageIndex.value + 1) % allImages.value.length
 }
 
-const addToCart = () => {
-  if (selectedVariant.value) {
-  }
+const addToCart = async () => {
+  if (!selectedVariant.value || !product.value) return
+
+  await add({
+    product_id: product.value.id,
+    product_variant_id: selectedVariant.value.id,
+    quantity: quantity.value,
+    session_id: user.value ? null : localStorage.getItem('session_id') || null,
+  })
 }
 
 const fetchProduct = async (slug: string) => {
   loading.value = true
   activeImageIndex.value = 0
   try {
-    const productRes = await api.get(`/api/shop/${slug}`)
+    const productRes = await axiosClient.get(`/api/shop/${slug}`)
     product.value = productRes.data.data
     selectedVariantId.value = product.value?.variants?.[0]?.id ?? null
     const catSlug = product.value?.categories?.[0]?.slug
     if (catSlug) {
-      const sim = await api.get(`/api/shop/category/${catSlug}`)
+      const sim = await axiosClient.get(`/api/shop/category/${catSlug}`)
       similarProducts.value = sim.data.data
     }
   } finally {
@@ -171,7 +178,8 @@ watch(
           </div>
         </div>
 
-        <button class="add-to-cart" :disabled="!selectedVariant" :onClick="addToCart">
+        <input class="quantity" type="number" min="1" v-model.number="quantity" />
+        <button class="add-to-cart" :disabled="!selectedVariant" @click="addToCart">
           <ShoppingCart :size="18" />
           <span>Add to Cart</span>
         </button>

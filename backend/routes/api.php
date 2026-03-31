@@ -22,4 +22,5 @@ Route::get('/user', function (Request $request) {
 Route::middleware(['auth:sanctum', 'role:customer'])->group(function () {
     Route::post('/logout', LogoutController::class)->name('api.logout');
     Route::post('/cart', [CartController::class, 'store'])->name('api.cart');
+    Route::get('/cart', [CartController::class, 'index']);
 });

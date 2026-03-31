@@ -4,7 +4,7 @@ namespace App\models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\Belongsto;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ProductVariant extends Model
 {
@@ -34,19 +34,19 @@ class ProductVariant extends Model
     }
 
     /**
-     * @return Belongsto<product>
+     * @return BelongsTo<product>
      */
-    public function product(): Belongsto
+    public function product(): BelongsTo
     {
-        return $this->belongsto(product::class);
+        return $this->belongsTo(Product::class);
     }
 
-    public function instock(): bool
+    public function inStock(): bool
     {
         return $this->is_active && $this->stock_quantity > 0;
     }
 
-    public function islowstock(): bool
+    public function isLowStock(): bool
     {
         return $this->stock_quantity <= $this->low_stock_threshold;
     }
@@ -59,5 +59,10 @@ class ProductVariant extends Model
     public function maxprice(): ?float
     {
         return $this->variants()->max('price');
+    }
+
+    public function cartItems()
+    {
+        return $this->hasMany(CartItem::class);
     }
 }

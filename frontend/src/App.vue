@@ -1,13 +1,17 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router'
 import { useAuth } from '@/composables/useAuth'
+import { useCart } from '@/composables/useCart'
 
 const { fetchUser } = useAuth()
+const { loadCart } = useCart()
+loadCart()
 fetchUser()
 </script>
 
 <template>
   <div class="base-view">
+    <Toast />
     <RouterView />
   </div>
 </template>
