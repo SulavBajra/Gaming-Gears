@@ -3,9 +3,11 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import axiosClient from '@/axios'
 import { useAuth } from '@/composables/useAuth'
+import { useCart } from '@/composables/useCart'
 
 const router = useRouter()
 const { fetchUser } = useAuth()
+const { syncWithServer } = useCart()
 
 const form = ref({ email: '', password: '' })
 const error = ref('')
@@ -20,6 +22,7 @@ const submit = async () => {
       localStorage.setItem('token', token)
       axiosClient.defaults.headers.common['Authorization'] = `Bearer ${token}`
       fetchUser()
+      syncWithServer()
       router.push('/')
     })
   } catch (e: any) {
