@@ -7,7 +7,9 @@ fetchUser()
 </script>
 
 <template>
-  <RouterView class="base-view" />
+  <div class="base-view">
+    <RouterView />
+  </div>
 </template>
 
 <style>

@@ -42,3 +42,9 @@ export interface ProductView {
   gallery: string[]
   variants: Variant[]
 }
+
+export type User = {
+  id: number
+  name: string
+  email: string
+} | null

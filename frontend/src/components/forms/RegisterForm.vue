@@ -2,12 +2,15 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import axiosClient from '@/axios'
-import { useAuth } from '@/composables/useAuth'
 
 const router = useRouter()
-const { fetchUser } = useAuth()
 
-const form = ref({ email: '', password: '' })
+const form = ref({
+  name: '',
+  email: '',
+  password: '',
+  password_confirmation: '',
+})
 const error = ref('')
 const loading = ref(false)
 
@@ -15,13 +18,10 @@ const submit = async () => {
   error.value = ''
   loading.value = true
   try {
-    await axiosClient.post('/api/login', form.value).then((response) => {
-      const token = response.data.token
-      localStorage.setItem('token', token)
-      axiosClient.defaults.headers.common['Authorization'] = `Bearer ${token}`
-      fetchUser()
-      router.push('/')
-    })
+    const response = await axiosClient.post('/api/register', form.value)
+    const token = response.data.token
+    localStorage.setItem('token', token)
+    router.push('/login')
   } catch (e: any) {
     error.value = e.response?.data?.message ?? 'Invalid credentials.'
   } finally {
@@ -33,7 +33,6 @@ const submit = async () => {
 <template>
   <div class="login-wrap">
     <div class="login-card">
-      <!-- Logo -->
       <div class="brand">
         <div class="brand-icon">
           <svg viewBox="0 0 16 16" fill="currentColor">
@@ -46,9 +45,20 @@ const submit = async () => {
       </div>
 
       <h1>Welcome back</h1>
-      <p class="subtitle">Sign in to your account</p>
+      <p class="subtitle">Create a new account</p>
 
-      <form @submit.prevent="submit" novalidate>
+      <form @submit.prevent="submit" novalidate autocomplete="off">
+        <div class="field">
+          <label for="name">name</label>
+          <input
+            id="name"
+            v-model="form.name"
+            placeholder="John Doe"
+            required
+            autocomplete="name"
+          />
+        </div>
+
         <div class="field">
           <label for="email">Email</label>
           <input
@@ -56,8 +66,8 @@ const submit = async () => {
             v-model="form.email"
             type="email"
             placeholder="you@example.com"
-            autocomplete="email"
             required
+            autocomplete="email"
           />
         </div>
 
@@ -68,19 +78,27 @@ const submit = async () => {
             v-model="form.password"
             type="password"
             placeholder="••••••••"
-            autocomplete="current-password"
             required
+            autocomplete="new-password"
           />
         </div>
 
-        <div class="forgot-row">
-          <router-link to="/forgot-password">Forgot password?</router-link>
+        <div class="field">
+          <label for="password_confirmation">Confirm Password</label>
+          <input
+            id="password_confirmation"
+            v-model="form.password_confirmation"
+            type="password"
+            placeholder="••••••••"
+            required
+            autocomplete="new-password"
+          />
         </div>
 
         <p v-if="error" class="error">{{ error }}</p>
 
         <button type="submit" :disabled="loading">
-          {{ loading ? 'Signing in…' : 'Sign in' }}
+          {{ loading ? 'Creating account…' : 'Create account' }}
         </button>
       </form>
 
@@ -91,8 +109,8 @@ const submit = async () => {
       </div>
 
       <p class="register-link">
-        Don't have an account?
-        <router-link to="/register">Register</router-link>
+        Already have an account?
+        <router-link to="/login">Sign in</router-link>
       </p>
     </div>
   </div>

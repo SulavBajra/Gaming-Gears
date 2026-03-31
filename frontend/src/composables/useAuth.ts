@@ -1,12 +1,17 @@
 import { ref } from 'vue'
-import axios from 'axios'
+import axiosClient from '@/axios'
+import type { User } from '@/components/types'
 
-const user = ref<{ id: number; name: string; email: string } | null>(null)
+const user = ref<User>(null)
 
 export function useAuth() {
   const fetchUser = async () => {
     try {
-      const { data } = await axios.get('http://localhost/api/user')
+      if (!localStorage.getItem('token')) {
+        user.value = null
+        return
+      }
+      const { data } = await axiosClient.get('/api/user')
       user.value = data
     } catch {
       user.value = null
@@ -14,11 +19,14 @@ export function useAuth() {
   }
 
   const logout = async () => {
-    await axios.post('http://localhost/api/logout')
-    user.value = null
+    try {
+      await axiosClient.post('/api/logout') // POST is more conventional for logout
+      localStorage.removeItem('token')
+      user.value = null
+    } catch (error) {
+      console.error('Logout failed:', error)
+    }
   }
 
-  const setUser = (userData: { id: number; name: string; email: string }, token: string) => {}
-
-  return { user, fetchUser, logout, setUser }
+  return { user, fetchUser, logout }
 }

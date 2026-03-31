@@ -6,6 +6,8 @@ use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
+use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
+use Laravel\Fortify\Http\Controllers\RegisteredUserController;
 
 Route::inertia('/', 'Dashboard', [
     'canRegister' => Features::enabled(Features::registration()),
@@ -20,4 +22,12 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     });
 });
 
-require __DIR__.'/settings.php';
+Route::post('/register', [RegisteredUserController::class, 'store'])
+    ->middleware('guest')
+    ->name('register');
+
+Route::post('/login', [AuthenticatedSessionController::class, 'store'])
+    ->middleware('guest')
+    ->name('login');
+
+require __DIR__ . '/settings.php';
