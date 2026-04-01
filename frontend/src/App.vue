@@ -3,19 +3,21 @@ import { onMounted } from 'vue'
 import { RouterView } from 'vue-router'
 import { useAuth } from '@/composables/useAuth'
 import { useCart } from '@/composables/useCart'
+import ConfirmDialog from 'primevue/confirmdialog'
 
 const { fetchUser } = useAuth()
-const { initCart } = useCart()
+const { fetchCart } = useCart()
 
 onMounted(async () => {
   await fetchUser()
-  await initCart()
+  await fetchCart()
 })
 </script>
 
 <template>
   <div class="base-view">
-    <Toast />
+    <Toast position="top-left" />
+    <ConfirmDialog></ConfirmDialog>
     <RouterView />
   </div>
 </template>

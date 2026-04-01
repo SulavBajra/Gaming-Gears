@@ -5,7 +5,7 @@ import { useAuth } from '@/composables/useAuth'
 import { useCart } from '@/composables/useCart'
 
 const { user } = useAuth()
-const { totalItems } = useCart()
+const { itemCount } = useCart()
 </script>
 
 <template>
@@ -27,7 +27,7 @@ const { totalItems } = useCart()
         </button>
         <RouterLink to="/cart" class="icon-btn" aria-label="Cart">
           <ShoppingCart />
-          <span class="cart-badge">{{ totalItems }}</span>
+          <span class="cart-badge">{{ itemCount }}</span>
         </RouterLink>
         <button v-if="user" class="icon-btn" aria-label="Profile">
           <RouterLink to="/profile" class="user-profile"><CircleUserRound /></RouterLink>

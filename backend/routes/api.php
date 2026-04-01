@@ -23,4 +23,7 @@ Route::middleware(['auth:sanctum', 'role:customer'])->group(function () {
     Route::post('/logout', LogoutController::class)->name('api.logout');
     Route::post('/cart', [CartController::class, 'store'])->name('api.cart');
     Route::get('/cart', [CartController::class, 'index']);
+    Route::delete('/cart/{cart}', [CartController::class, 'destroy']);
+    Route::delete('/cart/items/{cartItem}', [CartController::class, 'deleteItem']);
+    Route::patch('/cart/items/{cartItem}', [CartController::class, 'updateItem']);
 });

@@ -6,11 +6,13 @@ import PrimeVue from 'primevue/config'
 import ToastService from 'primevue/toastservice'
 import Aura from '@primeuix/themes/aura'
 import Toast from 'primevue/toast'
+import ConfirmationService from 'primevue/confirmationservice'
 
 const app = createApp(App)
 
 app.use(router)
 app.use(ToastService)
+app.use(ConfirmationService)
 app.use(PrimeVue, {
   theme: {
     preset: Aura,

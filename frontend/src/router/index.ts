@@ -23,11 +23,7 @@ const router = createRouter({
       name: 'profile',
       component: Profile,
     },
-    {
-      path: '/cart',
-      name: 'cart',
-      component: Cart,
-    },
+
     {
       path: '/',
       component: AppLayout,
@@ -51,6 +47,11 @@ const router = createRouter({
           path: 'about',
           name: 'about',
           component: () => import('@/views/AboutView.vue'),
+        },
+        {
+          path: '/cart',
+          name: 'cart',
+          component: Cart,
         },
       ],
     },

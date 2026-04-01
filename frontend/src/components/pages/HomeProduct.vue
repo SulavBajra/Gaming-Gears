@@ -2,19 +2,16 @@
 import ProductGrid from './ProductGrid.vue'
 import CategoryGrid from './CategoryGrid.vue'
 import { ref, onMounted } from 'vue'
-import axios from 'axios'
 import type { Category, HomeProduct } from '@/components/types'
+import axiosClient from '@/axios'
 
 const categories = ref<Category[]>([])
 const products = ref<HomeProduct[]>([])
 const loading = ref(true)
-const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL,
-})
 
 onMounted(async () => {
   try {
-    const res = await api.get('/api/home')
+    const res = await axiosClient.get('/api/home')
     products.value = res.data.data
   } finally {
     loading.value = false

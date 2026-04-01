@@ -8,10 +8,12 @@ import placeholder from '@/assets/placeholder.jpg'
 import { useAuth } from '@/composables/useAuth'
 import { useCart } from '@/composables/useCart'
 import axiosClient from '@/axios'
+import { useToaster } from '@/composables/useToast'
 
 const route = useRoute()
 const { user } = useAuth()
-const { add } = useCart()
+const { showSuccess } = useToaster()
+const { addToCart: addItemToCart, handleGuestAddToCart } = useCart()
 const quantity = ref(1)
 const product = ref<ProductView | null>(null)
 const similarProducts = ref<HomeProduct[]>([])
@@ -39,21 +41,15 @@ const nextImage = () => {
   activeImageIndex.value = (activeImageIndex.value + 1) % allImages.value.length
 }
 
-const addToCart = async () => {
+const handleAddToCart = async () => {
   if (!selectedVariant.value || !product.value) return
-
-  add(
-    {
-      product_id: product.value.id,
-      product_variant_id: selectedVariant.value.id,
-      quantity: quantity.value,
-    },
-    {
-      unit_price: String(selectedVariant.value.price),
-      product_name: product.value.name,
-      product_variant_name: selectedVariant.value.name,
-    },
-  )
+  if (!user.value) {
+    handleGuestAddToCart(product.value.id, selectedVariant.value.id, quantity.value)
+  }
+  const success = await addItemToCart(product.value.id, selectedVariant.value.id, quantity.value)
+  if (success) {
+    showSuccess()
+  }
 }
 
 const fetchProduct = async (slug: string) => {
@@ -185,7 +181,7 @@ watch(
         </div>
 
         <input class="quantity" type="number" min="1" v-model.number="quantity" />
-        <button class="add-to-cart" :disabled="!selectedVariant" @click="addToCart">
+        <button class="add-to-cart" :disabled="!selectedVariant" @click="handleAddToCart">
           <ShoppingCart :size="18" />
           <span>Add to Cart</span>
         </button>

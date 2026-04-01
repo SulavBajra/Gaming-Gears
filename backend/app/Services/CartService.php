@@ -44,7 +44,7 @@ class CartService
 
     public function getCart($userId)
     {
-        $cart = Cart::with('items.product', 'items.productVariant')
+        $cart = Cart::with('items.product', 'items.productVariant', 'items.product.media')
             ->where('user_id', $userId)
             ->first();
 
