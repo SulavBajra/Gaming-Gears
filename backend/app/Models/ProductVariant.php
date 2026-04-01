@@ -51,16 +51,6 @@ class ProductVariant extends Model
         return $this->stock_quantity <= $this->low_stock_threshold;
     }
 
-    public function minprice(): ?float
-    {
-        return $this->variants()->min('price');
-    }
-
-    public function maxprice(): ?float
-    {
-        return $this->variants()->max('price');
-    }
-
     public function cartItems()
     {
         return $this->hasMany(CartItem::class);

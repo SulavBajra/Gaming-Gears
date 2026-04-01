@@ -2,10 +2,9 @@
 import ProductGrid from './ProductGrid.vue'
 import CategoryGrid from './CategoryGrid.vue'
 import { ref, onMounted } from 'vue'
-import type { Category, HomeProduct } from '@/components/types'
+import type { HomeProduct } from '@/components/types'
 import axiosClient from '@/axios'
 
-const categories = ref<Category[]>([])
 const products = ref<HomeProduct[]>([])
 const loading = ref(true)
 

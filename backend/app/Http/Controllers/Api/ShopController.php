@@ -34,4 +34,15 @@ class ShopController extends Controller
 
         return ProductShopResource::collection($products);
     }
+
+    public function index()
+    {
+        $products = Product::with(['categories', 'brand', 'media', 'variants'])
+            ->withMin('variants', 'price')
+            ->whereHas('variants', fn ($v) => $v->where('stock_quantity', '>', 0))
+            ->paginate(10);
+
+        return ProductShopResource::collection($products);
+        // return response()->json($products);
+    }
 }

@@ -109,8 +109,10 @@ export function useCart() {
     try {
       const { data } = await axiosClient.patch(`/api/cart/items/${cartItemId}`, { quantity })
       cart.value = data.data
+      fetchCart()
     } catch {
       error.value = 'Could not update quantity.'
+      showError(error.value)
     } finally {
       loading.value = false
     }

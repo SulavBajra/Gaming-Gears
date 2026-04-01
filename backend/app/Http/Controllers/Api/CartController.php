@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\CartRequest;
+use App\Http\Requests\Api\CartUpdateRequest;
 use App\Http\Resources\CartResource;
 use App\Models\Cart;
 use App\Models\CartItem;
@@ -48,15 +49,13 @@ class CartController extends Controller
         return response()->json(['message' => 'Cart item deleted successfully']);
     }
 
-    public function updateItem(CartItem $cartItem, int $requestQuantity)
+    public function updateItem(CartUpdateRequest $request, CartItem $cartItem)
     {
-        if ($requestQuantity < 1) {
-            return response()->json(['message' => 'Quantity must be at least 1'], 400);
-        }
-
-        CartItem::update($cartItem->id, ['quantity' => $requestQuantity]);
-
-        return response()->json(['message' => 'Cart item updated successfully']);
+        $cartItem->update([
+            'quantity' => $request->quantity,
+        ]);
+        return response()->json([
+            'message' => 'Cart item updated successfully'
+        ]);
     }
-
 }
