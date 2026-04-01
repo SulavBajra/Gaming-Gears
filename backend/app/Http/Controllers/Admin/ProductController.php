@@ -73,19 +73,19 @@ class ProductController extends Controller
     public function edit(Product $product)
     {
         return Inertia::render('products/Edit', [
-            'brands'     => Brand::select('id', 'name')->get(),
+            'brands' => Brand::select('id', 'name')->get(),
             'categories' => Category::select('id', 'name')->get(),
-            'product'    => [
+            'product' => [
                 ...$product->only('id', 'name', 'description', 'brand_id', 'is_active', 'is_featured', 'tags'),
                 'category_ids' => $product->categories->pluck('id'),
-                'variants'     => $product->variants->map->only('id', 'name', 'price', 'stock_quantity', 'is_active'),
+                'variants' => $product->variants->map->only('id', 'name', 'price', 'stock_quantity', 'is_active'),
                 'thumbnail' => $product->getFirstMedia('thumbnail')
                     ? [
-                        'id'  => $product->getFirstMedia('thumbnail')->id,
+                        'id' => $product->getFirstMedia('thumbnail')->id,
                         'url' => $product->getFirstMediaUrl('thumbnail', 'preview'),
-                      ]
+                    ]
                     : null,
-                'gallery'      => $product->getMedia('gallery')->map(fn($m) => ['id' => $m->id, 'url' => $m->getUrl()]),
+                'gallery' => $product->getMedia('gallery')->map(fn ($m) => ['id' => $m->id, 'url' => $m->getUrl()]),
             ],
         ]);
     }

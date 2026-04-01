@@ -6,6 +6,8 @@ use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
+use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
+use Laravel\Fortify\Http\Controllers\RegisteredUserController;
 
 Route::inertia('/', 'Dashboard', [
     'canRegister' => Features::enabled(Features::registration()),

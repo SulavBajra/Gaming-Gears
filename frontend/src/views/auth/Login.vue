@@ -1,9 +1,16 @@
+<script setup lang="ts">
+import LoginForm from '@/components/forms/LoginForm.vue'
+</script>
 <template>
-  <div>
-    <form>
-      <input type="text" placeholder="Username" />
-      <input type="password" placeholder="Password" />
-      <button type="submit">Login</button>
-    </form>
-  </div>
+  <section class="login-view">
+    <LoginForm />
+  </section>
 </template>
+<style scoped>
+.login-view {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+</style>

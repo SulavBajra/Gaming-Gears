@@ -42,3 +42,16 @@ export interface ProductView {
   gallery: string[]
   variants: Variant[]
 }
+
+export type User = {
+  id: number
+  name: string
+  email: string
+} | null
+
+export type CartItem = {
+  product_id: number
+  product_variant_id: number
+  quantity: number
+  session_id: string | null
+}

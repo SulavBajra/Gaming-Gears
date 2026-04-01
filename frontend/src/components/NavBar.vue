@@ -28,7 +28,7 @@ const { user } = useAuth()
           <span class="cart-badge">3</span>
         </button>
         <button v-if="user" class="icon-btn" aria-label="Profile">
-          <CircleUserRound />
+          <RouterLink to="/profile" class="user-profile"><CircleUserRound /></RouterLink>
         </button>
         <RouterLink v-else to="/login" class="icon-btn-login" aria-label="Login">Login</RouterLink>
       </div>
@@ -147,6 +147,11 @@ const { user } = useAuth()
 .icon-btn:hover {
   color: var(--ink);
   background: var(--border);
+}
+
+.user-profile:active,
+.user-profile:visited {
+  color: var(--accent);
 }
 
 .cart-badge {
