@@ -1,12 +1,16 @@
 <script setup lang="ts">
+import { onMounted } from 'vue'
 import { RouterView } from 'vue-router'
 import { useAuth } from '@/composables/useAuth'
 import { useCart } from '@/composables/useCart'
 
 const { fetchUser } = useAuth()
-const { loadCart } = useCart()
-fetchUser()
-loadCart()
+const { initCart } = useCart()
+
+onMounted(async () => {
+  await fetchUser()
+  await initCart()
+})
 </script>
 
 <template>

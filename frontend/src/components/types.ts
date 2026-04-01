@@ -50,20 +50,39 @@ export type User = {
 } | null
 
 export interface Cart {
-  items: CartItem[]
+  items: (CartItem | GuestCartItem)[]
   total_items: number
   total_price: string
 }
 
-export type CartItem = {
-  cart_item_id: number
-  cart_id: number
+type BaseCartItem = {
   product_id: number
   product_variant_id: number
   quantity: number
   unit_price: string
-  updated_at: string
-  item_total_price: string
   product_name: string
   product_variant_name: string
+}
+
+export type CartItem = BaseCartItem & {
+  cart_item_id: number
+  cart_id: number
+  updated_at: string
+  item_total_price: string
+}
+
+export type GuestCartItem = {
+  product_id: number
+  product_variant_id: number
+  quantity: number
+  unit_price: string
+  product_name: string
+  product_variant_name: string
+  item_total_price: string
+}
+
+export type AddToCartPayload = {
+  product_id: number
+  product_variant_id: number
+  quantity: number
 }

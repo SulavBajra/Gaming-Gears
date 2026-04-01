@@ -42,12 +42,18 @@ const nextImage = () => {
 const addToCart = async () => {
   if (!selectedVariant.value || !product.value) return
 
-  await add({
-    product_id: product.value.id,
-    product_variant_id: selectedVariant.value.id,
-    quantity: quantity.value,
-    session_id: user.value ? null : localStorage.getItem('session_id') || null,
-  })
+  add(
+    {
+      product_id: product.value.id,
+      product_variant_id: selectedVariant.value.id,
+      quantity: quantity.value,
+    },
+    {
+      unit_price: String(selectedVariant.value.price),
+      product_name: product.value.name,
+      product_variant_name: selectedVariant.value.name,
+    },
+  )
 }
 
 const fetchProduct = async (slug: string) => {
