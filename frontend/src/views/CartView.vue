@@ -73,7 +73,12 @@ const handleCheckout = () => {
             <div class="item-image">
               <img
                 :src="item.thumbnail ?? placeholder"
-                @error="(e) => (e.target.src = placeholder)"
+                @error="
+                  (e) => {
+                    const img = e.target as HTMLImageElement
+                    if (img) img.src = placeholder
+                  }
+                "
               />
             </div>
 

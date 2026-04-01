@@ -12,8 +12,10 @@
 - [ ] Add queue worker + retry strategy
 - [ ] Tracking order
 - [ ] Add Payment Integration
-- [ ] Add expiration to the cart 
+- [ ] Add expiration to the cart
+- [ ] Implement Caching
 
 ## Base
 - [ ] SEO optimized
 - [ ] Deploy
+- [ ] Guest cart

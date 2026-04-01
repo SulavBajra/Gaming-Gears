@@ -3,7 +3,7 @@ import { ref, onMounted, watch, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import ProductGrid from '@/components/pages/ProductGrid.vue'
 import type { HomeProduct, ProductView } from '@/components/types'
-import { ShoppingCart, ChevronLeft, ChevronRight } from '@lucide/vue'
+import { ShoppingCart, ChevronLeft, ChevronRight, Minus, Plus } from '@lucide/vue'
 import placeholder from '@/assets/placeholder.jpg'
 import { useAuth } from '@/composables/useAuth'
 import { useCart } from '@/composables/useCart'
@@ -23,7 +23,6 @@ const selectedVariant = computed(() =>
 )
 const loading = ref(true)
 
-// Gallery state
 const activeImageIndex = ref(0)
 const allImages = computed(() => {
   const imgs: string[] = []
@@ -180,7 +179,21 @@ watch(
           </div>
         </div>
 
-        <input class="quantity" type="number" min="1" v-model.number="quantity" />
+        <div class="qty-stepper">
+          <button
+            class="qty-btn"
+            @click="quantity > 1 && quantity--"
+            :disabled="quantity <= 1"
+            type="button"
+            aria-label="Decrease quantity"
+          >
+            <Minus :size="12" />
+          </button>
+          <span class="qty-value">{{ quantity }}</span>
+          <button class="qty-btn" @click="quantity++" type="button" aria-label="Increase quantity">
+            <Plus :size="12" />
+          </button>
+        </div>
         <button class="add-to-cart" :disabled="!selectedVariant" @click="handleAddToCart">
           <ShoppingCart :size="18" />
           <span>Add to Cart</span>
@@ -577,6 +590,55 @@ watch(
   background-size: 200% 100%;
   animation: shimmer 1.4s infinite;
   border-radius: 4px;
+}
+
+.qty-stepper {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.03);
+  width: fit-content;
+}
+
+.qty-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #8fa8a8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  transition:
+    color 0.15s,
+    background 0.15s;
+  flex-shrink: 0;
+}
+
+.qty-btn:hover:not(:disabled) {
+  color: #f0ebe2;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.qty-btn:disabled {
+  opacity: 0.25;
+  cursor: not-allowed;
+}
+
+.qty-value {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #f0ebe2;
+  min-width: 36px;
+  text-align: center;
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  height: 36px;
+  line-height: 36px;
+  user-select: none;
 }
 
 @keyframes shimmer {

@@ -10,6 +10,27 @@ export interface HomeProduct {
   thumbnail: string
 }
 
+export interface ShopMeta {
+  current_page: number
+  from: number
+  to: number
+  total: number
+  last_page: number
+  per_page: number
+  path: string
+}
+
+export interface ShopProduct {
+  data: HomeProduct[]
+  links: {
+    first: string
+    last: string
+    prev: string | null
+    next: string | null
+  }
+  meta: ShopMeta
+}
+
 export interface Category {
   id: number
   name: string
