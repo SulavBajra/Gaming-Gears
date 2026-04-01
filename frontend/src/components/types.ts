@@ -49,9 +49,21 @@ export type User = {
   email: string
 } | null
 
+export interface Cart {
+  items: CartItem[]
+  total_items: number
+  total_price: string
+}
+
 export type CartItem = {
+  cart_item_id: number
+  cart_id: number
   product_id: number
   product_variant_id: number
   quantity: number
-  session_id: string | null
+  unit_price: string
+  updated_at: string
+  item_total_price: string
+  product_name: string
+  product_variant_name: string
 }

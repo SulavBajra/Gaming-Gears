@@ -5,8 +5,8 @@ import { useCart } from '@/composables/useCart'
 
 const { fetchUser } = useAuth()
 const { loadCart } = useCart()
-loadCart()
 fetchUser()
+loadCart()
 </script>
 
 <template>

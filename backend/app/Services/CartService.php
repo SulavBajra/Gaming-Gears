@@ -42,7 +42,7 @@ class CartService
         return $cart;
     }
 
-    public function getCart(int $userId)
+    public function getCart($userId)
     {
         $cart = Cart::with('items.product', 'items.productVariant')
             ->where('user_id', $userId)
@@ -52,6 +52,6 @@ class CartService
             return collect();
         }
 
-        return $cart->items;
+        return $cart;
     }
 }

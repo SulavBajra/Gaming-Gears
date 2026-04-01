@@ -31,4 +31,9 @@ class Cart extends Model
     {
         return $this->items->sum(fn ($item) => $item->quantity * $item->unit_price);
     }
+
+    public function getTotalQuantityAttribute()
+    {
+        return $this->items->sum('quantity');
+    }
 }
