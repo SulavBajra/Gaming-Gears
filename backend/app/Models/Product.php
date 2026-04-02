@@ -81,6 +81,11 @@ class Product extends Model implements HasMedia
             ->orderBy('sort_order');
     }
 
+    public function cartItems()
+    {
+        return $this->hasMany(CartItem::class);
+    }
+
     public function activeVariants(): HasMany
     {
         return $this->hasMany(ProductVariant::class)

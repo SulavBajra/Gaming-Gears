@@ -1,0 +1,6 @@
+{
+	"dependencies": {
+		"primevue": "^4.5.4",
+		"@primeuix/themes": "^2.0.3"
+	}
+}

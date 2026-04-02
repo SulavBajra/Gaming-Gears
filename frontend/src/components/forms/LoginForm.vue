@@ -4,10 +4,12 @@ import { useRouter } from 'vue-router'
 import axiosClient from '@/axios'
 import { useAuth } from '@/composables/useAuth'
 import { useCart } from '@/composables/useCart'
+import { useToaster } from '@/composables/useToast'
 
 const router = useRouter()
+const { showError } = useToaster()
 const { fetchUser } = useAuth()
-const { syncWithServer } = useCart()
+const { restorePendingCart } = useCart()
 
 const form = ref({ email: '', password: '' })
 const error = ref('')
@@ -17,16 +19,16 @@ const submit = async () => {
   error.value = ''
   loading.value = true
   try {
-    await axiosClient.post('/api/login', form.value).then((response) => {
-      const token = response.data.token
-      localStorage.setItem('token', token)
-      axiosClient.defaults.headers.common['Authorization'] = `Bearer ${token}`
-      fetchUser()
-      syncWithServer()
-      router.push('/')
-    })
+    const response = await axiosClient.post('/api/login', form.value)
+    const token = response.data.token
+    localStorage.setItem('token', token)
+    axiosClient.defaults.headers.common['Authorization'] = `Bearer ${token}`
+    await fetchUser()
+    await restorePendingCart()
+    router.push('/')
   } catch (e: any) {
     error.value = e.response?.data?.message ?? 'Invalid credentials.'
+    showError(e.message)
   } finally {
     loading.value = false
   }

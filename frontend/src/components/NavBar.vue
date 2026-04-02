@@ -2,8 +2,10 @@
 import { RouterLink } from 'vue-router'
 import { ShoppingCart, Search, CircleUserRound } from '@lucide/vue'
 import { useAuth } from '@/composables/useAuth'
+import { useCart } from '@/composables/useCart'
 
 const { user } = useAuth()
+const { itemCount } = useCart()
 </script>
 
 <template>
@@ -23,10 +25,10 @@ const { user } = useAuth()
         <button class="icon-btn" aria-label="Search">
           <Search />
         </button>
-        <button class="icon-btn" aria-label="Cart">
+        <RouterLink to="/cart" class="icon-btn" aria-label="Cart">
           <ShoppingCart />
-          <span class="cart-badge">3</span>
-        </button>
+          <span class="cart-badge">{{ itemCount }}</span>
+        </RouterLink>
         <button v-if="user" class="icon-btn" aria-label="Profile">
           <RouterLink to="/profile" class="user-profile"><CircleUserRound /></RouterLink>
         </button>
