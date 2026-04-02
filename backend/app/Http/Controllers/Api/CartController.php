@@ -29,7 +29,7 @@ class CartController extends Controller
         $cart = $this->cartService->getCart(Auth::id());
 
         if (! $cart instanceof Cart) {
-            return response()->json(['data' => new Cart()]);
+            return response()->json(['data' => new Cart]);
         }
 
         return new CartResource($cart->load('items.product', 'items.productVariant'));
@@ -37,25 +37,31 @@ class CartController extends Controller
 
     public function destroy(Cart $cart)
     {
-        Cart::destroy($cart->id);
+        $cart->delete();
 
         return response()->json(['message' => 'Cart deleted successfully']);
     }
 
     public function deleteItem(CartItem $cartItem)
     {
-        CartItem::destroy($cartItem->id);
+        $cartItem->delete();
 
         return response()->json(['message' => 'Cart item deleted successfully']);
     }
 
-    public function updateItem(CartUpdateRequest $request, CartItem $cartItem)
+    /**
+     * @param CartUpdateRequest $request
+     * @param CartItem $cartItem
+     * @return JsonResponse
+     */
+    public function updateItem(CartUpdateRequest $request, CartItem $cartItem):JsonResponse
     {
         $cartItem->update([
             'quantity' => $request->quantity,
         ]);
+
         return response()->json([
-            'message' => 'Cart item updated successfully'
+            'message' => 'Cart item updated successfully',
         ]);
     }
 }

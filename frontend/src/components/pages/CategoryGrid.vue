@@ -2,6 +2,7 @@
 import keyboardImg from '@/assets/category/keyboard.jpg'
 import mouseImg from '@/assets/category/mouse.jpg'
 import headsetImg from '@/assets/category/headset.jpg'
+import { useRoute } from 'vue-router'
 
 const categories = [
   {
@@ -25,6 +26,7 @@ const categories = [
     icon: headsetImg,
   },
 ]
+const route = useRoute()
 </script>
 
 <template>
@@ -33,7 +35,7 @@ const categories = [
       <RouterLink
         v-for="cat in categories"
         :key="cat.slug"
-        :to="`/shop?category=${cat.slug}`"
+        :to="{ path: '/shop', query: { category: cat.slug } }"
         class="card"
       >
         <div class="icon"><img :src="cat.icon" alt="{{ cat.name }}" /></div>

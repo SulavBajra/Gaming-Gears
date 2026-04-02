@@ -6,17 +6,24 @@ import axiosClient from '@/axios'
 import type { HomeProduct, ShopMeta } from '@/components/types'
 import Paginator from 'primevue/paginator'
 import ProgressSpinner from 'primevue/progressspinner'
+import { useRoute } from 'vue-router'
 
 const products = ref<HomeProduct[]>([])
 const meta = ref<ShopMeta | null>(null)
 const loading = ref(true)
 const first = ref(0)
 const perPage = 12
+const selectedCategory = ref<string | null>(null)
+const selectedSort = ref<string | null>(null)
+const selectedSearch = ref<string>('')
+const route = useRoute()
 
-const fetchProducts = async (page = 1) => {
+const fetchProducts = async (page = 1, category?: string, sort?: string, search?: string) => {
   loading.value = true
   try {
-    const res = await axiosClient.get('/api/shops', { params: { page } })
+    const res = await axiosClient.get('/api/shops', {
+      params: { page, category, sort, search, per_page: perPage },
+    })
     products.value = res.data.data
     meta.value = res.data.meta
     first.value = (res.data.meta.current_page - 1) * res.data.meta.per_page
@@ -25,17 +32,38 @@ const fetchProducts = async (page = 1) => {
   }
 }
 
-const onPageChange = (event: { page: number; first: number }) => {
-  fetchProducts(event.page + 1)
+const onFilter = (payload: { category: string | null; sort: string | null; search: string }) => {
+  selectedCategory.value = payload.category
+  selectedSort.value = payload.sort
+  selectedSearch.value = payload.search
+  fetchProducts(
+    1,
+    selectedCategory.value || undefined,
+    selectedSort.value || undefined,
+    payload.search || undefined,
+  )
 }
-onMounted(() => fetchProducts())
+
+const onPageChange = (event: { page: number }) => {
+  fetchProducts(
+    event.page + 1,
+    selectedCategory.value || undefined,
+    selectedSort.value || undefined,
+    selectedSearch.value || undefined,
+  )
+}
+onMounted(() => {
+  const categoryFromQuery = route.query.category as string | undefined
+  if (categoryFromQuery) selectedCategory.value = categoryFromQuery
+  fetchProducts(1, selectedCategory.value || undefined)
+})
 </script>
 <template>
   <section class="shop-view">
-    <FilterBar />
+    <FilterBar @filter="onFilter" />
 
-    <div v-if="loading" class="spinner">
-      <ProgressSpinner />
+    <div v-if="loading" :class="$style.spinner">
+      <ProgressSpinner class="spinner-load" />
     </div>
 
     <ProductGrid v-else :products="products" />
@@ -53,21 +81,16 @@ onMounted(() => fetchProducts())
     </div>
   </section>
 </template>
-<style scoped module>
-.shop-view {
-  height: 100%;
-}
-
+<style module>
 .spinner {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 50%;
+  height: 60vh;
 }
 
 .paginator {
   display: flex;
   justify-content: center;
-  color: red;
 }
 </style>

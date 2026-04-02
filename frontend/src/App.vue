@@ -4,6 +4,7 @@ import { RouterView } from 'vue-router'
 import { useAuth } from '@/composables/useAuth'
 import { useCart } from '@/composables/useCart'
 import ConfirmDialog from 'primevue/confirmdialog'
+import Toast from 'primevue/toast'
 
 const { fetchUser } = useAuth()
 const { fetchCart } = useCart()

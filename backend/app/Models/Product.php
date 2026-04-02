@@ -45,7 +45,7 @@ class Product extends Model implements HasMedia
     public function registerMediaConversions(?Media $media = null): void
     {
         $this->addMediaConversion('preview')
-            ->fit(Fit::Contain, 300, 300)
+            ->fit(Fit::Contain, 400, 400)
             ->nonQueued()
             ->performOnCollections('thumbnail', 'gallery');
     }

@@ -9,23 +9,26 @@ use App\Models\ProductVariant;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
+/**
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Product>
+ */
 class ProductFactory extends Factory
 {
     protected $model = Product::class;
 
     public function definition(): array
     {
-        $type = $this->faker->randomElement(['keyboard', 'mouse', 'headset']);
+        $type = fake()->randomElement(['keyboard', 'mouse', 'headset']);
         $name = $this->generateProductName($type);
 
         return [
             'brand_id' => Brand::inRandomOrder()->first()->id,
             'name' => $name,
-            'slug' => Str::slug($name).'-'.$this->faker->unique()->numberBetween(1, 999),
-            'description' => $this->faker->paragraph(3),
+            'slug' => Str::slug($name).'-'.fake()->unique()->numberBetween(1, 999),
+            'description' => fake()->paragraph(3),
             'is_active' => true,
-            'is_featured' => $this->faker->boolean(30),
-            'tags' => $this->faker->randomElements(['gaming', 'RGB', 'mechanical', 'wireless', 'wired'], $this->faker->numberBetween(1, 3)),
+            'is_featured' => fake()->boolean(30),
+            'tags' => fake()->randomElements(['gaming', 'RGB', 'mechanical', 'wireless', 'wired'], fake()->numberBetween(1, 3)),
         ];
     }
 
@@ -63,9 +66,9 @@ class ProductFactory extends Factory
                     'product_id' => $product->id,
                     'name' => "Variant $i",
                     'stock_quantity' => rand(5, 100),
-                    'price' => $this->faker->randomFloat(2, 50, 500),
+                    'price' => fake()->randomFloat(2, 50, 500),
                     'low_stock_threshold' => 5,
-                    'weight' => $this->faker->randomFloat(2, 0.5, 5),
+                    'weight' => fake()->randomFloat(2, 0.5, 5),
                     'is_active' => true,
                     'sort_order' => $i,
                 ]);
@@ -78,8 +81,8 @@ class ProductFactory extends Factory
         $brands = Brand::pluck('name')->toArray();
         $lines = ['G Pro X', 'BlackWidow V4', 'Apex Pro', 'K70 RGB', 'Alloy Origins', 'One 3', 'Q1 Pro', 'Strix Scope'];
 
-        $brand = $this->faker->randomElement($brands);
-        $line = $this->faker->randomElement($lines);
+        $brand = fake()->randomElement($brands);
+        $line = fake()->randomElement($lines);
 
         return match ($type) {
             'keyboard' => "$brand $line Keyboard",
