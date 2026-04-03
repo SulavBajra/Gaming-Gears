@@ -18,11 +18,13 @@ return new class extends Migration
             $table->foreignId('product_variant_id')->nullable()->constrained()->nullOnDelete();
             $table->string('product_name'); // snapshot
             $table->string('variant_name')->nullable();
-            $table->string('sku');
-            $table->integer('quantity');
+            $table->unsignedInteger('quantity');
             $table->decimal('unit_price', 10, 2);
-            $table->decimal('total', 10, 2);
+            $table->string('image')->nullable();
             $table->json('product_snapshot')->nullable(); // full product data at time of order
+            $table->index('order_id');
+            $table->index('product_id');
+            $table->index('product_variant_id');
             $table->timestamps();
         });
     }

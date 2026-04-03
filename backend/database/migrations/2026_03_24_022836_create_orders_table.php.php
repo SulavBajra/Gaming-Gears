@@ -15,13 +15,12 @@ return new class extends Migration
             $table->id();
             $table->string('order_number')->unique();
             $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
-            $table->string('status')->default('pending');
+            $table->foreignId('order_status_id')->constrained('order_statuses')->restrictOnDelete();
             // pending, confirmed, processing, shipped, delivered, cancelled, refunded
-            $table->string('payment_status')->default('unpaid');
+            $table->foreignId('payment_status_id')->constrained('payment_statuses')->restrictOnDelete();
             // unpaid, paid, refunded, failed
             // Pricing
             $table->decimal('subtotal', 10, 2);
-            $table->decimal('shipping_amount', 10, 2)->default(0);
             $table->decimal('total', 10, 2);
             $table->string('currency', 3)->default('NPR');
 
@@ -32,13 +31,9 @@ return new class extends Migration
 
             // Addresses (JSON snapshot)
             $table->json('shipping_address');
-            $table->json('billing_address');
-
-            // Shipping
-            $table->string('shipping_method')->nullable();
-            $table->string('tracking_number')->nullable();
-            $table->string('carrier')->nullable();
-
+            // Add to orders table via new migration
+            $table->string('stripe_payment_intent_id')->nullable()->index();
+            $table->string('payment_method')->nullable();
             $table->timestamp('paid_at')->nullable();
             $table->timestamp('shipped_at')->nullable();
             $table->timestamp('delivered_at')->nullable();
@@ -46,9 +41,8 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->index(['status', 'payment_status']);
+            $table->index(['order_status_id', 'payment_status_id']);
             $table->index('user_id');
-            $table->index('order_number');
         });
     }
 

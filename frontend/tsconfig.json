@@ -10,6 +10,7 @@
   ],
   "compilerOptions": {
     "moduleResolution": "bundler",
+    "module": "esnext",
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],

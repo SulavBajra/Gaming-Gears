@@ -11,6 +11,9 @@ importers:
       '@primeuix/themes':
         specifier: ^2.0.3
         version: 2.0.3
+      '@stripe/stripe-js':
+        specifier: ^9.0.1
+        version: 9.0.1
       primevue:
         specifier: ^4.5.4
         version: 4.5.4(vue@3.5.31)
@@ -60,6 +63,10 @@ packages:
   '@primevue/icons@4.5.4':
     resolution: {integrity: sha512-DxgryEc7ZmUqcEhYMcxGBRyFzdtLIoy3jLtlH1zsVSRZaG+iSAcjQ88nvfkZxGUZtZBFL7sRjF6KLq3bJZJwUw==}
     engines: {node: '>=12.11.0'}
+
+  '@stripe/stripe-js@9.0.1':
+    resolution: {integrity: sha512-un0URSosrW7wNr7xZ5iI2mC9mdeXZ3KERoVlA2RdmeLXYxHUPXq0yHzir2n/MtyXXEdSaELtz4WXGS6dzPEeKA==}
+    engines: {node: '>=12.16'}
 
   '@vue/compiler-core@3.5.31':
     resolution: {integrity: sha512-k/ueL14aNIEy5Onf0OVzR8kiqF/WThgLdFhxwa4e/KF/0qe38IwIdofoSWBTvvxQOesaz6riAFAUaYjoF9fLLQ==}
@@ -174,6 +181,8 @@ snapshots:
       '@primevue/core': 4.5.4(vue@3.5.31)
     transitivePeerDependencies:
       - vue
+
+  '@stripe/stripe-js@9.0.1': {}
 
   '@vue/compiler-core@3.5.31':
     dependencies:

@@ -41,6 +41,16 @@ class ProductVariant extends Model
         return $this->belongsTo(Product::class);
     }
 
+    public function cartItems()
+    {
+        return $this->hasMany(CartItem::class);
+    }
+
+    public function orderItems()
+    {
+        return $this->hasMany(OrderItem::class);
+    }
+
     public function inStock(): bool
     {
         return $this->is_active && $this->stock_quantity > 0;
@@ -49,10 +59,5 @@ class ProductVariant extends Model
     public function isLowStock(): bool
     {
         return $this->stock_quantity <= $this->low_stock_threshold;
-    }
-
-    public function cartItems()
-    {
-        return $this->hasMany(CartItem::class);
     }
 }

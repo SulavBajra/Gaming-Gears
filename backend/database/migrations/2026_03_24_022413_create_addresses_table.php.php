@@ -22,8 +22,6 @@ return new class extends Migration
             $table->string('city');
             $table->string('state');
             $table->string('phone')->nullable();
-            $table->boolean('is_default_billing')->default(false);
-            $table->boolean('is_default_shipping')->default(false);
             $table->timestamps();
         });
     }

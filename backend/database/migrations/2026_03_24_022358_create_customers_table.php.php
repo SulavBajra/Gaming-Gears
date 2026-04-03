@@ -17,7 +17,6 @@ return new class extends Migration
             $table->string('phone')->nullable();
             $table->date('date_of_birth')->nullable();
             $table->string('gender')->nullable();
-            $table->text('notes')->nullable(); // admin notes
             $table->decimal('total_spent', 12, 2)->default(0);
             $table->integer('orders_count')->default(0);
             $table->timestamp('last_ordered_at')->nullable();
