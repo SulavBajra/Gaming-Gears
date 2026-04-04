@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('order_number')->unique();
             $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
-            $table->foreignId('order_status_id')->constrained('order_statuses')->restrictOnDelete();
+            $table->foreignId('order_status_id')->constrained('order_statuses');
             // pending, confirmed, processing, shipped, delivered, cancelled, refunded
-            $table->foreignId('payment_status_id')->constrained('payment_statuses')->restrictOnDelete();
+            $table->foreignId('payment_status_id')->constrained('payment_statuses');
             // unpaid, paid, refunded, failed
             // Pricing
             $table->decimal('subtotal', 10, 2);
@@ -29,9 +29,7 @@ return new class extends Migration
             $table->string('customer_name');
             $table->string('customer_phone')->nullable();
 
-            // Addresses (JSON snapshot)
             $table->json('shipping_address');
-            // Add to orders table via new migration
             $table->string('stripe_payment_intent_id')->nullable()->index();
             $table->string('payment_method')->nullable();
             $table->timestamp('paid_at')->nullable();

@@ -38,7 +38,6 @@ class CategorySeeder extends Seeder
         ];
 
         foreach ($categories as $parentName => $children) {
-
             // Create parent
             $parent = Category::firstOrCreate(
                 [
@@ -57,7 +56,7 @@ class CategorySeeder extends Seeder
                 Category::firstOrCreate(
                     [
                         'parent_id' => $parent->id,
-                        'slug' => Str::slug($childName),
+                        'slug' => Str::slug($parentName),
                     ],
                     [
                         'name' => $childName,

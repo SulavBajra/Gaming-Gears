@@ -51,15 +51,29 @@ class ProductFactory extends Factory
     public function configure(): static
     {
         return $this->afterCreating(function (Product $product) {
+            // Match the categories you actually have
             $categorySlugs = match (true) {
-                str_contains(strtolower($product->name), 'keyboard') => ['mechanical', 'membrane', 'wireless', '60%', 'tkl'],
-                str_contains(strtolower($product->name), 'mouse') => ['wireless', 'wired', 'mmo', 'fps', 'ergonomic'],
-                str_contains(strtolower($product->name), 'headset') => ['wireless', 'wired', 'surround-sound', 'noise-cancelling'],
-                default => [],
+                str_contains(strtolower($product->name), 'keyboard') => ['keyboards'],
+                str_contains(strtolower($product->name), 'mouse') => ['mice'],
+                str_contains(strtolower($product->name), 'headset') => ['headsets'],
+                default => ['accessories'],
             };
 
+            // Get random category from the matched ones (or add random variation)
             $categories = Category::whereIn('slug', $categorySlugs)->get();
+
+            // Optional: Add random variation (keyboards-1, keyboards-2, etc.)
+            if ($categories->isEmpty() && str_contains(strtolower($product->name), 'keyboard')) {
+                $categories = Category::where('slug', 'like', 'keyboards%')->get();
+            } elseif ($categories->isEmpty() && str_contains(strtolower($product->name), 'mouse')) {
+                $categories = Category::where('slug', 'like', 'mice%')->get();
+            } elseif ($categories->isEmpty() && str_contains(strtolower($product->name), 'headset')) {
+                $categories = Category::where('slug', 'like', 'headsets%')->get();
+            }
+
             $product->categories()->sync($categories->pluck('id'));
+
+            // Your variant creation code remains the same...
             $variantsCount = rand(1, 3);
             for ($i = 1; $i <= $variantsCount; $i++) {
                 ProductVariant::create([

@@ -86,6 +86,16 @@ class User extends Authenticatable
         return $this->hasMany(Order::class);
     }
 
+    public function customer()
+    {
+        return $this->hasOne(Customer::class);
+    }
+
+    public function address()
+    {
+        return $this->hasOne(Address::class);
+    }
+
     public function cartTotal(): float
     {
         return $this->cartItems()
