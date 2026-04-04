@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\CartRequest;
+use App\Http\Requests\Api\CartUpdateRequest;
 use App\Http\Resources\CartResource;
 use App\Models\Cart;
 use App\Models\CartItem;
@@ -28,7 +29,7 @@ class CartController extends Controller
         $cart = $this->cartService->getCart(Auth::id());
 
         if (! $cart instanceof Cart) {
-            return response()->json(['data' => new Cart()]);
+            return response()->json(['data' => new Cart]);
         }
 
         return new CartResource($cart->load('items.product', 'items.productVariant'));
@@ -36,27 +37,31 @@ class CartController extends Controller
 
     public function destroy(Cart $cart)
     {
-        Cart::destroy($cart->id);
+        $cart->delete();
 
         return response()->json(['message' => 'Cart deleted successfully']);
     }
 
     public function deleteItem(CartItem $cartItem)
     {
-        CartItem::destroy($cartItem->id);
+        $cartItem->delete();
 
         return response()->json(['message' => 'Cart item deleted successfully']);
     }
 
-    public function updateItem(CartItem $cartItem, int $requestQuantity)
+    /**
+     * @param CartUpdateRequest $request
+     * @param CartItem $cartItem
+     * @return JsonResponse
+     */
+    public function updateItem(CartUpdateRequest $request, CartItem $cartItem):JsonResponse
     {
-        if ($requestQuantity < 1) {
-            return response()->json(['message' => 'Quantity must be at least 1'], 400);
-        }
+        $cartItem->update([
+            'quantity' => $request->quantity,
+        ]);
 
-        CartItem::update($cartItem->id, ['quantity' => $requestQuantity]);
-
-        return response()->json(['message' => 'Cart item updated successfully']);
+        return response()->json([
+            'message' => 'Cart item updated successfully',
+        ]);
     }
-
 }

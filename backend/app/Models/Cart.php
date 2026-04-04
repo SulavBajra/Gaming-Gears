@@ -27,13 +27,17 @@ class Cart extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function getTotalAttribute()
+    protected function total(): \Illuminate\Database\Eloquent\Casts\Attribute
     {
-        return $this->items->sum(fn ($item) => $item->quantity * $item->unit_price);
+        return \Illuminate\Database\Eloquent\Casts\Attribute::make(get: function () {
+            return $this->items->sum(fn ($item) => $item->quantity * $item->unit_price);
+        });
     }
 
-    public function getTotalQuantityAttribute()
+    protected function totalQuantity(): \Illuminate\Database\Eloquent\Casts\Attribute
     {
-        return $this->items->sum('quantity');
+        return \Illuminate\Database\Eloquent\Casts\Attribute::make(get: function () {
+            return $this->items->sum('quantity');
+        });
     }
 }

@@ -14,7 +14,7 @@ Route::post('/register', RegisterController::class)->name('api.register');
 Route::get('/home', [ProductHomeController::class, 'index'])->name('api.home');
 Route::get('/shop/{product:slug}', [ShopController::class, 'show'])->name('api.shop');
 Route::get('/shop/category/{category:slug}', [ShopController::class, 'similar']);
-Route::post('/cart', [CartController::class, 'addToCart']);
+Route::get('/shops/', [ShopController::class, 'index']);
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware(['auth:sanctum', 'role:customer']);

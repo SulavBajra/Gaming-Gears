@@ -37,10 +37,10 @@ const formatPrice = (price: number) => {
             </p>
 
             <div class="tags">
-              <Tag class="tag-icon" />
               <p>
                 {{ product.tags?.join(', ') }}
               </p>
+              <Tag class="tag-icon" />
             </div>
           </div>
 
@@ -133,10 +133,9 @@ const formatPrice = (price: number) => {
 
 .meta {
   display: flex;
-  gap: 0.8rem;
+  flex-direction: column;
   flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: center;
+  gap: 0.4rem;
 }
 
 .category {
@@ -147,14 +146,14 @@ const formatPrice = (price: number) => {
 .tags {
   display: flex;
   align-items: center;
-  gap: 0.4rem;
   font-size: 0.85rem;
   color: #aab6ba;
 }
 
 .tag-icon {
-  size: 12px;
+  padding-top: 2px;
   stroke-width: 1px;
+  height: 14px;
 }
 
 /* bottom */

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
-import { ShoppingCart, Search, CircleUserRound } from '@lucide/vue'
+import { ShoppingCart, Search, CircleUserRound, House, Store } from '@lucide/vue'
 import { useAuth } from '@/composables/useAuth'
 import { useCart } from '@/composables/useCart'
 
@@ -16,8 +16,12 @@ const { itemCount } = useCart()
       </div>
 
       <ul class="nav-links">
-        <li><RouterLink to="/" class="nav-item">Home</RouterLink></li>
-        <li><RouterLink to="/shop" class="nav-item">Shop</RouterLink></li>
+        <li>
+          <RouterLink to="/" class="nav-item"><House class="house-icon" />Home</RouterLink>
+        </li>
+        <li>
+          <RouterLink to="/shop" class="nav-item"><Store class="house-icon" />Shop</RouterLink>
+        </li>
         <li><RouterLink to="/about" class="nav-item">About</RouterLink></li>
       </ul>
 
@@ -100,6 +104,11 @@ const { itemCount } = useCart()
   position: relative;
   padding-bottom: 2px;
   transition: color 0.2s;
+}
+
+.house-icon {
+  height: 0.78rem;
+  padding-top: 2px;
 }
 
 .nav-item::after {

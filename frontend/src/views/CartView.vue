@@ -9,18 +9,8 @@ import ProgressSpinner from 'primevue/progressspinner'
 import { useConfirmDialog } from '@/composables/useConfirm'
 
 const { deleteCartItem, clearEntireCart } = useConfirmDialog()
-const {
-  fetchCart,
-  cart,
-  items,
-  isEmpty,
-  totalItems,
-  totalPrice,
-  updateQuantity,
-  removeItem,
-  clearCart,
-  loading,
-} = useCart()
+const { fetchCart, cart, items, isEmpty, totalItems, totalPrice, updateQuantity, loading } =
+  useCart()
 const { user } = useAuth()
 const router = useRouter()
 
@@ -31,6 +21,11 @@ onMounted(async () => {
 const decrease = (item: (typeof items.value)[number]) => {
   if (item.quantity <= 1) return
   updateQuantity(item.id, item.quantity - 1)
+}
+
+const increase = (item: (typeof items.value)[number]) => {
+  if (item.quantity <= 1) return
+  updateQuantity(item.id, item.quantity + 1)
 }
 
 const handleCheckout = () => {
@@ -78,7 +73,12 @@ const handleCheckout = () => {
             <div class="item-image">
               <img
                 :src="item.thumbnail ?? placeholder"
-                @error="(e) => (e.target.src = placeholder)"
+                @error="
+                  (e) => {
+                    const img = e.target as HTMLImageElement
+                    if (img) img.src = placeholder
+                  }
+                "
               />
             </div>
 
@@ -95,7 +95,7 @@ const handleCheckout = () => {
                 <Minus :size="13" />
               </button>
               <span class="qty-value">{{ item.quantity }}</span>
-              <button class="qty-btn" @click="" :disabled="loading">
+              <button class="qty-btn" @click="increase(item)" :disabled="loading">
                 <Plus :size="13" />
               </button>
             </div>
