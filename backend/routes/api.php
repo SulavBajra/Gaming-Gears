@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\ProductHomeController;
 use App\Http\Controllers\Api\RegisterController;
 use App\Http\Controllers\Api\ShopController;
 use App\Http\Controllers\Api\StripeWebhookController;
+use App\Http\Controllers\Api\WishlistController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -29,13 +30,16 @@ Route::middleware(['auth:sanctum', 'role:customer'])->group(function () {
     Route::delete('/cart/{cart}', [CartController::class, 'destroy']);
     Route::delete('/cart/items/{cartItem}', [CartController::class, 'deleteItem']);
     Route::patch('/cart/items/{cartItem}', [CartController::class, 'updateItem']);
-    Route::post('/checkout/intent', [CheckoutController::class, 'createIntent'])->name('api.createIntent');
+    Route::post('/checkout/intent', [CheckoutController::class, 'createPaymentIntent']);
 
     // this is for the user profile section
     Route::get('/profile', [CustomerProfileController::class, 'show'])->name('api.profile');
     Route::post('/profile', [CustomerProfileController::class, 'store']);
     Route::put('/profile', [CustomerProfileController::class, 'update']);
     Route::patch('/profile', [CustomerProfileController::class, 'update']);
+
+    // TODO: Add for wishlist
+    Route::resource('/wishlist', WishlistController::class);
 });
 
 Route::post('/stripe/webhook', [StripeWebhookController::class, 'handle']);

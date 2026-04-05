@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\Mail\OrderConfirmation;
 use App\Models\Order;
-use App\Models\OrderItem;
 use App\Models\OrderStatus;
 use App\Models\PaymentStatus;
 use App\Models\User;
@@ -33,12 +32,12 @@ class OrderService
         }
 
         return DB::transaction(function () use ($user, $intent, $orderStatusId, $paymentStatusId) {
-            $cartItems = $user->cartItems()
-                ->with(['product.media', 'variant'])
+            $cartItems = $user->cart->items()
+                ->with(['product.media', 'productVariant'])
                 ->lockForUpdate()
                 ->get();
 
-            if ($user->cartItems()->count() === 0) {
+            if ($cartItems->isEmpty()) {
                 throw new \Exception('Cart is empty');
             }
 
@@ -57,6 +56,7 @@ class OrderService
                 'currency' => strtoupper($intent->currency),
                 'stripe_payment_intent_id' => $intent->id,
                 // Customer snapshot
+                'payment_method' => 'stripe',
                 'customer_email' => $user->email,
                 'customer_name' => $user->name,
                 'customer_phone' => $user->phone ?? null,
@@ -92,15 +92,12 @@ class OrderService
             DB::table('order_items')->insert($items);
 
             // 3. Clear the cart
-            $user->cartItems()->delete();
+            $user->cart->items()->delete();
 
-            $order->setRelation('items', collect($items)->map(
-                fn ($i) => new OrderItem($i)
-            ));
-
-            // 4. Send confirmation email
             DB::afterCommit(function () use ($user, $order) {
-                Mail::to($user->email)->queue(new OrderConfirmation($order));
+                Mail::to($user->email)->queue(
+                    new OrderConfirmation($order->load('items'))
+                );
             });
 
             Log::info('Order created', [

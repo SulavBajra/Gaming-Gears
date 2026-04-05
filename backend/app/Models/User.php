@@ -98,7 +98,16 @@ class User extends Authenticatable
 
     public function cartTotal(): float
     {
-        return $this->cartItems()
-            ->sum(DB::raw('quantity * unit_price'));
+        $cart = $this->cart()->first(); // hasOne, so use first()
+        if (! $cart) {
+            return 0;
+        }
+
+        return $cart->items()->sum(DB::raw('quantity * unit_price'));
+    }
+
+    public function wishlists()
+    {
+        return $this->hasMany(Wishlist::class);
     }
 }
