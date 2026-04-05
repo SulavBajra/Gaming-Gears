@@ -12,9 +12,7 @@ use Illuminate\Support\Facades\Auth;
 
 class CustomerProfileController extends Controller
 {
-    public function __construct(private readonly CustomerProfileService $customerProfileService)
-    {
-    }
+    public function __construct(private readonly CustomerProfileService $customerProfileService) {}
 
     public function show()
     {
@@ -25,7 +23,7 @@ class CustomerProfileController extends Controller
         ])->findOrFail($user_id);
 
         if (! $user->customer || ! $user->address) {
-            return response()->json(['error' => 'Profile not found'], 404);
+            return response()->json(['message' => 'Profile not found']);
         }
 
         return new UserProfileResource($user);
@@ -36,7 +34,7 @@ class CustomerProfileController extends Controller
         $user = $request->user();
         if ($user->address()->exists() && $user->customer()->exists()) {
             return response()->json([
-                'error' => 'Customer profile already exists'
+                'error' => 'Customer profile already exists',
             ], 409);
         }
         $user = $this->customerProfileService->createUserProfile($request);

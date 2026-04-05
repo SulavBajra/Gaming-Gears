@@ -2,7 +2,6 @@
 import keyboardImg from '@/assets/category/keyboard.jpg'
 import mouseImg from '@/assets/category/mouse.jpg'
 import headsetImg from '@/assets/category/headset.jpg'
-import { useRoute } from 'vue-router'
 
 const categories = [
   {
@@ -26,7 +25,6 @@ const categories = [
     icon: headsetImg,
   },
 ]
-const route = useRoute()
 </script>
 
 <template>

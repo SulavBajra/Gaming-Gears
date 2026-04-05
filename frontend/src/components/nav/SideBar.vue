@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { RouterLink, useRouter } from 'vue-router'
 import { useAuth } from '@/composables/useAuth'
+import { User, ShoppingBag, LogOut } from '@lucide/vue'
 
 const { user, logout } = useAuth()
 const router = useRouter()
@@ -14,7 +15,6 @@ const handleLogout = () => {
 <template>
   <aside class="profile-sidebar">
     <div class="sidebar-header">
-      <div class="avatar">{{ user?.name?.charAt(0).toUpperCase() }}</div>
       <div class="user-info">
         <span class="greeting">Welcome back</span>
         <h2 class="user-name">{{ user?.name }}</h2>
@@ -23,59 +23,18 @@ const handleLogout = () => {
 
     <nav class="sidebar-nav">
       <RouterLink to="/profile" class="sidebar-item" active-class="active">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="16"
-          height="16"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <circle cx="12" cy="8" r="5" />
-          <path d="M20 21a8 8 0 1 0-16 0" />
-        </svg>
+        <User />
         Profile
       </RouterLink>
       <RouterLink to="/profile/orders" class="sidebar-item" active-class="active">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="16"
-          height="16"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
-          <line x1="3" y1="6" x2="21" y2="6" />
-          <path d="M16 10a4 4 0 0 1-8 0" />
-        </svg>
+        <ShoppingBag />
         Orders
       </RouterLink>
     </nav>
 
     <div class="sidebar-footer">
       <button @click="handleLogout" class="logout-btn">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="16"
-          height="16"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-          <polyline points="16 17 21 12 16 7" />
-          <line x1="21" y1="12" x2="9" y2="12" />
-        </svg>
+        <LogOut />
         Logout
       </button>
     </div>
@@ -84,39 +43,22 @@ const handleLogout = () => {
 
 <style scoped>
 .profile-sidebar {
-  width: 240px;
+  width: 200px;
   background: var(--bg);
   border-right: 1px solid var(--border);
-  min-height: 100vh;
-  padding: 2rem 1.25rem;
+  min-height: 90vh;
+  padding: 1.2rem 1rem;
   display: flex;
   flex-direction: column;
   gap: 2rem;
 }
 
-/* Header */
 .sidebar-header {
   display: flex;
   align-items: center;
   gap: 0.875rem;
-  padding-bottom: 1.5rem;
+  padding-bottom: 1rem;
   border-bottom: 1px solid var(--border);
-}
-
-.avatar {
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  background: color-mix(in srgb, var(--accent) 15%, transparent);
-  border: 1.5px solid var(--accent);
-  color: var(--accent);
-  font-family: 'Oswald', sans-serif;
-  font-size: 1.1rem;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
 }
 
 .user-info {
