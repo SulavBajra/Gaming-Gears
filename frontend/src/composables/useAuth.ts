@@ -1,8 +1,10 @@
 import { ref } from 'vue'
 import axiosClient from '@/axios'
 import type { User } from '@/components/types'
+import type { Profile } from '@/components/types'
 
 const user = ref<User>(null)
+const profile = ref<Profile>()
 
 export function useAuth() {
   const fetchUser = async () => {
@@ -28,5 +30,15 @@ export function useAuth() {
     }
   }
 
-  return { user, fetchUser, logout }
+  const getUserProfile = async () => {
+    try {
+      const response = await axiosClient.get('/api/profile')
+      profile.value = response.data.data
+    } catch (error) {
+      console.error('Get user profile failed:', error)
+      return null
+    }
+  }
+
+  return { user, fetchUser, logout, profile, getUserProfile }
 }

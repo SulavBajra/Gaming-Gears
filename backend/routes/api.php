@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\CheckoutController;
 use App\Http\Controllers\Api\CustomerProfileController;
 use App\Http\Controllers\Api\LoginController;
 use App\Http\Controllers\Api\LogoutController;
+use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\ProductHomeController;
 use App\Http\Controllers\Api\RegisterController;
 use App\Http\Controllers\Api\ShopController;
@@ -37,6 +38,8 @@ Route::middleware(['auth:sanctum', 'role:customer'])->group(function () {
     Route::post('/profile', [CustomerProfileController::class, 'store']);
     Route::put('/profile', [CustomerProfileController::class, 'update']);
     Route::patch('/profile', [CustomerProfileController::class, 'update']);
+
+    Route::get('/orders', [OrderController::class, 'index']);
 
     // TODO: Add for wishlist
     Route::resource('/wishlist', WishlistController::class);

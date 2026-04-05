@@ -56,15 +56,16 @@ class OrderService
                 'currency' => strtoupper($intent->currency),
                 'stripe_payment_intent_id' => $intent->id,
                 // Customer snapshot
-                'payment_method' => 'stripe',
+                'payment_method' => "Stripe",
                 'customer_email' => $user->email,
                 'customer_name' => $user->name,
-                'customer_phone' => $user->phone ?? null,
+                'customer_phone' => $user->customer()->phone ?? "test",
                 // Address snapshots — pull from user profile or cart
                 'shipping_address' => static::resolveShippingAddress($user, $intent),
                 'paid_at' => now(),
             ]);
 
+            $products = [];
             $items = [];
             foreach ($cartItems as $cartItem) {
                 $product = $cartItem->product;
@@ -87,12 +88,18 @@ class OrderService
                     'created_at' => now(),
                     'updated_at' => now(),
                 ];
+                $products[] = [
+                    'product_id' => $product->id,
+                    'product_variant_id' => $variant?->id,
+                    'quantity' => $cartItem->quantity,
+                ];
             }
 
             DB::table('order_items')->insert($items);
 
             // 3. Clear the cart
             $user->cart->items()->delete();
+
 
             DB::afterCommit(function () use ($user, $order) {
                 Mail::to($user->email)->queue(
@@ -151,7 +158,6 @@ class OrderService
                 'line2' => $s->address->line2 ?? null,
                 'city' => $s->address->city,
                 'state' => $s->address->state ?? null,
-                'postal' => $s->address->postal_code,
                 'country' => $s->address->country,
                 'phone' => $s->phone ?? null,
             ];
@@ -162,7 +168,6 @@ class OrderService
             'name' => $user->name,
             'line1' => '',
             'city' => '',
-            'country' => 'NP',
         ];
     }
 

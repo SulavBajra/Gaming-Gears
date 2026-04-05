@@ -19,7 +19,7 @@ class OrderConfirmation extends Mailable implements ShouldQueue
 
     public function envelope(): Envelope
     {
-        return new Envelope(subject: 'Your Game Gears order #'.$this->order->id);
+        return new Envelope(subject: 'Your Game Gears order '.$this->order->id);
     }
 
     public function content(): Content

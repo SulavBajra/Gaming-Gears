@@ -7,10 +7,12 @@ import { useAuth } from '@/composables/useAuth'
 import axiosClient from '@/axios'
 import { ArrowLeft, ArrowRight, Lock } from '@lucide/vue'
 import ProgressSpinner from 'primevue/progressspinner'
+import { useToaster } from '@/composables/useToast'
 
 const router = useRouter()
 const { items, totalPrice, totalItems, fetchCart } = useCart()
-const { user } = useAuth()
+const { user, profile, getUserProfile } = useAuth()
+const { showSuccess } = useToaster()
 
 // ── State ────────────────────────────────────────────────────────────
 type Step = 'shipping' | 'payment'
@@ -27,14 +29,17 @@ const shipping = reactive({
   shipping_name: '',
   shipping_line1: '',
   shipping_city: '',
-  shipping_postal: '',
-  shipping_country: 'NP',
+  // shipping_country: 'NP',
 })
 
-// Pre-fill name from auth user
 onMounted(async () => {
-  await fetchCart()
-  if (user.value) shipping.shipping_name = user.value.name ?? ''
+  await getUserProfile()
+  if (profile.value) {
+    shipping.shipping_name =
+      profile.value.address.first_name + ' ' + profile.value.address.last_name
+    shipping.shipping_line1 = profile.value.address.address_line_1
+    shipping.shipping_city = profile.value.address.city
+  }
 })
 
 onUnmounted(() => {
@@ -102,9 +107,8 @@ async function submitPayment() {
     processing.value = false
     return
   }
-
-  // Webhook handles order creation async — redirect immediately
-  router.push({ name: 'order-success', query: { ref: paymentIntent.id } })
+  showSuccess('Order placed successfully!')
+  router.push({ name: 'shop' })
 }
 </script>
 
@@ -155,10 +159,6 @@ async function submitPayment() {
               <div class="field">
                 <label>City</label>
                 <input v-model="shipping.shipping_city" placeholder="Kathmandu" />
-              </div>
-              <div class="field">
-                <label>Postal code</label>
-                <input v-model="shipping.shipping_postal" placeholder="44600" />
               </div>
             </div>
 
