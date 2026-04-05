@@ -49,12 +49,7 @@ class CartController extends Controller
         return response()->json(['message' => 'Cart item deleted successfully']);
     }
 
-    /**
-     * @param CartUpdateRequest $request
-     * @param CartItem $cartItem
-     * @return JsonResponse
-     */
-    public function updateItem(CartUpdateRequest $request, CartItem $cartItem):JsonResponse
+    public function updateItem(CartUpdateRequest $request, CartItem $cartItem): JsonResponse
     {
         $cartItem->update([
             'quantity' => $request->quantity,

@@ -26,7 +26,10 @@ class ProductSeeder extends Seeder
             [
                 'name' => 'Logitech G Pro X Keyboard',
                 'brand' => $logitech,
+                'description' => fake()->sentence(12),
                 'category' => $keyboards,
+                'tags' => ['gaming', 'pro'],
+                'is_active' => true,
                 'variants' => [
                     ['name' => 'Red Switch', 'price' => 15000, 'stock_quantity' => 100],
                     ['name' => 'Blue Switch', 'price' => 14500, 'stock_quantity' => 100],
@@ -35,7 +38,10 @@ class ProductSeeder extends Seeder
             [
                 'name' => 'Razer DeathAdder V3',
                 'brand' => $razer,
+                'description' => fake()->sentence(12),
                 'category' => $mice,
+                'tags' => ['gaming', 'pro'],
+                'is_active' => true,
                 'variants' => [
                     ['name' => 'Standard', 'price' => 8500, 'stock_quantity' => 100],
                     ['name' => 'Wireless', 'price' => 12000, 'stock_quantity' => 100],
@@ -44,7 +50,10 @@ class ProductSeeder extends Seeder
             [
                 'name' => 'SteelSeries Arctis 7',
                 'brand' => $steelseries,
+                'description' => fake()->sentence(12),
                 'category' => $headsets,
+                'tags' => ['gaming', 'pro'],
+                'is_active' => true,
                 'variants' => [
                     ['name' => 'Black', 'price' => 18000, 'stock_quantity' => 100],
                     ['name' => 'White', 'price' => 18500, 'stock_quantity' => 100],
@@ -55,7 +64,7 @@ class ProductSeeder extends Seeder
         foreach ($products as $data) {
             $product = Product::create([
                 'name' => $data['name'],
-                'brand_id' => $data['brand']?->id, // ✅ attach brand
+                'brand_id' => $data['brand']?->id,
                 'description' => fake()->sentence(12),
                 'is_active' => true,
                 'is_featured' => fake()->boolean(30),

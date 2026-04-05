@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -27,16 +28,16 @@ class Cart extends Model
         return $this->belongsTo(User::class);
     }
 
-    protected function total(): \Illuminate\Database\Eloquent\Casts\Attribute
+    protected function total(): Attribute
     {
-        return \Illuminate\Database\Eloquent\Casts\Attribute::make(get: function () {
+        return Attribute::make(get: function () {
             return $this->items->sum(fn ($item) => $item->quantity * $item->unit_price);
         });
     }
 
-    protected function totalQuantity(): \Illuminate\Database\Eloquent\Casts\Attribute
+    protected function totalQuantity(): Attribute
     {
-        return \Illuminate\Database\Eloquent\Casts\Attribute::make(get: function () {
+        return Attribute::make(get: function () {
             return $this->items->sum('quantity');
         });
     }

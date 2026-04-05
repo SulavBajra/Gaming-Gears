@@ -36,6 +36,15 @@ class Product extends Model implements HasMedia
         'tags',
     ];
 
+    protected function casts(): array
+    {
+        return [
+            'is_active' => 'boolean',
+            'is_featured' => 'boolean',
+            'tags' => 'array',
+        ];
+    }
+
     public function registerMediaCollections(): void
     {
         $this->addMediaCollection('thumbnail')->singleFile();
@@ -86,20 +95,16 @@ class Product extends Model implements HasMedia
         return $this->hasMany(CartItem::class);
     }
 
+    public function orderItems()
+    {
+        return $this->hasMany(OrderItem::class);
+    }
+
     public function activeVariants(): HasMany
     {
         return $this->hasMany(ProductVariant::class)
             ->where('is_active', true)
             ->orderBy('sort_order');
-    }
-
-    protected function casts(): array
-    {
-        return [
-            'is_active' => 'boolean',
-            'is_featured' => 'boolean',
-            'tags' => 'array',
-        ];
     }
 
     #[Scope]

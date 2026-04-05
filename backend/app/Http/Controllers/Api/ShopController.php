@@ -47,15 +47,15 @@ class ShopController extends Controller
             })
             ->when($request->filled('sort'), function ($q) use ($request) {
                 match ($request->sort) {
-                    'price_asc'  => $q->orderBy('variants_min_price', 'asc'),
+                    'price_asc' => $q->orderBy('variants_min_price', 'asc'),
                     'price_desc' => $q->orderBy('variants_min_price', 'desc'),
-                    'name_asc'   => $q->orderBy('name', 'asc'),
-                    'name_desc'  => $q->orderBy('name', 'desc'),
-                    default      => null,
+                    'name_asc' => $q->orderBy('name', 'asc'),
+                    'name_desc' => $q->orderBy('name', 'desc'),
+                    default => null,
                 };
             })
             ->when($request->filled('search'), function ($q) use ($request) {
-                $q->where('name', 'like', '%' . $request->search . '%');
+                $q->where('name', 'like', '%'.$request->search.'%');
             })
             ->paginate($request->input('per_page', 12));
 

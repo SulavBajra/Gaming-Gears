@@ -2,18 +2,21 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\DB;
+use Laravel\Cashier\Billable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
+    use Billable;
+
     /** @use HasFactory<UserFactory> */
     use HasApiTokens;
 
@@ -76,5 +79,26 @@ class User extends Authenticatable
     public function cart()
     {
         return $this->hasOne(Cart::class)->with('items');
+    }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
+
+    public function customer()
+    {
+        return $this->hasOne(Customer::class);
+    }
+
+    public function address()
+    {
+        return $this->hasOne(Address::class);
+    }
+
+    public function cartTotal(): float
+    {
+        return $this->cartItems()
+            ->sum(DB::raw('quantity * unit_price'));
     }
 }
