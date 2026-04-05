@@ -42,7 +42,7 @@ Route::middleware(['auth:sanctum', 'role:customer'])->group(function () {
     Route::get('/orders', [OrderController::class, 'index']);
 
     // TODO: Add for wishlist
-    Route::resource('/wishlist', WishlistController::class);
+    Route::get('/wishlist', [WishlistController::class, 'index']);
 });
 
 Route::post('/stripe/webhook', [StripeWebhookController::class, 'handle']);
