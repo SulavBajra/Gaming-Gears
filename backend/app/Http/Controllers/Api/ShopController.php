@@ -6,18 +6,22 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\ProductShopResource;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\Wishlist;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ShopController extends Controller
 {
     public function show(Product $product)
     {
+        $userId = Auth::id();
         $product->load([
             'brand',
             'categories',
             'variants',
             'media',
         ])->loadMin('variants', 'price');
+        $product->is_in_wishlist = Wishlist::where('user_id', $userId)->where('product_id', $product->id)->exists();
 
         return new ProductShopResource($product);
         // return response()->json($product);

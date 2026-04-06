@@ -21,6 +21,7 @@ class ProductShopResource extends JsonResource
             'description' => $this->description ?? '',
             'tags' => $this->tags ?? [],
             'price' => (float) ($this->variants_min_price ?? 0),
+            'is_in_wishlist' => $this->is_in_wishlist ?? false,
 
             'categories' => $this->whenLoaded('categories', function () {
                 return $this->categories->map(fn ($c) => [

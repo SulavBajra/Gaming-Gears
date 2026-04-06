@@ -105,6 +105,11 @@ class Product extends Model implements HasMedia
         return $this->hasMany(Wishlist::class);
     }
 
+    public function isInWishlist($userId): bool
+    {
+        return $this->wishlists()->where('user_id', $userId)->where('product_id', $this->id)->exists();
+    }
+
     public function activeVariants(): HasMany
     {
         return $this->hasMany(ProductVariant::class)

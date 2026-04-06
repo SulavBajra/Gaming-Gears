@@ -31,6 +31,12 @@ export interface ShopProduct {
   meta: ShopMeta
 }
 
+export interface FallBackCategory {
+  '1': 'keyboard'
+  '7': 'Mice'
+  '13': 'Headsets'
+}
+
 export interface Category {
   id: number
   name: string
@@ -57,6 +63,7 @@ export interface ProductView {
   description: string
   tags: string[]
   price: number
+  is_in_wishlist: boolean
   categories: Category[]
   brand: Brand | null
   thumbnail: string
@@ -94,4 +101,18 @@ export interface Customer {
   phone: string
   date_of_birth: string
   gender: string | null
+}
+
+export interface Wishlist {
+  id: number
+  product_id: number
+  product: WishlistItem
+}
+
+export interface WishlistItem {
+  name: string
+  slug: string
+  tags: string[]
+  thumbnail: string | null
+  variants: Variant[]
 }

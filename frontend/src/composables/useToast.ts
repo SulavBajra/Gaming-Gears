@@ -11,5 +11,9 @@ export function useToaster() {
     toast.add({ severity: 'error', summary: 'Error', detail: message, life: 3000 })
   }
 
-  return { showSuccess, showError }
+  const showInfo = (message = 'Failed to add item to cart') => {
+    toast.add({ severity: 'info', summary: 'Info', detail: message, life: 2000 })
+  }
+
+  return { showSuccess, showError, showInfo }
 }

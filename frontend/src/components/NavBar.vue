@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
-import { ShoppingCart, Search, CircleUserRound, House, Store } from '@lucide/vue'
+import { ShoppingCart, Heart, CircleUserRound, House, Store } from '@lucide/vue'
 import { useAuth } from '@/composables/useAuth'
 import { useCart } from '@/composables/useCart'
 
@@ -17,7 +17,9 @@ const { itemCount } = useCart()
 
       <ul class="nav-links">
         <li>
-          <RouterLink to="/" class="nav-item"><House class="house-icon" />Home</RouterLink>
+          <RouterLink to="/" class="nav-item" exact-active-class="router-link-active">
+            <House class="house-icon" />Home
+          </RouterLink>
         </li>
         <li>
           <RouterLink to="/shop" class="nav-item"><Store class="house-icon" />Shop</RouterLink>
@@ -26,9 +28,9 @@ const { itemCount } = useCart()
       </ul>
 
       <div class="nav-actions">
-        <button class="icon-btn" aria-label="Search">
-          <Search />
-        </button>
+        <RouterLink to="/wishlist" class="icon-btn" aria-label="Wishlist">
+          <Heart />
+        </RouterLink>
         <RouterLink to="/cart" class="icon-btn" aria-label="Cart">
           <ShoppingCart />
           <span class="cart-badge">{{ itemCount }}</span>
@@ -43,8 +45,6 @@ const { itemCount } = useCart()
 </template>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Iosevka+Charon:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&family=Oswald:wght@200..700&display=swap');
-
 .site-header {
   position: sticky;
   top: 0;
@@ -52,6 +52,7 @@ const { itemCount } = useCart()
   background: var(--bg);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border);
+  font-family: 'Iosevka Charon', monospace;
 }
 
 .navbar {
@@ -94,8 +95,8 @@ const { itemCount } = useCart()
 }
 
 .nav-item {
-  font-family: 'DM Sans', sans-serif;
-  font-size: 0.78rem;
+  font-family: 'Iosevka Charon', monospace;
+  font-size: 0.88rem;
   font-weight: 400;
   letter-spacing: 0.12em;
   text-transform: uppercase;
