@@ -8,8 +8,11 @@ import Cart from '@/views/CartView.vue'
 import ProfileLayout from '@/components/layout/ProfileLayout.vue'
 import ProfileForm from '@/components/pages/profile/ProfileForm.vue'
 import ProfileEditForm from '@/components/pages/profile/ProfileEditForm.vue'
+import Wishlist from '@/views/WishlistView.vue'
 
 const router = createRouter({
+  linkActiveClass: '',
+  linkExactActiveClass: 'router-link-active',
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
@@ -89,6 +92,11 @@ const router = createRouter({
           path: '/cart',
           name: 'cart',
           component: Cart,
+        },
+        {
+          path: '/wishlist',
+          name: 'wishlist',
+          component: Wishlist,
         },
       ],
     },

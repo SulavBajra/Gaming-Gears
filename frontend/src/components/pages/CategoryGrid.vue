@@ -44,6 +44,7 @@ const categories = [
 </template>
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Iosevka+Charon:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&family=Lobster+Two:ital,wght@0,400;0,700;1,400;1,700&family=Oswald:wght@200..700&display=swap');
 .grid-section {
   padding: 2.5rem 2rem;
 }
@@ -54,9 +55,11 @@ const categories = [
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
   gap: 2rem;
+  font-family: 'Iosevka Charon', monospace;
 }
 
 .card {
+  font-family: 'Iosevka Charon', monospace;
   background: #2e4248;
   border: 1px solid #ffffff12;
   border-radius: 12px;

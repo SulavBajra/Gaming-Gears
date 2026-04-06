@@ -25,6 +25,9 @@ Route::get('/user', function (Request $request) {
 })->middleware(['auth:sanctum', 'role:customer']);
 
 Route::middleware(['auth:sanctum', 'role:customer'])->group(function () {
+    //Change these for guest in future
+    Route::get('/shop/{product:slug}', [ShopController::class, 'show'])->name('api.shop');
+
     Route::post('/logout', LogoutController::class)->name('api.logout');
     Route::post('/cart', [CartController::class, 'store'])->name('api.cart');
     Route::get('/cart', [CartController::class, 'index']);
@@ -42,7 +45,8 @@ Route::middleware(['auth:sanctum', 'role:customer'])->group(function () {
     Route::get('/orders', [OrderController::class, 'index']);
 
     // TODO: Add for wishlist
-    Route::get('/wishlist', [WishlistController::class, 'index']);
+    Route::get('/wishlist', [WishlistController::class, 'show']);
+    Route::patch('/wishlist', [WishlistController::class, 'update']);
 });
 
 Route::post('/stripe/webhook', [StripeWebhookController::class, 'handle']);

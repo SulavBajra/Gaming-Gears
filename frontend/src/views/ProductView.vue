@@ -3,7 +3,7 @@ import { ref, onMounted, watch, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import ProductGrid from '@/components/pages/ProductGrid.vue'
 import type { HomeProduct, ProductView } from '@/components/types'
-import { ShoppingCart, ChevronLeft, ChevronRight, Minus, Plus } from '@lucide/vue'
+import { ShoppingCart, ChevronLeft, ChevronRight, Minus, Plus, Heart } from '@lucide/vue'
 import placeholder from '@/assets/placeholder.jpg'
 import { useAuth } from '@/composables/useAuth'
 import { useCart } from '@/composables/useCart'
@@ -12,7 +12,7 @@ import { useToaster } from '@/composables/useToast'
 
 const route = useRoute()
 const { user } = useAuth()
-const { showSuccess } = useToaster()
+const { showSuccess, showError, showInfo } = useToaster()
 const { addToCart: addItemToCart, handleGuestAddToCart } = useCart()
 const quantity = ref(1)
 const product = ref<ProductView | null>(null)
@@ -22,6 +22,7 @@ const selectedVariant = computed(() =>
   product.value?.variants.find((v) => v.id === selectedVariantId.value),
 )
 const loading = ref(true)
+const wishlistColor = ref('red')
 
 const activeImageIndex = ref(0)
 const allImages = computed(() => {
@@ -38,6 +39,28 @@ const prevImage = () => {
 }
 const nextImage = () => {
   activeImageIndex.value = (activeImageIndex.value + 1) % allImages.value.length
+}
+
+const isLoading = ref(false)
+
+const handleWishlist = async () => {
+  if (!product.value?.id || isLoading.value) return
+
+  try {
+    isLoading.value = true
+
+    const { data } = await axiosClient.patch('/api/wishlist', {
+      product_id: product.value.id,
+    })
+
+    product.value.is_in_wishlist = !product.value.is_in_wishlist
+
+    showInfo(data.message)
+  } catch (error: any) {
+    showError(error?.response?.data?.message || 'Something went wrong')
+  } finally {
+    isLoading.value = false
+  }
 }
 
 const handleAddToCart = async () => {
@@ -179,21 +202,42 @@ watch(
           </div>
         </div>
 
-        <div class="qty-stepper">
-          <button
-            class="qty-btn"
-            @click="quantity > 1 && quantity--"
-            :disabled="quantity <= 1"
-            type="button"
-            aria-label="Decrease quantity"
-          >
-            <Minus :size="12" />
-          </button>
-          <span class="qty-value">{{ quantity }}</span>
-          <button class="qty-btn" @click="quantity++" type="button" aria-label="Increase quantity">
-            <Plus :size="12" />
-          </button>
+        <div class="qty-wishlist">
+          <div class="qty-stepper">
+            <button
+              class="qty-btn"
+              @click="quantity > 1 && quantity--"
+              :disabled="quantity <= 1"
+              type="button"
+              aria-label="Decrease quantity"
+            >
+              <Minus :size="12" />
+            </button>
+            <span class="qty-value">{{ quantity }}</span>
+            <button
+              class="qty-btn"
+              @click="quantity++"
+              type="button"
+              aria-label="Increase quantity"
+            >
+              <Plus :size="12" />
+            </button>
+          </div>
+          <div class="wishlist-btn">
+            <button
+              class="wishlist-btn-inner"
+              :class="{ active: product.is_in_wishlist }"
+              :disabled="isLoading"
+              @click="handleWishlist"
+            >
+              <Heart class="wishlist" :size="16" />
+              <span>
+                {{ isLoading ? 'Updating...' : product.is_in_wishlist ? 'Wishlisted' : 'Wishlist' }}
+              </span>
+            </button>
+          </div>
         </div>
+
         <button class="add-to-cart" :disabled="!selectedVariant" @click="handleAddToCart">
           <ShoppingCart :size="18" />
           <span>Add to Cart</span>
@@ -232,6 +276,59 @@ watch(
   background-color: var(--bg);
 }
 
+.qty-wishlist {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.wishlist-btn-inner {
+  padding: 10px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.03);
+  cursor: pointer;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 500;
+
+  transition: all 0.2s ease;
+}
+
+/* hover */
+.wishlist-btn-inner:hover {
+  border-color: var(--accent);
+  background: rgba(255, 255, 255, 0.06);
+  transform: translateY(-1px);
+}
+
+/* active (in wishlist) */
+.wishlist-btn-inner.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+}
+
+/* icon default */
+.wishlist {
+  color: var(--accent);
+  transition: all 0.2s ease;
+}
+
+/* icon when active */
+.wishlist-btn-inner.active .wishlist {
+  color: white;
+  fill: white; /* if SVG supports fill */
+}
+
+/* subtle press effect */
+.wishlist-btn-inner:active {
+  transform: scale(0.97);
+}
 /* ── Product Layout ── */
 .product-layout {
   display: grid;

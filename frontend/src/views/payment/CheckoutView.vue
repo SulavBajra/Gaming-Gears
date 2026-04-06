@@ -222,7 +222,7 @@ async function submitPayment() {
           <div class="summary-items">
             <div class="summary-item" v-for="item in items" :key="item.id">
               <div class="si-img">
-                <img :src="item.thumbnail" />
+                <img :src?="item.thumbnail" />
                 <span class="si-qty">{{ item.quantity }}</span>
               </div>
               <div class="si-info">
