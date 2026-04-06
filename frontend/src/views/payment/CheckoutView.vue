@@ -10,11 +10,10 @@ import ProgressSpinner from 'primevue/progressspinner'
 import { useToaster } from '@/composables/useToast'
 
 const router = useRouter()
-const { items, totalPrice, totalItems, fetchCart } = useCart()
-const { user, profile, getUserProfile } = useAuth()
+const { items, totalPrice, totalItems } = useCart()
+const { profile, getUserProfile } = useAuth()
 const { showSuccess } = useToaster()
 
-// ── State ────────────────────────────────────────────────────────────
 type Step = 'shipping' | 'payment'
 const step = ref<Step>('shipping')
 const processing = ref(false)
@@ -29,7 +28,6 @@ const shipping = reactive({
   shipping_name: '',
   shipping_line1: '',
   shipping_city: '',
-  // shipping_country: 'NP',
 })
 
 onMounted(async () => {
@@ -46,7 +44,6 @@ onUnmounted(() => {
   cardElement?.destroy()
 })
 
-// ── Step 1: get intent + mount card ─────────────────────────────────
 async function proceedToPayment() {
   loadingIntent.value = true
   stripeError.value = ''
@@ -92,7 +89,6 @@ async function mountCardElement() {
   })
 }
 
-// ── Step 2: confirm payment ──────────────────────────────────────────
 async function submitPayment() {
   if (!stripe || !cardElement) return
   processing.value = true
@@ -115,7 +111,6 @@ async function submitPayment() {
 <template>
   <section class="checkout-page">
     <div class="checkout-container">
-      <!-- Header -->
       <div class="checkout-header">
         <button
           class="back-btn"
@@ -127,7 +122,6 @@ async function submitPayment() {
         <h1>Checkout</h1>
       </div>
 
-      <!-- Steps indicator -->
       <div class="steps">
         <div class="step" :class="{ active: step === 'shipping', done: step === 'payment' }">
           <span class="step-dot">1</span>
