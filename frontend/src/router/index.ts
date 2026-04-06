@@ -2,8 +2,12 @@ import { createRouter, createWebHistory } from 'vue-router'
 import AppLayout from '../components/layout/AppLayout.vue'
 import Login from '@/views/auth/Login.vue'
 import Register from '@/views/auth/Register.vue'
-import Profile from '@/views/ProfileView.vue'
+import UserProfile from '@/components/pages/profile/UserProfile.vue'
+import OrderProfile from '@/components/pages/profile/UserOrder.vue'
 import Cart from '@/views/CartView.vue'
+import ProfileLayout from '@/components/layout/ProfileLayout.vue'
+import ProfileForm from '@/components/pages/profile/ProfileForm.vue'
+import ProfileEditForm from '@/components/pages/profile/ProfileEditForm.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -19,9 +23,42 @@ const router = createRouter({
       component: Register,
     },
     {
+      path: '/checkout',
+      name: 'checkout',
+      component: () => import('@/views/payment/CheckoutView.vue'),
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/order-success',
+      name: 'order-success',
+      component: () => import('@/views/payment/OrderSuccessView.vue'),
+      meta: { requiresAuth: true },
+    },
+    {
       path: '/profile',
-      name: 'profile',
-      component: Profile,
+      component: ProfileLayout,
+      children: [
+        {
+          path: '',
+          name: 'profile',
+          component: UserProfile,
+        },
+        {
+          path: 'create',
+          name: 'profile.create',
+          component: ProfileForm,
+        },
+        {
+          path: 'edit',
+          name: 'profile.edit',
+          component: ProfileEditForm,
+        },
+        {
+          path: 'orders',
+          name: 'orders',
+          component: OrderProfile,
+        },
+      ],
     },
 
     {

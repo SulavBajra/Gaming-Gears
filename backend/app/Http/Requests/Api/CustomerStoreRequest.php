@@ -23,7 +23,7 @@ class CustomerStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'phone' => 'required|regex:/^[0-9]{10}$/',
+            'phone' => 'required|regex:/^[0-9]{10}$/|unique:customers.phone',
             'date_of_birth' => 'required|date|before:today',
             'gender' => 'nullable|in:male,female,other',
             'first_name' => 'required|string|max:255|min:1',

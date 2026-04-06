@@ -21,7 +21,7 @@ class UserProfileResource extends JsonResource
             'customer' => [
                 'id' => $this->customer->id,
                 'phone' => $this->customer->phone,
-                'date_of_birth' => $this->customer->date_of_birth,
+                'date_of_birth' => $this->customer->date_of_birth->format('Y-m-d'),
                 'gender' => $this->customer->gender,
             ],
             'address' => [
