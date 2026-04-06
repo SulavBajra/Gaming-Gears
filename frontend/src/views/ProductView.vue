@@ -22,7 +22,6 @@ const selectedVariant = computed(() =>
   product.value?.variants.find((v) => v.id === selectedVariantId.value),
 )
 const loading = ref(true)
-const wishlistColor = ref('red')
 
 const activeImageIndex = ref(0)
 const allImages = computed(() => {

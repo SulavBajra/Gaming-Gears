@@ -47,6 +47,7 @@ Route::middleware(['auth:sanctum', 'role:customer'])->group(function () {
     // TODO: Add for wishlist
     Route::get('/wishlist', [WishlistController::class, 'show']);
     Route::patch('/wishlist', [WishlistController::class, 'update']);
+    Route::delete('/wishlist/{wishlist}', [WishlistController::class, 'destroy']);
 });
 
 Route::post('/stripe/webhook', [StripeWebhookController::class, 'handle']);

@@ -102,3 +102,17 @@ export interface Customer {
   date_of_birth: string
   gender: string | null
 }
+
+export interface Wishlist {
+  id: number
+  product_id: number
+  product: WishlistItem
+}
+
+export interface WishlistItem {
+  name: string
+  slug: string
+  tags: string[]
+  thumbnail: string | null
+  variants: Variant[]
+}

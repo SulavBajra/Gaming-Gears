@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\WishlistResource;
 use App\Models\User;
 use App\Models\Wishlist;
 use Illuminate\Http\Request;
@@ -16,6 +17,7 @@ class WishlistController extends Controller
      */
     public function index()
     {
+        //TODO: remove these are only for tests
         $user = User::findOrFail(Auth::id());
         $cartItems = null;
         $variant = null;
@@ -68,8 +70,9 @@ class WishlistController extends Controller
     public function show()
     {
         $user = User::findOrFail(Auth::id());
-        $wishlist = Wishlist::where('user_id', Auth::id())->with('product')->get();
-        return response()->json($wishlist);
+        $wishlist = Wishlist::where('user_id', Auth::id())->with(['product.media','product.variants'])->get();
+        return response()->json(WishlistResource::collection($wishlist));
+        // return response()->json($wishlist);
     }
 
     /**
@@ -100,6 +103,7 @@ class WishlistController extends Controller
      */
     public function destroy(Wishlist $wishlist)
     {
-        //
+        $wishlist->delete();
+        return response()->json(['message' => 'Wishlist item removed successfully']);
     }
 }

@@ -2,7 +2,9 @@
 import type { HomeProduct, FallBackCategory } from '@/components/types'
 import placeholder from '@/assets/placeholder.jpg'
 import { Tag } from '@lucide/vue'
+import { useRouter } from 'vue-router'
 
+const router = useRouter()
 defineProps<{
   products?: HomeProduct[]
 }>()
@@ -16,18 +18,25 @@ const fallBackCategory: FallBackCategory = {
 const formatPrice = (price: number) => {
   return `Rs. ${price.toLocaleString()}`
 }
+
+const viewProduct = (slug: string) => {
+  router.push(`/shop/${slug}`)
+}
 </script>
 
 <template>
   <div class="grid-section">
     <div class="grid">
-      <div v-for="product in products" :key="product.id" class="card">
-        <!-- Image -->
+      <div
+        v-for="product in products"
+        :key="product.id"
+        class="card"
+        @click="viewProduct(product.slug)"
+      >
         <div class="card-img">
           <img :src="product.thumbnail || placeholder" :alt="product.name" />
         </div>
 
-        <!-- Content -->
         <div class="card-body">
           <p class="brand">
             {{ product.brand?.name }}
@@ -80,7 +89,6 @@ const formatPrice = (price: number) => {
   gap: 2rem;
 }
 
-/* card */
 .card {
   background: #2e4248;
   border: 1px solid #ffffff12;
@@ -96,6 +104,7 @@ const formatPrice = (price: number) => {
   background: #36545b;
   border-color: #ffffff25;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  cursor: pointer;
 }
 
 /* image */
