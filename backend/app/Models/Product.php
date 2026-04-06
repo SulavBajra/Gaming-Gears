@@ -100,6 +100,11 @@ class Product extends Model implements HasMedia
         return $this->hasMany(OrderItem::class);
     }
 
+    public function wishlists()
+    {
+        return $this->hasMany(Wishlist::class);
+    }
+
     public function activeVariants(): HasMany
     {
         return $this->hasMany(ProductVariant::class)

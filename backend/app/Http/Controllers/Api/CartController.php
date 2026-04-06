@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\CartRequest;
 use App\Http\Requests\Api\CartUpdateRequest;
+use App\Http\Resources\CartItemResource;
 use App\Http\Resources\CartResource;
 use App\Models\Cart;
 use App\Models\CartItem;
@@ -57,6 +58,7 @@ class CartController extends Controller
 
         return response()->json([
             'message' => 'Cart item updated successfully',
+            'data' => new CartItemResource($cartItem),
         ]);
     }
 }

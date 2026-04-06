@@ -20,8 +20,9 @@ class CheckoutController extends Controller
         ]);
 
         $user = $request->user();
+        $cartItems = $user->cart->items()->get();
 
-        if ($user->cartItems()->count() === 0) {
+        if ($cartItems->count() === 0) {
             return response()->json(['message' => 'Cart is empty'], 422);
         }
 
@@ -37,6 +38,9 @@ class CheckoutController extends Controller
         $intent = PaymentIntent::create([
             'amount' => $total,
             'currency' => 'usd',
+            'automatic_payment_methods' => [
+                'enabled' => true,
+            ],
             'shipping' => [
                 'name' => $request->shipping_name,
                 'address' => [

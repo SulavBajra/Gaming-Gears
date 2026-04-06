@@ -2,6 +2,7 @@
 import { onMounted, ref } from 'vue'
 import { loadStripe } from '@stripe/stripe-js'
 import axiosClient from '@/axios'
+
 const stripe = ref(null)
 const cardElement = ref(null)
 const clientSecret = ref('')

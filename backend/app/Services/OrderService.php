@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\Mail\OrderConfirmation;
 use App\Models\Order;
-use App\Models\OrderItem;
 use App\Models\OrderStatus;
 use App\Models\PaymentStatus;
 use App\Models\User;
@@ -24,7 +23,7 @@ class OrderService
             return $existing;
         }
 
-        $user = User::findOrFail($userId);
+        $user = User::with(['address:id,user_id,phone'])->where('id', $userId)->first();
         $orderStatusId = OrderStatus::where('code', 'confirmed')->value('id');
         $paymentStatusId = PaymentStatus::where('code', 'paid')->value('id');
 
@@ -33,12 +32,12 @@ class OrderService
         }
 
         return DB::transaction(function () use ($user, $intent, $orderStatusId, $paymentStatusId) {
-            $cartItems = $user->cartItems()
-                ->with(['product.media', 'variant'])
+            $cartItems = $user->cart->items()
+                ->with(['product.media', 'productVariant'])
                 ->lockForUpdate()
                 ->get();
 
-            if ($user->cartItems()->count() === 0) {
+            if ($cartItems->isEmpty()) {
                 throw new \Exception('Cart is empty');
             }
 
@@ -57,9 +56,10 @@ class OrderService
                 'currency' => strtoupper($intent->currency),
                 'stripe_payment_intent_id' => $intent->id,
                 // Customer snapshot
+                'payment_method' => 'Stripe',
                 'customer_email' => $user->email,
                 'customer_name' => $user->name,
-                'customer_phone' => $user->phone ?? null,
+                'customer_phone' => $user->customer->phone ?? ' ',
                 // Address snapshots — pull from user profile or cart
                 'shipping_address' => static::resolveShippingAddress($user, $intent),
                 'paid_at' => now(),
@@ -68,40 +68,48 @@ class OrderService
             $items = [];
             foreach ($cartItems as $cartItem) {
                 $product = $cartItem->product;
-                $variant = $cartItem->variant;
+                $variant = $cartItem->productVariant;
                 $productImage = $product->getFirstMediaUrl('thumbnail') ?: null;
-                $variantImage = $variant?->getFirstMediaUrl('thumbnail') ?: null;
 
                 $items[] = [
-                    'order_id' => $order->id,  // needed for raw insert
+                    'order_id' => $order->id,
                     'product_id' => $product->id,
                     'product_variant_id' => $variant?->id,
                     'product_name' => $product->name,
                     'variant_name' => $variant?->name,
                     'quantity' => $cartItem->quantity,
                     'unit_price' => $cartItem->unit_price,
-                    'image' => $variantImage ?? $productImage,
-                    'product_snapshot' => json_encode(   // raw insert needs manual encoding
+                    'image' => $productImage,
+                    'product_snapshot' => json_encode(
                         static::buildProductSnapshot($product, $variant)
                     ),
                     'created_at' => now(),
                     'updated_at' => now(),
                 ];
+                $products[] = [
+                    'product_variant_id' => $variant?->id,
+                    'quantity' => $cartItem->quantity,
+                ];
             }
 
             DB::table('order_items')->insert($items);
-
+            foreach ($products as $product) {
+                $variantId = $product['product_variant_id'];
+                $quantity = $product['quantity'];
+                    DB::table('product_variants')
+                        ->where('id', $variantId)
+                        ->decrement('stock_quantity', $quantity);
+            }
             // 3. Clear the cart
-            $user->cartItems()->delete();
+            $user->cart->items()->delete();
 
-            $order->setRelation('items', collect($items)->map(
-                fn ($i) => new OrderItem($i)
-            ));
 
-            // 4. Send confirmation email
             DB::afterCommit(function () use ($user, $order) {
-                Mail::to($user->email)->queue(new OrderConfirmation($order));
+                Mail::to($user->email)->queue(
+                    new OrderConfirmation($order->load('items'))
+                );
             });
+
 
             Log::info('Order created', [
                 'order_id' => $order->id,
@@ -154,7 +162,6 @@ class OrderService
                 'line2' => $s->address->line2 ?? null,
                 'city' => $s->address->city,
                 'state' => $s->address->state ?? null,
-                'postal' => $s->address->postal_code,
                 'country' => $s->address->country,
                 'phone' => $s->phone ?? null,
             ];
@@ -165,7 +172,6 @@ class OrderService
             'name' => $user->name,
             'line1' => '',
             'city' => '',
-            'country' => 'NP',
         ];
     }
 
