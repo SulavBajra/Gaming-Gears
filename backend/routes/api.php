@@ -11,6 +11,8 @@ use App\Http\Controllers\Api\RegisterController;
 use App\Http\Controllers\Api\ShopController;
 use App\Http\Controllers\Api\StripeWebhookController;
 use App\Http\Controllers\Api\WishlistController;
+use App\Http\Resources\BrandResource;
+use App\Models\Brand;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -20,6 +22,11 @@ Route::get('/home', [ProductHomeController::class, 'index'])->name('api.home');
 Route::get('/shop/{product:slug}', [ShopController::class, 'show'])->name('api.shop');
 Route::get('/shop/category/{category:slug}', [ShopController::class, 'similar']);
 Route::get('/shops/', [ShopController::class, 'index']);
+Route::get('/brands', function () {
+    $brands = Brand::with('media')->where('is_active', true)->select('id', 'name', 'slug')->get();
+    return response()->json(BrandResource::collection($brands));
+});
+
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware(['auth:sanctum', 'role:customer']);

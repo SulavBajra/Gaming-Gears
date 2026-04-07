@@ -49,6 +49,9 @@ class ShopController extends Controller
             ->when($request->filled('category'), function ($q) use ($request) {
                 $q->whereHas('categories', fn ($c) => $c->where('slug', $request->category));
             })
+            ->when($request->filled('brand'), function ($q) use ($request) {
+                $q->whereHas('brand', fn ($c) => $c->where('slug', $request->brand));
+            })
             ->when($request->filled('sort'), function ($q) use ($request) {
                 match ($request->sort) {
                     'price_asc' => $q->orderBy('variants_min_price', 'asc'),

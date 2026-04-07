@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { HomeProduct, FallBackCategory } from '@/components/types'
+import type { HomeProduct } from '@/components/types'
 import placeholder from '@/assets/placeholder.jpg'
 import { Tag } from '@lucide/vue'
 import { useRouter } from 'vue-router'
@@ -8,12 +8,6 @@ const router = useRouter()
 defineProps<{
   products?: HomeProduct[]
 }>()
-
-const fallBackCategory: FallBackCategory = {
-  '1': 'keyboard',
-  '7': 'Mice',
-  '13': 'Headsets',
-}
 
 const formatPrice = (price: number) => {
   return `Rs. ${price.toLocaleString()}`
