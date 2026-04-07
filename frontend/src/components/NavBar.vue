@@ -49,7 +49,7 @@ const { itemCount } = useCart()
   position: sticky;
   top: 0;
   z-index: 100;
-  background: var(--bg);
+  background: var(--dark-bg);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border);
   font-family: 'Iosevka Charon', monospace;

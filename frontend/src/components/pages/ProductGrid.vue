@@ -45,7 +45,7 @@ const viewProduct = (slug: string) => {
               {{ product.categories?.[0]?.name }}
             </p>
             <p v-else class="category">
-              {{ console.log(product.categories) }}
+              {{ product.categories }}
             </p>
 
             <div class="tags">

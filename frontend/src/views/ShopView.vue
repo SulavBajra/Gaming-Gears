@@ -80,8 +80,16 @@ const onPageChange = (event: { page: number }) => {
 }
 onMounted(() => {
   const categoryFromQuery = route.query.category as string | undefined
-  if (categoryFromQuery) selectedCategory.value = categoryFromQuery
-  fetchProducts(1, selectedCategory.value || undefined)
+  if (categoryFromQuery) {
+    selectedCategory.value = categoryFromQuery
+    fetchProducts(1, selectedCategory.value || undefined)
+  }
+
+  const brandFromQuery = route.query.brand as string | undefined
+  if (brandFromQuery) {
+    selectedBrand.value = brandFromQuery
+    fetchProducts(1, selectedBrand.value || undefined)
+  }
   fetchBrand()
 })
 </script>

@@ -77,10 +77,8 @@ const socials = ['X', 'in', 'GH']
   </footer>
 </template>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500&display=swap');
-
 footer {
-  background-color: var(--bg);
+  background-color: var(--dark-bg);
   font-family: 'DM Sans', sans-serif;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
   /*padding: 20px 0 0;*/
