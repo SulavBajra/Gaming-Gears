@@ -116,3 +116,10 @@ export interface WishlistItem {
   thumbnail: string | null
   variants: Variant[]
 }
+
+export interface Brand {
+  id: number
+  name: string
+  slug: string
+  logo_url: string | null
+}

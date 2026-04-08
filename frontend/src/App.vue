@@ -36,6 +36,7 @@ onMounted(async () => {
   --accent: #c8a96e;
   --bg: #253439;
   --border: #e8e4df;
+  --dark-bg: #1b2a2e;
 }
 
 .base-view {
