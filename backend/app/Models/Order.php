@@ -35,7 +35,6 @@ class Order extends Model
             'shipped_at' => 'datetime',
             'delivered_at' => 'datetime',
             'cancelled_at' => 'datetime',
-            'product_snapshot' => 'array',
         ];
     }
 

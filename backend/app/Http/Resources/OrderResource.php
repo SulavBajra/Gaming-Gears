@@ -20,7 +20,7 @@ class OrderResource extends JsonResource
             'user_id' => $this->user_id,
             'order_status' => $this->whenLoaded('orderStatus', $this->orderStatus->name),
             'payment_status' => $this->whenLoaded('paymentStatus', $this->paymentStatus->name),
-            'total' => $this->total,
+            'total' => (float) $this->total,
             'payment_method' => $this->payment_method,
             'shipping_address' => $this->shipping_address['line1'],
             'delivered_at' => $this->delivered_at?->format('Y-m-d'),

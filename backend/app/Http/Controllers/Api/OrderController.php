@@ -12,7 +12,7 @@ class OrderController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $orders = Order::with('items')->where('user_id', $user->id)->get();
+        $orders = Order::with(['items','orderStatus','paymentStatus'])->where('user_id', $user->id)->get();
 
         return response()->json(OrderResource::collection($orders));
         // return response()->json($orders);
