@@ -25,6 +25,7 @@ Route::get('/shops/', [ShopController::class, 'index']);
 
 Route::get('/brands', function () {
     $brands = Brand::with('media')->where('is_active', true)->select('id', 'name', 'slug')->get();
+
     return response()->json(BrandResource::collection($brands));
 });
 
@@ -33,7 +34,7 @@ Route::get('/user', function (Request $request) {
 })->middleware(['auth:sanctum', 'role:customer']);
 
 Route::middleware(['auth:sanctum', 'role:customer'])->group(function () {
-    //Change these for guest in future
+    // Change these for guest in future
     Route::get('/shop/{product:slug}', [ShopController::class, 'show'])->name('api.shop');
 
     Route::post('/logout', LogoutController::class)->name('api.logout');

@@ -14,7 +14,7 @@ class WishlistResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return[
+        return [
             'id' => $this->id,
             'user_id' => $this->user_id,
             'product_id' => $this->product_id,
@@ -31,7 +31,7 @@ class WishlistResource extends JsonResource
                         'price' => $variant->price,
                     ];
                 }),
-            ]
+            ],
         ];
     }
 }

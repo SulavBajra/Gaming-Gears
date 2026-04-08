@@ -123,3 +123,32 @@ export interface Brand {
   slug: string
   logo_url: string | null
 }
+
+export interface Order {
+  id: number
+  order_number: string
+  user_id: number
+  order_status: string
+  payment_status: string
+  total: number
+  quantity: number
+  payment_method: string
+  shipping_address: string
+  delivered_at: string | null
+  created_at: string
+  updated_at: string
+  items: OrderItem[]
+}
+
+export interface OrderItem {
+  id: number
+  product_name: string
+  quantity: number
+  image: string | null
+  product_snapshot: {
+    id: number
+    name: string
+    slug: string
+    thumbnail: string | null
+  }
+}
