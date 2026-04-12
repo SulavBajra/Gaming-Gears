@@ -12,7 +12,9 @@ use Laravel\Cashier\Billable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
+use ApiPlatform\Metadata\ApiResource;
 
+#[ApiResource]
 class User extends Authenticatable
 {
     use Billable;

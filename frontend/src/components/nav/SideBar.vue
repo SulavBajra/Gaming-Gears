@@ -22,7 +22,7 @@ const handleLogout = () => {
     </div>
 
     <nav class="sidebar-nav">
-      <RouterLink to="/profile" class="sidebar-item" active-class="active">
+      <RouterLink to="/profile" class="sidebar-item" exact-active-class="router-link-active">
         <User />
         Profile
       </RouterLink>
@@ -46,7 +46,7 @@ const handleLogout = () => {
   width: 200px;
   background: var(--bg);
   border-right: 1px solid var(--border);
-  min-height: 90vh;
+  height: 100vh;
   padding: 1.2rem 1rem;
   display: flex;
   flex-direction: column;
@@ -87,6 +87,17 @@ const handleLogout = () => {
 }
 
 /* Nav */
+
+.sidebar-item:hover,
+.sidebar-item.router-link-active {
+  color: var(--ink);
+}
+
+.sidebar-item:hover::after,
+.sidebar-item.router-link-active::after {
+  width: 100%;
+}
+
 .sidebar-nav {
   display: flex;
   flex-direction: column;
