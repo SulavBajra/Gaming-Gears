@@ -96,20 +96,18 @@ class OrderService
             foreach ($products as $product) {
                 $variantId = $product['product_variant_id'];
                 $quantity = $product['quantity'];
-                    DB::table('product_variants')
-                        ->where('id', $variantId)
-                        ->decrement('stock_quantity', $quantity);
+                DB::table('product_variants')
+                    ->where('id', $variantId)
+                    ->decrement('stock_quantity', $quantity);
             }
             // 3. Clear the cart
             $user->cart->items()->delete();
-
 
             DB::afterCommit(function () use ($user, $order) {
                 Mail::to($user->email)->queue(
                     new OrderConfirmation($order->load('items'))
                 );
             });
-
 
             Log::info('Order created', [
                 'order_id' => $order->id,

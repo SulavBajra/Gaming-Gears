@@ -17,7 +17,7 @@ class WishlistController extends Controller
      */
     public function index()
     {
-        //TODO: remove these are only for tests
+        // TODO: remove these are only for tests
         $user = User::findOrFail(Auth::id());
         $cartItems = null;
         $variant = null;
@@ -42,10 +42,7 @@ class WishlistController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
-    {
-
-    }
+    public function create() {}
 
     /**
      * Store a newly created resource in storage.
@@ -70,7 +67,8 @@ class WishlistController extends Controller
     public function show()
     {
         $user = User::findOrFail(Auth::id());
-        $wishlist = Wishlist::where('user_id', Auth::id())->with(['product.media','product.variants'])->get();
+        $wishlist = Wishlist::where('user_id', Auth::id())->with(['product.media', 'product.variants'])->get();
+
         return response()->json(WishlistResource::collection($wishlist));
         // return response()->json($wishlist);
     }
@@ -87,6 +85,7 @@ class WishlistController extends Controller
         $wishlist = Wishlist::where('user_id', Auth::id())->where('product_id', $request->product_id)->first();
         if ($wishlist) {
             $wishlist->delete();
+
             return response()->json(['message' => 'Product removed from wishlist']);
         }
 
@@ -104,6 +103,7 @@ class WishlistController extends Controller
     public function destroy(Wishlist $wishlist)
     {
         $wishlist->delete();
+
         return response()->json(['message' => 'Wishlist item removed successfully']);
     }
 }

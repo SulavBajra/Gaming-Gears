@@ -20,17 +20,6 @@ export interface ShopMeta {
   path: string
 }
 
-export interface ShopProduct {
-  data: HomeProduct[]
-  links: {
-    first: string
-    last: string
-    prev: string | null
-    next: string | null
-  }
-  meta: ShopMeta
-}
-
 export interface FallBackCategory {
   '1': 'keyboard'
   '7': 'Mice'
@@ -123,3 +112,55 @@ export interface Brand {
   slug: string
   logo_url: string | null
 }
+
+export interface Order {
+  id: number
+  order_number: string
+  user_id: number
+  order_status: string
+  payment_status: string
+  total: number
+  quantity: number
+  payment_method: string
+  shipping_address: string
+  delivered_at: string | null
+  created_at: string
+  updated_at: string
+  items: OrderItem[]
+}
+
+export interface OrderItem {
+  id: number
+  product_name: string
+  unit_price: number
+  quantity: number
+  image: string | null
+  product_snapshot: {
+    id: number
+    name: string
+    slug: string
+    thumbnail: string | null
+  }
+}
+
+export interface Links {
+  first: string
+  last: string
+  prev: string | null
+  next: string | null
+}
+
+export interface Meta {
+  current_page: number
+  from: number
+  to: number
+  last_page: number
+  per_page: number
+  total: number
+  links: {
+    url: string | null
+    page: number | null
+  }
+}
+
+export type PaymentStatus = 'Unpaid' | 'Paid' | 'Failed' | 'Refunded'

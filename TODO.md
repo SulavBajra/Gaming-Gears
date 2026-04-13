@@ -5,7 +5,7 @@
 - [X] Add Global Toast handler
 - [X] Handle 422 responses in useCart and show error toast
 - [ ] UI for user profile
-- [ ] filter in index methods
+- [X] filter in index methods
 
 ## Backend
 - [X] Add mailing for order confirmation
