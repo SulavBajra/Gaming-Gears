@@ -21,7 +21,6 @@ class ProductHomeResource extends JsonResource
             'description' => $this->description ?? '',
             'tags' => $this->tags ?? [],
             'price' => (float) $this->variants_min_price ?? 0,
-
             'categories' => $this->whenLoaded('categories', function () {
                 return $this->categories->map(fn ($c) => [
                     'id' => $c->id,

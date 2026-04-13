@@ -50,3 +50,12 @@ export interface ProductHome {
     gender: { id: number; name: string; slug: string };
     media: ProductMedia[];
 }
+
+export interface DashboardOrderResource {
+    id: number;
+    order_number: string;
+    email: string;
+    created_at: string;
+    order_status: string;
+    payment_status: string;
+}

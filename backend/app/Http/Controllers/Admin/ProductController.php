@@ -22,7 +22,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::latest()->where('is_active', 1)->with('brand', 'categories')
+        $products = Product::latest()->with('brand', 'categories')
             ->withMin('variants', 'price')
             ->withMax('variants', 'price')
             ->withSum('variants', 'stock_quantity')

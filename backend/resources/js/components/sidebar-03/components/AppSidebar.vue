@@ -52,10 +52,6 @@ const data = {
                     title: 'Manage Users',
                     route: 'users.index',
                 },
-                {
-                    title: 'Manage Brands',
-                    route: 'brands.index',
-                },
             ],
         },
     ],
