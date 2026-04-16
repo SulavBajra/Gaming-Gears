@@ -18,6 +18,7 @@ class Order extends Model
         'customer_name',
         'customer_phone',
         'shipping_address',
+        'payment_method',
         'stripe_payment_intent_id',
         'paid_at',
         'shipped_at',

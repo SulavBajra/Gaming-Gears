@@ -135,16 +135,19 @@ const goToPage = (page: number) => {
                                     product.name
                                 }}</TableCell>
                                 <TableCell>{{ product.brand.name }}</TableCell>
-                                <TableCell>
-                                    {{
-                                        product?.categories?.[0]?.parent_id !==
+                                <TableCell
+                                    v-if="
+                                        product.categories?.[0]?.parent_id ===
                                         null
-                                            ? category[
-                                                  product.categories[0]
-                                                      .parent_id as number
-                                              ]
-                                            : (product?.categories?.[0]?.name ??
-                                              '—')
+                                    "
+                                >
+                                    {{ category[product.categories?.[0]?.id] }}
+                                </TableCell>
+                                <TableCell v-else>
+                                    {{
+                                        category[
+                                            product.categories?.[0]?.parent_id
+                                        ]
                                     }}
                                 </TableCell>
                                 <TableCell>
