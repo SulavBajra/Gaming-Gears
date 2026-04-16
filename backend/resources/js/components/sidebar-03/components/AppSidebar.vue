@@ -31,9 +31,13 @@ const data = {
             icon: LayoutGrid,
         },
         {
-            title: 'Products',
+            title: 'Inventory',
             icon: Box,
             items: [
+                {
+                    title: 'Inventory Analytics',
+                    route: 'products.index',
+                },
                 {
                     title: 'Manage Products',
                     route: 'products.index',
@@ -41,6 +45,16 @@ const data = {
                 {
                     title: 'Manage Brands',
                     route: 'brands.index',
+                },
+            ],
+        },
+        {
+            title: 'Customers',
+            icon: User,
+            items: [
+                {
+                    title: 'Customer Orders',
+                    route: 'customers.index',
                 },
             ],
         },

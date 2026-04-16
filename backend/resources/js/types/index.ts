@@ -59,3 +59,43 @@ export interface DashboardOrderResource {
     order_status: string;
     payment_status: string;
 }
+
+export interface Order {
+    id: number;
+    order_number: string;
+    total: number;
+    customer_email: string;
+    created_at: string;
+    order_status: string;
+    payment_status: string;
+}
+
+export interface OrderData {
+    data: Order[];
+    links: {
+        first: string;
+        last: string;
+        prev: string | null;
+        next: string | null;
+    };
+    meta: {
+        current_page: number;
+        from: number;
+        last_page: number;
+        path: string;
+        per_page: number;
+        to: number;
+        total: number;
+    };
+}
+
+export type OrderStatus =
+    | 'Pending'
+    | 'Confirmed'
+    | 'Processing'
+    | 'Shipped'
+    | 'Delivered'
+    | 'Cancelled'
+    | 'Refunded';
+
+export type PaymentStatus = 'Unpaid' | 'Paid' | 'Failed' | 'Refunded';

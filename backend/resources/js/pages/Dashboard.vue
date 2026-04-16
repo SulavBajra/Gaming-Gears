@@ -77,7 +77,7 @@ const fmt = (val: any) =>
         <div class="mt-6 overflow-hidden rounded-lg border">
             <div class="flex items-center justify-between border-b px-5 py-3">
                 <p class="text-sm font-medium">Recent orders</p>
-                <span class="text-xs text-muted-foreground">Last 10</span>
+                <span class="text-xs text-muted-foreground">Latest 5</span>
             </div>
             <Table>
                 <TableHeader>
