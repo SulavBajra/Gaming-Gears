@@ -4,8 +4,8 @@ import { route } from 'ziggy-js';
 import {
     Card,
     CardContent,
-    CardHeader,
     CardFooter,
+    CardHeader,
     CardTitle,
 } from '@/components/ui/card';
 import AppLayout from '@/layouts/AppLayout.vue';

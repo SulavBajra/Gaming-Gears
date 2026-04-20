@@ -9,6 +9,8 @@ use App\Models\OrderStatus;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Actions\UpdateOrderStatus;
+use App\Http\Requests\Admin\CustomerStatusUpdateRequest;
+use App\Http\Resources\CustomerOrderViewResource;
 
 class CustomerOrderController extends Controller
 {
@@ -34,7 +36,7 @@ class CustomerOrderController extends Controller
             });
         }
 
-        $orders = $query->latest()->paginate(10)->withQueryString();
+        $orders = $query->latest()->paginate(6)->withQueryString();
 
         return Inertia::render('customers/Index', [
             'orders' => CustomerOrderResource::collection($orders),
@@ -42,24 +44,17 @@ class CustomerOrderController extends Controller
         ]);
     }
 
-    public function updateStatus(Request $request, Order $order, UpdateOrderStatus $action)
+    public function edit(Order $order)
     {
-        $request->validate([
-            'order_status' => 'required|exists:order_statuses,id',
+        $order = $order->load(['orderStatus','paymentStatus']);
+        return Inertia::render('customers/Edit', [
+            'order' => new CustomerOrderViewResource($order),
         ]);
-
-        $statusId = OrderStatus::query()->where('name', $request->order_status)->value('id');
-
-        $action->execute($order, (int) $statusId);
-
-        return back();
     }
 
-    public function updatePaymentStatus(Request $request, Order $order)
+    public function update(CustomerStatusUpdateRequest $request, Order $order)
     {
-        $request->validate([
-            'payment_status' => 'required|exists:payment_statuses,id',
-        ]);
-        return back();
+        $order->update($request->validated());
+        return to_route('customers.edit', $order)->with('success', 'Order updated successfully');
     }
 }

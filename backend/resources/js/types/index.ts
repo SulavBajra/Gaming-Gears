@@ -99,3 +99,34 @@ export type OrderStatus =
     | 'Refunded';
 
 export type PaymentStatus = 'Unpaid' | 'Paid' | 'Failed' | 'Refunded';
+
+export interface OrderView {
+    data: {
+        id: number;
+        order_number: string;
+        total: number;
+        customer_email: string;
+        customer_name: string;
+        customer_phone: string;
+        shipping_address: {
+            city: string;
+            line1: string;
+            line2: string;
+        };
+        payment_method: string;
+        paid_at: string | null;
+        shipped_at: string | null;
+        delivered_at: string | null;
+        cancelled_at: string | null;
+        updated_at: string;
+        order_status: {
+            id: number;
+            name: string;
+        };
+
+        payment_status: {
+            id: number;
+            name: string;
+        };
+    };
+}

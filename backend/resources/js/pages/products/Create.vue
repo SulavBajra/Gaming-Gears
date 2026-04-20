@@ -1,34 +1,34 @@
 <script setup lang="ts">
 import { Head, useForm } from '@inertiajs/vue3';
 import {
-    Plus,
-    Trash2,
-    ChevronRight,
     ChevronLeft,
-    Package,
-    Layers,
+    ChevronRight,
     ImagePlus,
-    X,
+    Layers,
+    Package,
+    Plus,
     Tag,
+    Trash2,
+    X,
 } from 'lucide-vue-next';
-import { ref, computed } from 'vue';
+import { computed, ref } from 'vue';
 import { route } from 'ziggy-js';
 import { Button } from '@/components/ui/button';
 import {
     Card,
     CardContent,
+    CardDescription,
     CardHeader,
     CardTitle,
-    CardDescription,
 } from '@/components/ui/card';
-import { Field, FieldLabel, FieldError, FieldSet } from '@/components/ui/field';
+import { Field, FieldError, FieldLabel, FieldSet } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import {
     Select,
-    SelectTrigger,
-    SelectValue,
     SelectContent,
     SelectItem,
+    SelectTrigger,
+    SelectValue,
 } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';

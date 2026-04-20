@@ -1,7 +1,4 @@
 {
-    "agents": [
-        "opencode",
-        "copilot"
-    ],
+    "agents": ["opencode", "copilot"],
     "guidelines": true
 }

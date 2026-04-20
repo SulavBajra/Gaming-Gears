@@ -20,10 +20,9 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         return Redirect::route('users.index');
     });
     Route::get('customers', [CustomerOrderController::class, 'index'])->name('customers.index');
-    Route::patch('orders/{order}/status', [CustomerOrderController::class, 'updateStatus'])
-        ->name('orders.updateStatus');
-    Route::patch('orders/{order}/payment-status', [CustomerOrderController::class, 'updatePaymentStatus'])
-        ->name('orders.updatePaymentStatus');
+    Route::get('customers/{order}/', [CustomerOrderController::class, 'edit'])->name('customers.edit');
+    Route::patch('customers/{order}/', [CustomerOrderController::class, 'update'])->name('customers.update')
+    ->missing(fn() => Redirect::route('customers.index'));
 });
 
 require __DIR__.'/settings.php';

@@ -1,16 +1,15 @@
 <script setup lang="ts">
-import { Head, Link, router } from '@inertiajs/vue3';
-import { usePoll } from '@inertiajs/vue3';
+import { Head, Link, router, usePoll } from '@inertiajs/vue3';
 import { Pencil, Plus, Trash } from 'lucide-vue-next';
 import { route } from 'ziggy-js';
 import { Button } from '@/components/ui/button';
 import {
     Card,
     CardContent,
-    CardHeader,
-    CardFooter,
-    CardTitle,
     CardDescription,
+    CardFooter,
+    CardHeader,
+    CardTitle,
 } from '@/components/ui/card';
 import {
     Dialog,

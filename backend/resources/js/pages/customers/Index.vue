@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { Head, router } from '@inertiajs/vue3';
-import { Search } from 'lucide-vue-next';
+import { Head, Link, router } from '@inertiajs/vue3';
+import { EyeIcon, Search } from 'lucide-vue-next';
 import { ref } from 'vue';
 import { route } from 'ziggy-js';
+import { Button } from '@/components/ui/button';
 import {
     Card,
     CardContent,
@@ -10,6 +11,15 @@ import {
     CardHeader,
     CardTitle,
 } from '@/components/ui/card';
+import {
+    InputGroup,
+    InputGroupAddon,
+    InputGroupInput,
+} from '@/components/ui/input-group';
+import {
+    NativeSelect,
+    NativeSelectOption,
+} from '@/components/ui/native-select';
 import {
     Pagination,
     PaginationContent,
@@ -22,27 +32,18 @@ import {
     Table,
     TableBody,
     TableCaption,
+    TableCell,
     TableHead,
     TableHeader,
     TableRow,
-    TableCell,
 } from '@/components/ui/table';
 import AppLayout from '@/layouts/AppLayout.vue';
 import type {
     BreadcrumbItem,
+    OrderData,
     OrderStatus,
     PaymentStatus,
-    OrderData,
 } from '@/types';
-import {
-    InputGroup,
-    InputGroupAddon,
-    InputGroupInput,
-} from '@/components/ui/input-group';
-import {
-    NativeSelect,
-    NativeSelectOption,
-} from '@/components/ui/native-select';
 
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Customers Orders', href: route('customers.index') },
@@ -104,36 +105,6 @@ const props = defineProps<{
         payment_status?: PaymentStatus;
     };
 }>();
-
-const updateOrderStatus = (orderId: number, status: string | null) => {
-    if (!status) return;
-
-    router.patch(
-        route('orders.updateStatus', orderId),
-        {
-            order_status: status,
-        },
-        {
-            preserveScroll: true,
-            preserveState: true,
-        },
-    );
-};
-
-const updatePaymentStatus = (orderId: number, status: string | null) => {
-    if (!status) return;
-
-    router.patch(
-        route('orders.updatePaymentStatus', orderId),
-        {
-            payment_status: status,
-        },
-        {
-            preserveScroll: true,
-            preserveState: true,
-        },
-    );
-};
 
 const search = ref(props.filters.search ?? '');
 const orderStatus = ref<OrderStatus | null>(props.filters.order_status ?? null);
@@ -211,6 +182,7 @@ const paymentStatus = ref<PaymentStatus | null>(
                                 >Payment Status</TableHead
                             >
                             <TableHead>Ordered At</TableHead>
+                            <TableHead>Actions</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -223,64 +195,23 @@ const paymentStatus = ref<PaymentStatus | null>(
                             <TableCell>{{ order.customer_email }}</TableCell>
                             <TableCell>{{ order.total }}</TableCell>
                             <TableCell>
-                                <select
-                                    :value="order.order_status"
-                                    @change="
-                                        updateOrderStatus(
-                                            order.id,
-                                            ($event.target as HTMLSelectElement)
-                                                .value,
-                                        )
-                                    "
-                                >
-                                    <option
-                                        v-for="status in orderStatusOptions"
-                                        :key="status"
-                                        :value="status"
-                                    >
-                                        {{ status }}
-                                    </option>
-                                </select>
-                                <!-- <NativeSelect
-                                    :model-value="order.order_status"
-                                    @update="
-                                        (value: OrderStatus) =>
-                                            updateOrderStatus(
-                                                order.id,
-                                                value as OrderStatus,
-                                            )
-                                    "
-                                >
-                                    <NativeSelectOption
-                                        v-for="status in orderStatusOptions"
-                                        :key="status"
-                                        :value="status"
-                                    >
-                                        {{ status }}
-                                    </NativeSelectOption>
-                                </NativeSelect> -->
+                                <span class="rounded-full px-2 py-1 text-xs">{{
+                                    order.order_status
+                                }}</span>
                             </TableCell>
                             <TableCell>
-                                <NativeSelect
-                                    :model-value="order.payment_status"
-                                    @update="
-                                        (value: PaymentStatus) =>
-                                            updatePaymentStatus(
-                                                order.id,
-                                                value as PaymentStatus,
-                                            )
-                                    "
-                                >
-                                    <NativeSelectOption
-                                        v-for="status in paymentStatusOptions"
-                                        :key="status"
-                                        :value="status"
-                                    >
-                                        {{ status }}
-                                    </NativeSelectOption>
-                                </NativeSelect></TableCell
+                                <span class="rounded-full px-2 py-1 text-xs">{{
+                                    order.payment_status
+                                }}</span></TableCell
                             >
                             <TableCell>{{ order.created_at }}</TableCell>
+                            <TableCell>
+                                <Link :href="route('customers.edit', order.id)">
+                                    <Button variant="outline">
+                                        <EyeIcon />
+                                    </Button>
+                                </Link>
+                            </TableCell>
                         </TableRow>
                     </TableBody>
                 </Table>
