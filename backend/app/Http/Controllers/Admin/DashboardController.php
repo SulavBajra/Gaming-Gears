@@ -9,7 +9,7 @@ use Inertia\Inertia;
 
 class DashboardController extends Controller
 {
-    public function index()
+    public function __invoke()
     {
         $paidOrders = Order::query()->where('payment_status_id', 2);
 
@@ -38,8 +38,8 @@ class DashboardController extends Controller
             'orderStatus:id,name',
             'paymentStatus:id,name',
         ])
-        ->select('id', 'order_number', 'customer_email', 'total', 'created_at', 'order_status_id', 'payment_status_id')
-        ->latest()->limit(10)->get();
+            ->select('id', 'order_number', 'customer_email', 'total', 'created_at', 'order_status_id', 'payment_status_id')
+            ->latest()->limit(5)->get();
 
         return Inertia::render('Dashboard', [
             'pending_orders' => $pending_orders,
@@ -48,20 +48,6 @@ class DashboardController extends Controller
             'year_total' => $year_total,
             'completed_order' => $completed_order,
             'recentOrders' => DashboardOrderResource::collection($recentOrders)->toArray(request()),
-        ]);
-    }
-
-    public function recentOrders()
-    {
-        $orders = Order::with([
-            'orderStatus:id,name',
-            'paymentStatus:id,name',
-        ])
-        ->select('id', 'order_number', 'customer_email', 'total', 'created_at', 'order_status_id', 'payment_status_id')
-        ->latest()->take(10)->get();
-
-        return Inertia::render('Dashboard', [
-            'recentOrders' => DashboardOrderResource::collection($orders),
         ]);
     }
 }

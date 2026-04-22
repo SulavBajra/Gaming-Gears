@@ -16,7 +16,7 @@ useFlashToast();
 </script>
 
 <template>
-    <AppLayout :breadcrumbs="breadcrumbs">
+    <AppLayout :breadcrumbs="breadcrumbs" class="p-2.5">
         <Toaster
             position="top-right"
             :expand="false"

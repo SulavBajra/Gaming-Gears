@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { HTMLAttributes } from 'vue';
-import logo from '../../assets/logo.png';
+import logo from '../../assets/dragon-head.svg';
 
 defineOptions({
     inheritAttrs: false,
@@ -14,5 +14,5 @@ defineProps<Props>();
 </script>
 
 <template>
-    <img :src="logo" :class="className" alt="logo" v-bind="$attrs" />
+    <img :src="logo" alt="logo" v-bind="$attrs" />
 </template>

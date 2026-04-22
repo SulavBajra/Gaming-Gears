@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
-import { LayoutGrid, Box, User } from 'lucide-vue-next';
+import { Box, LayoutGrid, User } from 'lucide-vue-next';
 import { route } from 'ziggy-js';
 import AppLogo from '@/components/AppLogo.vue';
 import NavUser from '@/components/NavUser.vue';
@@ -8,6 +8,7 @@ import type { SidebarProps } from '@/components/ui/sidebar';
 import {
     Sidebar,
     SidebarContent,
+    SidebarFooter,
     SidebarGroup,
     SidebarHeader,
     SidebarMenu,
@@ -17,7 +18,6 @@ import {
     SidebarMenuSubButton,
     SidebarMenuSubItem,
     SidebarRail,
-    SidebarFooter,
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes';
 
@@ -31,9 +31,13 @@ const data = {
             icon: LayoutGrid,
         },
         {
-            title: 'Products',
+            title: 'Inventory',
             icon: Box,
             items: [
+                {
+                    title: 'Inventory Analytics',
+                    route: 'products.index',
+                },
                 {
                     title: 'Manage Products',
                     route: 'products.index',
@@ -41,6 +45,16 @@ const data = {
                 {
                     title: 'Manage Brands',
                     route: 'brands.index',
+                },
+            ],
+        },
+        {
+            title: 'Customers',
+            icon: User,
+            items: [
+                {
+                    title: 'Customer Orders',
+                    route: 'customers.index',
                 },
             ],
         },
