@@ -3,20 +3,31 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Services\OrderService;
 use Illuminate\Http\Request;
 use Stripe\PaymentIntent;
 use Stripe\Stripe;
 
 class CheckoutController extends Controller
 {
+    public function cashOnDelivery(Request $request, OrderService $orderService)
+    {
+        $request->validate([
+            'shipping_name' => 'required|string|max:100',
+            'shipping_line1' => 'required|string|max:255',
+            'shipping_city' => 'required|string|max:100',
+        ]);
+
+        $user = $request->user();
+        $orderService->cashOnDelivery($request);
+    }
+
     public function createPaymentIntent(Request $request)
     {
         $request->validate([
             'shipping_name' => 'required|string|max:100',
             'shipping_line1' => 'required|string|max:255',
             'shipping_city' => 'required|string|max:100',
-            'shipping_postal' => 'nullable|string|max:20',
-            'shipping_country' => 'nullable|string|size:2',
         ]);
 
         $user = $request->user();

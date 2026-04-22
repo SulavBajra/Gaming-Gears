@@ -43,7 +43,9 @@ Route::middleware(['auth:sanctum', 'role:customer'])->group(function () {
     Route::delete('/cart/{cart}', [CartController::class, 'destroy']);
     Route::delete('/cart/items/{cartItem}', [CartController::class, 'deleteItem']);
     Route::patch('/cart/items/{cartItem}', [CartController::class, 'updateItem']);
+
     Route::post('/checkout/intent', [CheckoutController::class, 'createPaymentIntent']);
+    Route::post('/checkout/cash', [CheckoutController::class, 'cashOnDelivery']);
 
     // this is for the user profile section
     Route::get('/profile', [CustomerProfileController::class, 'show'])->name('api.profile');

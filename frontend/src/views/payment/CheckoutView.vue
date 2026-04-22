@@ -5,8 +5,6 @@ import { useRouter } from 'vue-router'
 import { useCart } from '@/composables/useCart'
 import { useAuth } from '@/composables/useAuth'
 import axiosClient from '@/axios'
-import { ArrowLeft, ArrowRight, Lock } from '@lucide/vue'
-import ProgressSpinner from 'primevue/progressspinner'
 import { useToaster } from '@/composables/useToast'
 
 const router = useRouter()
@@ -20,6 +18,12 @@ const processing = ref(false)
 const loadingIntent = ref(false)
 const stripeError = ref('')
 const clientSecret = ref('')
+const selectedPaymentMethod = ref('card')
+
+const paymentMethods = [
+  { value: 'card', label: 'Card' },
+  { value: 'cash', label: 'Cash on Delivery' },
+]
 
 let stripe: any = null
 let cardElement: any = null
@@ -48,20 +52,27 @@ async function proceedToPayment() {
   loadingIntent.value = true
   stripeError.value = ''
 
-  try {
-    const { data } = await axiosClient.post('/api/checkout/intent', shipping)
-    clientSecret.value = data.client_secret
-    step.value = 'payment'
+  if (selectedPaymentMethod.value === 'card') {
+    try {
+      const { data } = await axiosClient.post('/api/checkout/intent', shipping)
+      clientSecret.value = data.client_secret
+      step.value = 'payment'
 
-    await nextTick()
-    await mountCardElement()
-  } catch (err: any) {
-    stripeError.value = err.response?.data?.message ?? 'Failed to initialize payment.'
-    console.log(err.response)
-    console.log('baseURL:', axiosClient.defaults.baseURL)
-    console.log('token:', localStorage.getItem('token'))
-  } finally {
-    loadingIntent.value = false
+      await nextTick()
+      await mountCardElement()
+    } catch (err: any) {
+      stripeError.value = err.response?.data?.message ?? 'Failed to initialize payment.'
+    } finally {
+      loadingIntent.value = false
+    }
+  } else {
+    try {
+      await axiosClient.post('/api/checkout/cash', shipping)
+      showSuccess('Order placed successfully!')
+      router.push({ name: 'shop' })
+    } catch (err: any) {
+      console.error(err)
+    }
   }
 }
 
@@ -94,7 +105,7 @@ async function submitPayment() {
   processing.value = true
   stripeError.value = ''
 
-  const { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret.value, {
+  const { error } = await stripe.confirmCardPayment(clientSecret.value, {
     payment_method: { card: cardElement },
   })
 
@@ -154,11 +165,26 @@ async function submitPayment() {
                 <label>City</label>
                 <input v-model="shipping.shipping_city" placeholder="Kathmandu" />
               </div>
+              <div class="field">
+                <label>Payment method</label>
+                <select v-model="selectedPaymentMethod" class="payment-select" required>
+                  <option disabled value="">Choose a payment method</option>
+
+                  <option
+                    v-for="method in paymentMethods"
+                    :key="method.value"
+                    :value="method.value"
+                  >
+                    {{ method.label }}
+                  </option>
+                </select>
+              </div>
             </div>
 
             <p v-if="stripeError" class="error-msg">{{ stripeError }}</p>
 
             <button
+              v-if="selectedPaymentMethod === 'card'"
               class="btn-primary"
               @click="proceedToPayment"
               :disabled="
@@ -171,6 +197,24 @@ async function submitPayment() {
               <ProgressSpinner v-if="loadingIntent" style="width: 18px; height: 18px" />
               <template v-else>
                 Continue to payment
+                <ArrowRight :size="16" />
+              </template>
+            </button>
+
+            <button
+              v-else
+              class="btn-primary"
+              @click="proceedToPayment"
+              :disabled="
+                loadingIntent ||
+                !shipping.shipping_name ||
+                !shipping.shipping_line1 ||
+                !shipping.shipping_city
+              "
+            >
+              <ProgressSpinner v-if="loadingIntent" style="width: 18px; height: 18px" />
+              <template v-else>
+                Continue to place order
                 <ArrowRight :size="16" />
               </template>
             </button>
@@ -216,7 +260,7 @@ async function submitPayment() {
           <div class="summary-items">
             <div class="summary-item" v-for="item in items" :key="item.id">
               <div class="si-img">
-                <img :src?="item.thumbnail" />
+                <img :src="item.thumbnail" />
                 <span class="si-qty">{{ item.quantity }}</span>
               </div>
               <div class="si-info">
@@ -256,6 +300,14 @@ async function submitPayment() {
   padding: 60px 40px;
   background: var(--bg);
   font-family: 'DM Sans', sans-serif;
+}
+
+.payment-select {
+  background: #1c2b2f;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 13px 14px;
+  transition: border-color 0.15s;
 }
 
 .checkout-container {
