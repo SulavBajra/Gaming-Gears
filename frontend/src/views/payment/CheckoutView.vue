@@ -6,11 +6,13 @@ import { useCart } from '@/composables/useCart'
 import { useAuth } from '@/composables/useAuth'
 import axiosClient from '@/axios'
 import { useToaster } from '@/composables/useToast'
+import { ArrowRight, ArrowLeft, Lock } from '@lucide/vue'
+import ProgressSpinner from 'primevue/progressspinner'
 
 const router = useRouter()
 const { items, totalPrice, totalItems } = useCart()
 const { profile, getUserProfile } = useAuth()
-const { showSuccess } = useToaster()
+const { showSuccess, showInfo } = useToaster()
 
 type Step = 'shipping' | 'payment'
 const step = ref<Step>('shipping')
@@ -41,6 +43,9 @@ onMounted(async () => {
       profile.value.address.first_name + ' ' + profile.value.address.last_name
     shipping.shipping_line1 = profile.value.address.address_line_1
     shipping.shipping_city = profile.value.address.city
+  } else {
+    router.push({ name: 'profile.create' })
+    showInfo('Please complete your profile to proceed with payment.')
   }
 })
 

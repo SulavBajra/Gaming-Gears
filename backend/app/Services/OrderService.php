@@ -19,10 +19,7 @@ class OrderService
     public static function cashOnDelivery(Request $request): void
     {
         $userId = $request->user()->id;
-        $user = User::with(['address:id,user_id,phone,address_line_1,city'])->where('id', $userId)->first();
-
-        $shippingAddress = $user->address()->address_line_1 ?? null;
-        $shippingCity = $user->address()->city ?? null;
+        $user = User::with(['address:id,user_id,phone,address_line_1,city,first_name,last_name'])->where('id', $userId)->first();
 
         $orderStatusId = OrderStatusEnum::CONFIRMED->value;
         $paymentStatusId = PaymentStatusEnum::UNPAID->value;
@@ -31,7 +28,7 @@ class OrderService
             throw new \Exception('Required order/payment status codes not seeded.');
         }
 
-        DB::transaction(function () use ($user, $orderStatusId, $shippingCity, $paymentStatusId, $shippingAddress) {
+        DB::transaction(function () use ($user, $orderStatusId, $paymentStatusId) {
             $randomString = bin2hex(random_bytes(4));
             $cartItems = $user->cart->items()
                 ->with(['product.media', 'productVariant'])
@@ -43,7 +40,6 @@ class OrderService
             }
 
             $subtotal = $cartItems->sum(fn ($item) => $item->unit_price * $item->quantity);
-            // 0 for now but will be changed into shipping cost
             $total = $subtotal + 0;
 
             // 1. Create the order
@@ -58,9 +54,9 @@ class OrderService
                 'stripe_payment_intent_id' => null,
                 'payment_method' => 'Cash on Delivery',
                 'customer_email' => $user->email,
-                'customer_name' => $user->name,
+                'customer_name' => $user->first_name . ' ' . $user->last_name,
                 'customer_phone' => $user->customer->phone ?? ' ',
-                'shipping_address' => static::resolveShippingAddress($user, null, $shippingAddress, $shippingCity),
+                'shipping_address' => static::resolveShippingAddress($user, null),
                 'paid_at' => null,
             ]);
 
@@ -111,6 +107,7 @@ class OrderService
                 'order_id' => $order->id,
                 'order_number' => $order->order_number,
                 'total' => $total,
+                'fullname' => $user->address->first_name . ' ' . $user->address->last_name,
                 'items_count' => count($items),
             ]);
 
@@ -162,7 +159,7 @@ class OrderService
                 'stripe_payment_intent_id' => $intent->id,
                 'payment_method' => 'Stripe',
                 'customer_email' => $user->email,
-                'customer_name' => $user->name,
+                'customer_name' => $user->address->first_name . $user->address->last_name,
                 'customer_phone' => $user->customer->phone ?? ' ',
                 // Address snapshots — pull from user profile or cart
                 'shipping_address' => static::resolveShippingAddress($user, $intent, null, null),
