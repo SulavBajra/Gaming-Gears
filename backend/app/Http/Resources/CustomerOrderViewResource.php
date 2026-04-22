@@ -22,9 +22,9 @@ class CustomerOrderViewResource extends JsonResource
             'customer_phone' => $this->customer_phone,
             'total' => $this->total,
             'shipping_address' => [
-                'city' => $this->shipping_address_city,
-                'line1' => $this->shipping_address_line1,
-                'line2' => $this->shipping_address_line2,
+                'city' => $this->shipping_address['city'] ?? null,
+                'line1' => $this->shipping_address['line1'] ?? null,
+                'line2' => $this->shipping_address['line2'] ?? null,
             ],
             'payment_method' => $this->payment_method,
             'shipped_at' => $this->shipped_at?->format('Y-m-d'),

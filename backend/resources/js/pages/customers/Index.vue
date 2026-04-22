@@ -4,6 +4,7 @@ import { EyeIcon, Search } from 'lucide-vue-next';
 import { ref } from 'vue';
 import { route } from 'ziggy-js';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import {
     Card,
     CardContent,
@@ -195,15 +196,22 @@ const paymentStatus = ref<PaymentStatus | null>(
                             <TableCell>{{ order.customer_email }}</TableCell>
                             <TableCell>{{ order.total }}</TableCell>
                             <TableCell>
-                                <span class="rounded-full px-2 py-1 text-xs">{{
+                                <Badge
+                                    v-if="order.order_status == 'Delivered'"
+                                    >{{ order.order_status }}</Badge
+                                >
+                                <Badge v-else variant="outline">{{
                                     order.order_status
-                                }}</span>
+                                }}</Badge>
                             </TableCell>
                             <TableCell>
-                                <span class="rounded-full px-2 py-1 text-xs">{{
+                                <Badge v-if="order.payment_status == 'Paid'">{{
                                     order.payment_status
-                                }}</span></TableCell
-                            >
+                                }}</Badge>
+                                <Badge v-else variant="outline">{{
+                                    order.payment_status
+                                }}</Badge>
+                            </TableCell>
                             <TableCell>{{ order.created_at }}</TableCell>
                             <TableCell>
                                 <Link :href="route('customers.edit', order.id)">

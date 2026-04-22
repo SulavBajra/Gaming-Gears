@@ -118,7 +118,7 @@ export interface OrderView {
         shipped_at: string | null;
         delivered_at: string | null;
         cancelled_at: string | null;
-        updated_at: string;
+        created_at: string;
         order_status: {
             id: number;
             name: string;
