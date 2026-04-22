@@ -23,8 +23,8 @@ class CustomerStatusUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'order_status' => 'nullable|string|exists:order_statuses,name',
-            'payment_status' => 'nullable|string|exists:payment_statuses,name',
+            'order_status_id' => 'nullable|integer|exists:order_statuses,id',
+            'payment_status_id' => 'nullable|integer|exists:payment_statuses,id',
         ];
     }
 }

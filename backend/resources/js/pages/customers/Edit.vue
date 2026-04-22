@@ -7,35 +7,31 @@ import { route } from 'ziggy-js';
 import { router } from '@inertiajs/vue3';
 
 const props = defineProps<{ order: OrderView }>();
-const orderStatusOptions: OrderStatus[] = [
-    'Pending',
-    'Confirmed',
-    'Processing',
-    'Shipped',
-    'Delivered',
-    'Cancelled',
-    'Refunded',
+const orderStatusOptions = [
+    { id: 1, name: 'Pending' },
+    { id: 2, name: 'Confirmed' },
+    { id: 3, name: 'Processing' },
+    { id: 4, name: 'Shipped' },
+    { id: 5, name: 'Delivered' },
+    { id: 6, name: 'Cancelled' },
+    { id: 7, name: 'Refunded' },
 ];
 
-const paymentStatusOptions: PaymentStatus[] = [
-    'Unpaid',
-    'Paid',
-    'Failed',
-    'Refunded',
+const paymentStatusOptions = [
+    { id: 1, name: 'Unpaid' },
+    { id: 2, name: 'Paid' },
+    { id: 3, name: 'Failed' },
+    { id: 4, name: 'Refunded' },
 ];
 
-const selectedOrderStatus = ref<OrderStatus>(
-    props.order.data.order_status.name as OrderStatus,
-);
+const selectedOrderStatus = ref<number>(props.order.data.order_status.id);
 
-const selectedPaymentStatus = ref<PaymentStatus>(
-    props.order.data.payment_status.name as PaymentStatus,
-);
+const selectedPaymentStatus = ref<number>(props.order.data.payment_status.id);
 
 const updateStatus = () => {
     router.patch(route('customers.update', { order: props.order.data.id }), {
-        order_status: selectedOrderStatus.value,
-        payment_status: selectedPaymentStatus.value,
+        order_status_id: selectedOrderStatus.value,
+        payment_status_id: selectedPaymentStatus.value,
     });
 };
 </script>
@@ -58,10 +54,10 @@ const updateStatus = () => {
                     >
                         <option
                             v-for="status in orderStatusOptions"
-                            :key="status"
-                            :value="status"
+                            :key="status.id"
+                            :value="status.id"
                         >
-                            {{ status }}
+                            {{ status.name }}
                         </option>
                     </select>
                 </p>
@@ -74,10 +70,10 @@ const updateStatus = () => {
                     >
                         <option
                             v-for="status in paymentStatusOptions"
-                            :key="status"
-                            :value="status"
+                            :key="status.id"
+                            :value="status.id"
                         >
-                            {{ status }}
+                            {{ status.name }}
                         </option>
                     </select>
                 </p>

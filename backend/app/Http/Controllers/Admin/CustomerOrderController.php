@@ -5,10 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CustomerOrderResource;
 use App\Models\Order;
-use App\Models\OrderStatus;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use App\Actions\UpdateOrderStatus;
+use App\Actions\CustomerOrderStatusUpdate;
 use App\Http\Requests\Admin\CustomerStatusUpdateRequest;
 use App\Http\Resources\CustomerOrderViewResource;
 
@@ -52,9 +51,9 @@ class CustomerOrderController extends Controller
         ]);
     }
 
-    public function update(CustomerStatusUpdateRequest $request, Order $order)
+    public function update(CustomerStatusUpdateRequest $request, Order $order, CustomerOrderStatusUpdate $update)
     {
-        $order->update($request->validated());
-        return to_route('customers.edit', $order)->with('success', 'Order updated successfully');
+        $update->execute($order, $request);
+        return to_route('customers.index')->with('success', 'Order updated successfully');
     }
 }
