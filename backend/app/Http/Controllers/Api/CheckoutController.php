@@ -34,7 +34,6 @@ class CheckoutController extends Controller
 
         Stripe::setApiKey(config('services.stripe.secret'));
 
-        // CheckoutController.php
         $intent = PaymentIntent::create([
             'amount' => $total,
             'currency' => 'usd',

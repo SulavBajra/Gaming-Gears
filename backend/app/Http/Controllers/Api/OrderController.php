@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
-    public function index()
+    public function __invoke()
     {
         $user = Auth::user();
         $orders = Order::with(['items', 'orderStatus', 'paymentStatus'])
@@ -17,6 +17,5 @@ class OrderController extends Controller
             ->paginate(4);
 
         return OrderResource::collection($orders);
-        // return response()->json($orders);
     }
 }

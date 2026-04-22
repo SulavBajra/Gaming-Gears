@@ -178,7 +178,7 @@ const updateStatus = () => {
                                     Total
                                 </dt>
                                 <dd class="mt-0.5 text-sm font-semibold">
-                                    ${{ order.data.total }}
+                                    Rs. {{ order.data.total }}
                                 </dd>
                             </div>
                             <div>

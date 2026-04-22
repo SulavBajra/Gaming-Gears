@@ -44,6 +44,7 @@ Route::middleware(['auth:sanctum', 'role:customer'])->group(function () {
     Route::delete('/cart/items/{cartItem}', [CartController::class, 'deleteItem']);
     Route::patch('/cart/items/{cartItem}', [CartController::class, 'updateItem']);
     Route::post('/checkout/intent', [CheckoutController::class, 'createPaymentIntent']);
+    // Route::post('/checkout/cod', [CheckoutController::class, 'cashOnDelivery']);
 
     // this is for the user profile section
     Route::get('/profile', [CustomerProfileController::class, 'show'])->name('api.profile');
@@ -51,7 +52,7 @@ Route::middleware(['auth:sanctum', 'role:customer'])->group(function () {
     Route::put('/profile', [CustomerProfileController::class, 'update']);
     Route::patch('/profile', [CustomerProfileController::class, 'update']);
 
-    Route::get('/orders', [OrderController::class, 'index']);
+    Route::get('/orders', OrderController::class);
 
     // TODO: Add for wishlist
     Route::get('/wishlist', [WishlistController::class, 'show']);

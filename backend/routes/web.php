@@ -22,7 +22,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('customers', [CustomerOrderController::class, 'index'])->name('customers.index');
     Route::get('customers/{order}/', [CustomerOrderController::class, 'edit'])->name('customers.edit');
     Route::patch('customers/{order}/', [CustomerOrderController::class, 'update'])->name('customers.update')
-    ->missing(fn() => Redirect::route('customers.index'));
+        ->missing(fn () => Redirect::route('customers.index'));
 });
 
 require __DIR__.'/settings.php';
