@@ -1,4 +1,5 @@
 FROM php:8.4-cli-alpine
+# build v3
 WORKDIR /var/www/html
 
 # System deps
@@ -16,6 +17,13 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Copy files
 COPY . .
 
+# Create minimal .env for build-time artisan commands
+RUN echo "APP_NAME=GamingGears" > .env \
+    && echo "APP_ENV=production" >> .env \
+    && echo "APP_KEY=base64:$(head -c 32 /dev/urandom | base64)" >> .env \
+    && echo "APP_DEBUG=false" >> .env \
+    && echo "DB_CONNECTION=mysql" >> .env
+
 # Install PHP deps
 RUN composer install --no-dev --optimize-autoloader
 
@@ -24,6 +32,9 @@ RUN php artisan wayfinder:generate
 
 # Build client + SSR bundle
 RUN npm install && npm run build:ssr
+
+# Remove build-time .env (real one comes from Render env vars at runtime)
+RUN rm .env
 
 # Permissions
 RUN chown -R nobody:nobody storage bootstrap/cache \
