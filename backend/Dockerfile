@@ -9,7 +9,7 @@ RUN apk add --no-cache \
     libxml2-dev freetype-dev libjpeg-turbo-dev \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install \
-        pdo pdo_mysql mbstring zip gd xml bcmath pcntl
+        pdo pdo_mysql mbstring zip gd xml bcmath pcntl exif
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
@@ -20,7 +20,7 @@ COPY . .
 # Install PHP deps
 RUN composer install --no-dev --optimize-autoloader
 
-# Build Inertia/Vue admin assets
+# Build frontend
 RUN npm install && npm run build
 
 # Permissions
