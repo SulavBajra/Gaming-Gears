@@ -19,6 +19,9 @@ COPY . .
 # Install PHP deps
 RUN composer install --no-dev --optimize-autoloader
 
+# Generate Wayfinder route + action files
+RUN php artisan wayfinder:generate
+
 # Build client + SSR bundle
 RUN npm install && npm run build:ssr
 
@@ -28,7 +31,6 @@ RUN chown -R nobody:nobody storage bootstrap/cache \
 
 EXPOSE 8080
 
-# Start SSR node server in background, then PHP
 CMD php artisan config:cache \
     && php artisan route:cache \
     && php artisan migrate --force \
