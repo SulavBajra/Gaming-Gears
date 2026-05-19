@@ -10,7 +10,7 @@ const { fetchUser } = useAuth()
 const { fetchCart } = useCart()
 
 onMounted(async () => {
-  await fetchUser()
+  await fetchUser().catch(() => {})
   await fetchCart()
 })
 </script>

@@ -66,6 +66,7 @@ const handleAddToCart = async () => {
   if (!selectedVariant.value || !product.value) return
   if (!user.value) {
     handleGuestAddToCart(product.value.id, selectedVariant.value.id, quantity.value)
+    return
   }
   const success = await addItemToCart(product.value.id, selectedVariant.value.id, quantity.value)
   if (success) {
@@ -227,7 +228,7 @@ watch(
               class="wishlist-btn-inner"
               :class="{ active: product.is_in_wishlist }"
               :disabled="isLoading"
-              @click="handleWishlist"
+              @click="user ? handleWishlist() : showInfo('Login to use wishlist')"
             >
               <Heart class="wishlist" :size="16" />
               <span>

@@ -44,10 +44,7 @@ const viewProduct = (slug: string) => {
             <p v-if="product.categories?.[0]?.name !== undefined" class="category">
               {{ product.categories?.[0]?.name }}
             </p>
-            <p v-else class="category">
-              <!-- TODO: Need to fix this later -->
-              {{ console.log(product.categories) }}
-            </p>
+            <p v-else class="category"></p>
 
             <div class="tags">
               <p>

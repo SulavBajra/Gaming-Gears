@@ -28,9 +28,17 @@ const { itemCount } = useCart()
       </ul>
 
       <div class="nav-actions">
-        <RouterLink to="/wishlist" class="icon-btn" aria-label="Wishlist">
+        <RouterLink v-if="user" to="/wishlist" class="icon-btn" aria-label="Wishlist">
           <Heart />
         </RouterLink>
+        <button
+          v-else
+          class="icon-btn"
+          aria-label="Wishlist"
+          @click="showInfo('Login to use wishlist')"
+        >
+          <Heart />
+        </button>
         <RouterLink to="/cart" class="icon-btn" aria-label="Cart">
           <ShoppingCart />
           <span class="cart-badge">{{ itemCount }}</span>
