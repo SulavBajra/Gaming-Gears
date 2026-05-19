@@ -22,8 +22,11 @@ axiosClient.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
+      const hadToken = !!localStorage.getItem('token')
       localStorage.removeItem('token')
-      router.push({ name: 'login' })
+      if (hadToken) {
+        router.push({ name: 'login' })
+      }
     }
     return Promise.reject(error)
   },

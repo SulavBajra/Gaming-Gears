@@ -42,20 +42,32 @@ export function useCart() {
   const fetchCart = async () => {
     if (!user.value) {
       const pending = sessionStorage.getItem('pendingCart')
-      if (!pending) return
+      if (!pending) {
+        cart.value = null
+        return
+      }
       const item = JSON.parse(pending)
-      cart.value = item
+      cart.value = {
+        id: null,
+        expires_at: null,
+        total_items: item.quantity,
+        total_price: 0,
+        items: [
+          {
+            id: 0,
+            product_id: item.product_id,
+            product_variant_id: item.product_variant_id,
+            quantity: item.quantity,
+            unit_price: 0,
+            item_total_price: 0,
+            updated_at: '',
+            product_name: null,
+            product_variant_name: null,
+            thumbnail: null,
+          },
+        ],
+      }
       return
-    }
-    loading.value = true
-    error.value = null
-    try {
-      const { data } = await axiosClient.get('/api/cart')
-      cart.value = data.data
-    } catch {
-      error.value = 'Failed to load cart.'
-    } finally {
-      loading.value = false
     }
   }
 
@@ -78,22 +90,17 @@ export function useCart() {
     }
   }
 
-  const handleGuestAddToCart = async (
+  const handleGuestAddToCart = (
     productId: number,
     variantId: number | null = null,
     quantity = 1,
   ) => {
-    if (!user.value) {
-      sessionStorage.setItem(
-        'pendingCart',
-        JSON.stringify({ product_id: productId, product_variant_id: variantId, quantity }),
-      )
-      router.push('/login')
-      return
-    }
-    await addToCart(productId, variantId, quantity)
+    sessionStorage.setItem(
+      'pendingCart',
+      JSON.stringify({ product_id: productId, product_variant_id: variantId, quantity }),
+    )
+    fetchCart()
   }
-
   const restorePendingCart = async () => {
     const pending = sessionStorage.getItem('pendingCart')
     if (!pending) return

@@ -35,7 +35,7 @@ Route::get('/user', function (Request $request) {
 
 Route::middleware(['auth:sanctum', 'role:customer'])->group(function () {
     // Change these for guest in future
-    Route::get('/shop/{product:slug}', [ShopController::class, 'show'])->name('api.shop');
+    // Route::get('/shop/{product:slug}', [ShopController::class, 'show'])->name('api.shop');
 
     Route::post('/logout', LogoutController::class)->name('api.logout');
     Route::post('/cart', [CartController::class, 'store'])->name('api.cart');
