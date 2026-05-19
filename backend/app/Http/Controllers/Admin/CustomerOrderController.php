@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Actions\CustomerOrderStatusUpdate;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\CustomerStatusUpdateRequest;
 use App\Http\Resources\CustomerOrderResource;
+use App\Http\Resources\CustomerOrderViewResource;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use App\Actions\CustomerOrderStatusUpdate;
-use App\Http\Requests\Admin\CustomerStatusUpdateRequest;
-use App\Http\Resources\CustomerOrderViewResource;
 
 class CustomerOrderController extends Controller
 {
@@ -45,7 +45,8 @@ class CustomerOrderController extends Controller
 
     public function edit(Order $order)
     {
-        $order = $order->load(['orderStatus','paymentStatus']);
+        $order = $order->load(['orderStatus', 'paymentStatus']);
+
         return Inertia::render('customers/Edit', [
             'order' => new CustomerOrderViewResource($order),
         ]);
@@ -54,6 +55,7 @@ class CustomerOrderController extends Controller
     public function update(CustomerStatusUpdateRequest $request, Order $order, CustomerOrderStatusUpdate $update)
     {
         $update->execute($order, $request);
+
         return to_route('customers.index')->with('success', 'Order updated successfully');
     }
 }

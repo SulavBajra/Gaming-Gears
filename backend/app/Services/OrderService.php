@@ -50,11 +50,11 @@ class OrderService
                 'payment_status_id' => $paymentStatusId,
                 'subtotal' => $subtotal,
                 'total' => $total,
-                'currency' => strtoupper("NPR"),
+                'currency' => strtoupper('NPR'),
                 'stripe_payment_intent_id' => null,
                 'payment_method' => 'Cash on Delivery',
                 'customer_email' => $user->email,
-                'customer_name' => $user->first_name . ' ' . $user->last_name,
+                'customer_name' => $user->first_name.' '.$user->last_name,
                 'customer_phone' => $user->customer->phone ?? ' ',
                 'shipping_address' => static::resolveShippingAddress($user, null),
                 'paid_at' => null,
@@ -107,7 +107,7 @@ class OrderService
                 'order_id' => $order->id,
                 'order_number' => $order->order_number,
                 'total' => $total,
-                'fullname' => $user->address->first_name . ' ' . $user->address->last_name,
+                'fullname' => $user->address->first_name.' '.$user->address->last_name,
                 'items_count' => count($items),
             ]);
 
@@ -159,7 +159,7 @@ class OrderService
                 'stripe_payment_intent_id' => $intent->id,
                 'payment_method' => 'Stripe',
                 'customer_email' => $user->email,
-                'customer_name' => $user->address->first_name . $user->address->last_name,
+                'customer_name' => $user->address->first_name.$user->address->last_name,
                 'customer_phone' => $user->customer->phone ?? ' ',
                 // Address snapshots — pull from user profile or cart
                 'shipping_address' => static::resolveShippingAddress($user, $intent, null, null),
