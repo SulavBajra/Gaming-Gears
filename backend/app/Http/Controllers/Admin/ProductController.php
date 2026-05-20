@@ -97,7 +97,7 @@ class ProductController extends Controller
     {
         $this->productService->update($request, $product);
 
-        return to_route('products/Index')->with('success', 'Updated Successfully');
+        return to_route('products.index')->with('success', 'Updated Successfully');
     }
 
     /**
@@ -107,6 +107,6 @@ class ProductController extends Controller
     {
         Product::destroy($id);
 
-        return to_route('products/Index')->with('success', 'Deleted Successfully');
+        return to_route('products.index')->with('success', 'Deleted Successfully');
     }
 }
