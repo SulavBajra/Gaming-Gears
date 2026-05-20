@@ -21,7 +21,7 @@ class DatabaseSeeder extends Seeder
             ProductSeeder::class,
         ]);
 
-        OrderStatus::insert([
+        OrderStatus::insertOrIgnore([
             ['name' => 'Pending', 'code' => 'pending'],
             ['name' => 'Confirmed', 'code' => 'confirmed'],
             ['name' => 'Processing', 'code' => 'processing'],
@@ -31,7 +31,7 @@ class DatabaseSeeder extends Seeder
             ['name' => 'Refunded', 'code' => 'refunded'],
         ]);
 
-        PaymentStatus::insert([
+        PaymentStatus::insertOrIgnore([
             ['name' => 'Unpaid', 'code' => 'unpaid'],
             ['name' => 'Paid', 'code' => 'paid'],
             ['name' => 'Failed', 'code' => 'failed'],
