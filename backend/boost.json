@@ -1,4 +1,8 @@
 {
-    "agents": ["opencode", "copilot"],
+    "agents": [
+        "opencode",
+        "copilot"
+    ],
+    "cloud": false,
     "guidelines": true
 }

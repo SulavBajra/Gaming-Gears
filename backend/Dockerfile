@@ -27,9 +27,6 @@ RUN echo "APP_NAME=GamingGears" > .env \
 # Install PHP deps
 RUN composer install --no-dev --optimize-autoloader
 
-# Generate Wayfinder route + action files
-RUN php artisan wayfinder:generate
-
 # Build client + SSR bundle
 RUN npm install && npm run build:ssr
 
