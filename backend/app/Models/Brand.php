@@ -43,7 +43,7 @@ class Brand extends Model implements HasMedia
     protected function logoUrl(): Attribute
     {
         return Attribute::make(get: function () {
-            return $this->getFirstMediaUrl('logo') ?: null;
+            return $this->getFirstMedia('logo')?->getUrl() ?? null;
         });
     }
 

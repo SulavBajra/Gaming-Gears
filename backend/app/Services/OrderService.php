@@ -64,7 +64,7 @@ class OrderService
             foreach ($cartItems as $cartItem) {
                 $product = $cartItem->product;
                 $variant = $cartItem->productVariant;
-                $productImage = $product->getFirstMediaUrl('thumbnail') ?: null;
+                $productImage = $product->getFirstMedia('thumbnail')?->getUrl() ?? null;
 
                 $items[] = [
                     'order_id' => $order->id,
@@ -170,7 +170,7 @@ class OrderService
             foreach ($cartItems as $cartItem) {
                 $product = $cartItem->product;
                 $variant = $cartItem->productVariant;
-                $productImage = $product->getFirstMediaUrl('thumbnail') ?: null;
+                $productImage = $product->getFirstMedia('thumbnail')?->getUrl() ?? null;
 
                 $items[] = [
                     'order_id' => $order->id,
@@ -240,7 +240,7 @@ class OrderService
             'id' => $product->id,
             'name' => $product->name,
             'slug' => $product->slug,
-            'thumbnail' => $product->getFirstMediaUrl('thumbnail'),
+            'thumbnail' => $product->getFirstMedia('thumbnail')?->getUrl() ?? null,
             'variant' => $variant ? [
                 'id' => $variant->id,
                 'name' => $variant->name,
