@@ -24,7 +24,7 @@ class CartItemResource extends JsonResource
             'updated_at' => $this->updated_at,
             'product_name' => $this->whenLoaded('product', fn () => $this->product?->name),
             'product_variant_name' => $this->whenLoaded('productVariant', fn () => $this->productVariant?->name),
-            'thumbnail' => $this->whenLoaded('product', fn () => $this->product?->getFirstMediaUrl('thumbnail')),
+            'thumbnail' => $this->whenLoaded('product', fn () => $this->product?->getFirstMedia('thumbnail')?->getUrl() ?? null),
         ];
     }
 }

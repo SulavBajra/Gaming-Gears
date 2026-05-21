@@ -37,7 +37,7 @@ class ProductHomeResource extends JsonResource
                 ];
             }),
 
-            'thumbnail' => $this->getFirstMediaUrl('thumbnail'),
+            'thumbnail' => $this->getFirstMedia('thumbnail')?->getUrl() ?? null,
         ];
     }
 }

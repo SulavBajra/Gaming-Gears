@@ -23,7 +23,7 @@ class WishlistResource extends JsonResource
                 'name' => $this->product->name,
                 'slug' => $this->product->slug,
                 'tags' => $this->product->tags,
-                'thumbnail' => $this->product->getFirstMediaUrl('thumbnail'),
+                'thumbnail' => $this->product->getFirstMedia('thumbnail')?->getUrl() ?? null,
                 'variants' => $this->product->variants->map(function ($variant) {
                     return [
                         'id' => $variant->id,

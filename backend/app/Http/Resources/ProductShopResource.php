@@ -39,7 +39,7 @@ class ProductShopResource extends JsonResource
                 ];
             }),
 
-            'thumbnail' => $this->getFirstMediaUrl('thumbnail'),
+            'thumbnail' => $this->getFirstMedia('thumbnail')?->getUrl() ?? null,
             'gallery' => $this->getMedia('gallery')->map(fn ($m) => $m->getUrl()),
             'variants' => $this->whenLoaded(
                 'variants',

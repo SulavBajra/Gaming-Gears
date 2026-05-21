@@ -18,7 +18,7 @@ class BrandResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'slug' => $this->slug,
-            'logo_url' => $this->getFirstMediaUrl('logo'),
+            'logo_url' => $this->getFirstMedia('logo')?->getUrl() ?? null,
         ];
     }
 }

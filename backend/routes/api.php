@@ -24,11 +24,9 @@ Route::get('/shop/category/{category:slug}', [ShopController::class, 'similar'])
 Route::get('/shops/', [ShopController::class, 'index']);
 
 Route::get('/brands', function () {
-    $brands = Brand::with('media')->where('is_active', true)->select('id', 'name', 'slug')->get();
-
+    $brands = Brand::where('is_active', true)->select('id', 'name', 'slug')->get();
     return response()->json(BrandResource::collection($brands));
 });
-
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware(['auth:sanctum', 'role:customer']);
