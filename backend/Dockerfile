@@ -39,7 +39,8 @@ RUN chown -R nobody:nobody storage bootstrap/cache \
 
 EXPOSE 8080
 
-CMD php artisan config:cache \
+CMD php artisan config:clear \
+    && php artisan config:cache \
     && php artisan route:cache \
     && php artisan migrate --force \
     && php artisan db:seed --force \
