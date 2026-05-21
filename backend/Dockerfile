@@ -45,6 +45,5 @@ CMD php artisan config:clear \
     && php artisan route:cache \
     && php artisan migrate --force \
     && php artisan db:seed --force \
-    && php artisan tinker --execute="DB::table('media')->update(['disk' => 'public']);" \
     && php artisan inertia:start-ssr & \
     php artisan serve --host=0.0.0.0 --port=8080
