@@ -38,10 +38,6 @@ return [
             'report' => false,
         ],
 
-        'cloudinary' => [
-            'driver' => 'cloudinary',
-        ],
-
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
