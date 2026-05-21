@@ -44,6 +44,8 @@ CMD php artisan config:clear \
     && php artisan config:cache \
     && php artisan route:cache \
     && php artisan migrate --force \
-    && php artisan db:seed --force \
+    && php artisan db:seed --class=RolePermissionSeeder --force \
+    && php artisan db:seed --class=UserSeeder --force \
+    && php artisan db:seed --class=StatusSeeder --force \
     && php artisan inertia:start-ssr & \
     php artisan serve --host=0.0.0.0 --port=8080
