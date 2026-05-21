@@ -82,7 +82,7 @@ class ProductController extends Controller
                 'thumbnail' => $product->getFirstMedia('thumbnail')
                     ? [
                         'id' => $product->getFirstMedia('thumbnail')->id,
-                        'url' => $product->getFirstMediaUrl('thumbnail', 'preview'),
+                        'url' => $product->getFirstMediaUrl('thumbnail'),
                     ]
                     : null,
                 'gallery' => $product->getMedia('gallery')->map(fn ($m) => ['id' => $m->id, 'url' => $m->getUrl()]),
