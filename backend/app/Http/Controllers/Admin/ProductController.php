@@ -54,7 +54,7 @@ class ProductController extends Controller
     {
         $this->productService->store($request);
 
-        return to_route('products/Index')->with('success', 'Product created successfully');
+        return to_route('products.index')->with('success', 'Product created successfully');
     }
 
     /**
@@ -63,7 +63,7 @@ class ProductController extends Controller
     public function show(Product $product)
     {
         return Inertia::render('products/Show', [
-            'products' => $product,
+            'product' => $product,
         ]);
     }
 
