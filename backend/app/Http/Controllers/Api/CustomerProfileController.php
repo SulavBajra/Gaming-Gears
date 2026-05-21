@@ -37,15 +37,14 @@ class CustomerProfileController extends Controller
                 'error' => 'Customer profile already exists',
             ], 409);
         }
-        $user = $this->customerProfileService->createUserProfile($request);
+        $this->customerProfileService->createUserProfile($request);
 
         return response()->json(['message' => 'Profile Created successfully'], 200);
     }
 
     public function update(CustomerUpdateRequest $request)
     {
-        $user = $request->user();
-        $user = $this->customerProfileService->updateUserProfile($request);
+        $this->customerProfileService->updateUserProfile($request);
 
         return response()->json(['message' => 'Profile updated successfully'], 200);
     }
