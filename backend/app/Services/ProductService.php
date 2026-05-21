@@ -65,6 +65,9 @@ class ProductService
 
     private function syncVariants(array $variants, Product $product): void
     {
+        $variants = is_string($variants)
+              ? json_decode($variants, true)
+              : $variants;
         $incomingIds = collect($variants)->pluck('id')->filter()->values();
 
         // Delete variants removed on the frontend
@@ -119,7 +122,11 @@ class ProductService
 
     private function createVariants(array $validated, Product $product): void
     {
-        foreach ($validated['variants'] as $index => $variant) {
+        $variants = is_string($validated['variants'])
+            ? json_decode($validated['variants'], true)
+            : $validated['variants'];
+
+        foreach ($variants as $index => $variant) {
             $product->variants()->create([
                 'name' => $variant['name'],
                 'price' => $variant['price'],
