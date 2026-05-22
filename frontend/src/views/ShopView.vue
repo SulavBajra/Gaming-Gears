@@ -62,11 +62,14 @@ onMounted(() => {
   <section class="shop-view">
     <FilterBar @filter="onFilter" />
 
-    <div v-if="loading" :class="$style.spinner">
-      <ProgressSpinner class="spinner-load" />
-    </div>
+    <div class="content">
+      <div v-if="loading" :class="$style.spinner">
+        <ProgressSpinner class="spinner-load" />
+      </div>
+      <div v-else-if="products.length === 0" class="empty-state">No products found</div>
 
-    <ProductGrid v-else :products="products" />
+      <ProductGrid v-else :products="products" />
+    </div>
 
     <div class="pagination-part">
       <Paginator
@@ -82,6 +85,27 @@ onMounted(() => {
   </section>
 </template>
 <style module>
+.shop-view {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.empty-state {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--text-muted, #888);
+  font-size: 1rem;
+}
+
 .spinner {
   display: flex;
   justify-content: center;
