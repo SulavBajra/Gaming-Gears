@@ -60,3 +60,8 @@ Route::middleware(['auth:sanctum', 'role:customer'])->group(function () {
 });
 
 Route::post('/stripe/webhook', [StripeWebhookController::class, 'handle']);
+
+Route::get('/debug/fix-media-disk', function () {
+    DB::table('media')->update(['disk' => 's3']);
+    return response()->json(['message' => 'Media disk updated to s3']);
+});
