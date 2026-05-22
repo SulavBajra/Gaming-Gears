@@ -1,7 +1,6 @@
-import { ref, computed } from 'vue'
+import { computed, ref } from 'vue'
 import axiosClient from '@/axios'
 import { useAuth } from '@/composables/useAuth'
-import router from '@/router'
 import { useToaster } from './useToast'
 
 export interface CartItem {
@@ -36,7 +35,7 @@ export function useCart() {
   const itemCount = computed(() => items.value.reduce((sum, item) => sum + item.quantity, 0))
   const subtotal = computed(() => items.value.reduce((sum, item) => sum + item.item_total_price, 0))
   const isEmpty = computed(() => items.value.length === 0)
-  const totalItems = computed(() => cart.value?.total_items ?? 0)
+  const totalItems = computed(() => items.value.reduce((sum, item) => sum + item.quantity, 0))
   const totalPrice = computed(() => cart.value?.total_price ?? 0)
 
   const fetchCart = async () => {
@@ -46,28 +45,40 @@ export function useCart() {
         cart.value = null
         return
       }
-      const item = JSON.parse(pending)
+      const cartItems: any[] = JSON.parse(pending)
+      if (!cartItems.length) {
+        cart.value = null
+        return
+      }
+      const totalPrice = cartItems.reduce((sum, i) => sum + i.unit_price * i.quantity, 0)
+      const totalQty = cartItems.reduce((sum, i) => sum + i.quantity, 0)
+
       cart.value = {
         id: null,
         expires_at: null,
-        total_items: item.quantity,
-        total_price: 0,
-        items: [
-          {
-            id: 0,
-            product_id: item.product_id,
-            product_variant_id: item.product_variant_id,
-            quantity: item.quantity,
-            unit_price: 0,
-            item_total_price: 0,
-            updated_at: '',
-            product_name: null,
-            product_variant_name: null,
-            thumbnail: null,
-          },
-        ],
+        total_items: totalQty,
+        total_price: totalPrice,
+        items: cartItems.map((i, index) => ({
+          id: index, // use index as fake id for keying
+          product_id: i.product_id,
+          product_variant_id: i.product_variant_id,
+          quantity: i.quantity,
+          unit_price: i.unit_price,
+          item_total_price: i.unit_price * i.quantity,
+          updated_at: '',
+          product_name: i.product_name,
+          product_variant_name: i.product_variant_name,
+          thumbnail: i.thumbnail,
+        })),
       }
       return
+    }
+    // authenticated path
+    try {
+      const { data } = await axiosClient.get('/api/cart')
+      cart.value = data.data
+    } catch {
+      cart.value = null
     }
   }
 
@@ -90,26 +101,66 @@ export function useCart() {
     }
   }
 
-  const handleGuestAddToCart = (
+  const handleGuestAddToCart = async (
     productId: number,
     variantId: number | null = null,
     quantity = 1,
+    productSlug: string,
+    productName: string,
+    variantName: string | null,
+    unitPrice: number,
+    thumbnail: string | null,
   ) => {
-    sessionStorage.setItem(
-      'pendingCart',
-      JSON.stringify({ product_id: productId, product_variant_id: variantId, quantity }),
+    const existing = sessionStorage.getItem('pendingCart')
+    const cartItems: any[] = existing ? JSON.parse(existing) : []
+
+    const index = cartItems.findIndex(
+      (i) => i.product_id === productId && i.product_variant_id === variantId,
     )
-    fetchCart()
+
+    if (index !== -1) {
+      cartItems[index].quantity += quantity
+    } else {
+      cartItems.push({
+        product_id: productId,
+        product_variant_id: variantId,
+        quantity,
+        slug: productSlug,
+        product_name: productName,
+        product_variant_name: variantName,
+        unit_price: unitPrice,
+        thumbnail,
+      })
+    }
+
+    sessionStorage.setItem('pendingCart', JSON.stringify(cartItems))
+    await fetchCart()
   }
+
   const restorePendingCart = async () => {
     const pending = sessionStorage.getItem('pendingCart')
     if (!pending) return
-    const item = JSON.parse(pending)
-    await addToCart(item.product_id, item.product_variant_id, item.quantity)
+    const cartItems: any[] = JSON.parse(pending)
+    for (const item of cartItems) {
+      await addToCart(item.product_id, item.product_variant_id, item.quantity)
+    }
     sessionStorage.removeItem('pendingCart')
   }
 
   const updateQuantity = async (cartItemId: number, quantity: number) => {
+    if (!user.value) {
+      const pending = sessionStorage.getItem('pendingCart')
+      if (!pending) return
+      const cartItems: any[] = JSON.parse(pending)
+      if (quantity < 1) {
+        cartItems.splice(cartItemId, 1)
+      } else {
+        cartItems[cartItemId].quantity = quantity
+      }
+      sessionStorage.setItem('pendingCart', JSON.stringify(cartItems))
+      await fetchCart()
+      return
+    }
     if (quantity < 1) return removeItem(cartItemId)
     loading.value = true
     error.value = null
@@ -126,6 +177,15 @@ export function useCart() {
   }
 
   const removeItem = async (cartItemId: number) => {
+    if (!user.value) {
+      const pending = sessionStorage.getItem('pendingCart')
+      if (!pending) return
+      const cartItems: any[] = JSON.parse(pending)
+      cartItems.splice(cartItemId, 1)
+      sessionStorage.setItem('pendingCart', JSON.stringify(cartItems))
+      await fetchCart()
+      return
+    }
     loading.value = true
     error.value = null
     try {

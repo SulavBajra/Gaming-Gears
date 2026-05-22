@@ -125,11 +125,13 @@ onMounted(() => {
 }
 
 .order-card {
-  border: 1px solid #e0e0e0;
+  border: 1px solid var(--p-content-border-color, #d1d5db); /* PrimeVue token, fallback for light */
   border-radius: 0.8rem;
   padding: 1.2rem;
   width: 100%;
   cursor: pointer;
+  background-color: var(--dark-bg);
+  color: var(--p-content-color, inherit); /* ensures text is always readable */
 }
 
 .order-header {
@@ -141,6 +143,7 @@ onMounted(() => {
 
 .order-header h1 {
   font-size: 1.5rem;
+  color: var(--p-content-color, inherit); /* explicit so it doesn't go invisible */
 }
 
 .order-status {
@@ -151,14 +154,15 @@ onMounted(() => {
 }
 
 .order-status span {
-  background-color: var(--accent);
+  background-color: var(--p-primary-color, var(--accent));
+  color: var(--p-primary-contrast-color, #fff); /* contrast text on the badge */
   padding: 0.4rem 0.8rem;
   border-radius: 0.4rem;
 }
 
 .order-items-description {
-  border-top: 1px solid #e0e0e0;
-  border-bottom: 1px solid #e0e0e0;
+  border-top: 1px solid var(--p-content-border-color, #d1d5db);
+  border-bottom: 1px solid var(--p-content-border-color, #d1d5db);
   padding: 1.2rem;
 }
 
@@ -167,6 +171,7 @@ onMounted(() => {
   justify-content: space-between;
   align-items: center;
   font-size: 0.9rem;
+  color: var(--p-content-color, inherit);
 }
 
 .item-details {
@@ -180,7 +185,7 @@ onMounted(() => {
   height: 48px;
   object-fit: cover;
   border-radius: 6px;
-  border: 1px solid var(--border);
+  border: 1px solid var(--p-content-border-color, #d1d5db);
   flex-shrink: 0;
 }
 
@@ -194,10 +199,10 @@ onMounted(() => {
   display: flex;
   justify-content: space-between;
   font-size: 0.8rem;
-  font-weight: 20;
   font-style: italic;
   align-items: center;
   padding-top: 1.2rem;
+  color: var(--p-text-muted-color, #6b7280); /* muted but visible on both modes */
 }
 
 .pagination-part {

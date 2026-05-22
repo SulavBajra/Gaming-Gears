@@ -81,8 +81,10 @@ import { RouterLink } from 'vue-router'
   content: '';
   position: absolute;
   inset: 0;
-  background-image:
-    linear-gradient(#ffffff08 1px, transparent 1px),
+  background-image: linear-gradient(
+      color-mix(in srgb, var(--ink) 8%, transparent) 1px,
+      transparent 1px
+    )
     linear-gradient(90deg, #ffffff08 1px, transparent 1px);
   background-size: 80px 80px;
   mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
@@ -201,7 +203,7 @@ import { RouterLink } from 'vue-router'
   text-transform: uppercase;
   padding: 0.9rem 2.2rem;
   background: var(--accent);
-  color: #1a1a1a;
+  color: var(--bg);
   text-decoration: none;
   clip-path: polygon(
     0 0,
@@ -250,7 +252,7 @@ import { RouterLink } from 'vue-router'
   gap: 2.5rem;
   margin-top: 4rem;
   padding-top: 2rem;
-  border-top: 1px solid #ffffff12;
+  border-top: 1px solid var(--border);
   flex-wrap: wrap;
 }
 .stat {
@@ -344,7 +346,7 @@ import { RouterLink } from 'vue-router'
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 2;
-  filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.6));
+  filter: drop-shadow(0 20px 40px color-mix(in srgb, var(--ink) 25%, transparent));
   transition: 0.4s;
 }
 .product-stage:hover .product-img {
@@ -354,8 +356,8 @@ import { RouterLink } from 'vue-router'
 /* floating cards */
 .float-card {
   position: absolute;
-  background: #1e3238cc;
-  border: 1px solid #ffffff15;
+  background: color-mix(in srgb, var(--card) 85%, transparent);
+  border: 1px solid var(--border);
   backdrop-filter: blur(8px);
   padding: 0.7rem 1rem;
   font-family: 'DM Sans';

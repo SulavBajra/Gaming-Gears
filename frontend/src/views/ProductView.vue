@@ -63,15 +63,28 @@ const handleWishlist = async () => {
 }
 
 const handleAddToCart = async () => {
-  if (!selectedVariant.value || !product.value) return
+  if (!product.value) return
+
+  const variantId = selectedVariant.value?.id ?? null
+  if (product.value.variants?.length && !variantId) return
+
   if (!user.value) {
-    handleGuestAddToCart(product.value.id, selectedVariant.value.id, quantity.value)
+    await handleGuestAddToCart(
+      product.value.id,
+      variantId,
+      quantity.value,
+      product.value.slug,
+      product.value.name,
+      selectedVariant.value?.name ?? null,
+      selectedVariant.value?.price ?? product.value.price,
+      product.value.thumbnail ?? null,
+    )
+    showSuccess()
     return
   }
-  const success = await addItemToCart(product.value.id, selectedVariant.value.id, quantity.value)
-  if (success) {
-    showSuccess()
-  }
+
+  const success = await addItemToCart(product.value.id, variantId, quantity.value)
+  if (success) showSuccess()
 }
 
 const fetchProduct = async (slug: string) => {

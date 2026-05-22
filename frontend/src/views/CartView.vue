@@ -24,7 +24,6 @@ const decrease = (item: (typeof items.value)[number]) => {
 }
 
 const increase = (item: (typeof items.value)[number]) => {
-  if (item.quantity <= 1) return
   updateQuantity(item.id, item.quantity + 1)
 }
 
@@ -67,6 +66,7 @@ const handleCheckout = () => {
         <p>Looks like you haven't added anything yet.</p>
         <RouterLink to="/shop" class="btn-primary">Browse Products</RouterLink>
       </div>
+
       <div v-else class="cart-layout">
         <div class="cart-items">
           <div class="cart-item" v-for="item in items" :key="item.id">
@@ -87,7 +87,7 @@ const handleCheckout = () => {
               <p class="item-variant" v-if="item.product_variant_name">
                 {{ item.product_variant_name }}
               </p>
-              <p class="item-unit-price">Rs. {{ item.unit_price.toLocaleString() }} each</p>
+              <p class="item-unit-price">Rs. {{ (item.unit_price ?? 0).toLocaleString() }} each</p>
             </div>
 
             <div class="item-qty">
@@ -100,13 +100,10 @@ const handleCheckout = () => {
               </button>
             </div>
             <div class="item-right">
-              <span class="item-total">Rs. {{ item.item_total_price.toLocaleString() }}</span>
-              <button
-                class="remove-btn"
-                @click="deleteCartItem(item.id)"
-                :disabled="loading"
-                aria-label="Remove item"
+              <span class="item-total"
+                >Rs. {{ (item.item_total_price ?? 0).toLocaleString() }}</span
               >
+              <button class="remove-btn" @click="deleteCartItem(item.id)" :disabled="loading">
                 <Trash2 :size="15" />
               </button>
             </div>
@@ -130,7 +127,7 @@ const handleCheckout = () => {
           <div class="summary-rows">
             <div class="summary-row">
               <span>Subtotal ({{ totalItems }} items)</span>
-              <span>Rs. {{ totalPrice.toLocaleString() }}</span>
+              <span>Rs. {{ (totalPrice ?? 0).toLocaleString() }}</span>
             </div>
             <div class="summary-row">
               <span>Shipping</span>
@@ -143,11 +140,19 @@ const handleCheckout = () => {
             <span>Rs. {{ totalPrice.toLocaleString() }}</span>
           </div>
 
-          <button class="btn-primary checkout-btn" @click="handleCheckout" :disabled="loading">
-            Checkout
-            <ArrowRight :size="16" />
-          </button>
-
+          <template v-if="!user">
+            <p class="guest-note">Login to place your order — your cart will be saved.</p>
+            <RouterLink to="/login" class="btn-primary checkout-btn">
+              Login to Checkout
+              <ArrowRight :size="16" />
+            </RouterLink>
+          </template>
+          <template v-else>
+            <button class="btn-primary checkout-btn" @click="handleCheckout" :disabled="loading">
+              Checkout
+              <ArrowRight :size="16" />
+            </button>
+          </template>
           <RouterLink to="/shop" class="continue-link">← Continue Shopping</RouterLink>
         </aside>
       </div>
@@ -508,6 +513,14 @@ const handleCheckout = () => {
   border-radius: 4px;
 }
 
+.guest-note {
+  font-size: 0.8rem;
+  color: var(--muted);
+  text-align: center;
+  margin: 0;
+  line-height: 1.5;
+}
+
 @keyframes shimmer {
   from {
     background-position: 200% 0;
@@ -541,6 +554,7 @@ const handleCheckout = () => {
 }
 
 /* Responsive */
+/* Replace the mobile @media block */
 @media (max-width: 768px) {
   .cart-page {
     padding: 40px 20px;
@@ -556,18 +570,36 @@ const handleCheckout = () => {
 
   .cart-item {
     grid-template-columns: 64px 1fr;
-    grid-template-rows: auto auto;
+    grid-template-rows: auto auto auto;
+    row-gap: 0.75rem;
   }
 
-  .item-qty {
+  /* image: row 1, col 1 */
+  .item-image {
+    grid-row: 1;
+    grid-column: 1;
+  }
+
+  /* info: row 1, col 2 */
+  .item-info {
+    grid-row: 1;
     grid-column: 2;
   }
 
+  /* qty: row 2, col 1-2 */
+  .item-qty {
+    grid-row: 2;
+    grid-column: 1 / -1;
+    width: fit-content;
+  }
+
+  /* price + remove: row 3, col 1-2 */
   .item-right {
+    grid-row: 3;
+    grid-column: 1 / -1;
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    grid-column: 1 / -1;
   }
 }
 </style>

@@ -8,6 +8,7 @@ import axiosClient from '@/axios'
 import { useToaster } from '@/composables/useToast'
 import { ArrowRight, ArrowLeft, Lock } from '@lucide/vue'
 import ProgressSpinner from 'primevue/progressspinner'
+import Footer from '@/components/pages/Footer.vue'
 
 const router = useRouter()
 const { items, totalPrice, totalItems } = useCart()
@@ -297,6 +298,7 @@ async function submitPayment() {
       </div>
     </div>
   </section>
+  <Footer />
 </template>
 
 <style scoped>
@@ -313,6 +315,17 @@ async function submitPayment() {
   border-radius: 6px;
   padding: 13px 14px;
   transition: border-color 0.15s;
+  color: var(--ink); /* ← add this */
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.9rem;
+  outline: none;
+  width: 100%;
+  appearance: none;
+}
+
+.payment-select option {
+  background: #1c2b2f;
+  color: var(--ink);
 }
 
 .checkout-container {
