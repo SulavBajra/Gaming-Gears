@@ -83,41 +83,84 @@ onMounted(async () => {
 .skeleton-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 1.25rem;
-  padding: 1.5rem;
+  gap: 1.5rem;
+  padding: 2rem;
 }
 
 .skeleton-card {
-  border-radius: 10px;
+  border-radius: 18px;
   overflow: hidden;
-  border: 1px solid var(--border);
-  background: var(--surface);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.015));
+  backdrop-filter: blur(12px);
+  box-shadow:
+    0 8px 28px rgba(0, 0, 0, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  transition: transform 0.3s ease;
+}
+
+.skeleton-card:hover {
+  transform: translateY(-6px);
 }
 
 .skeleton-img {
   width: 100%;
   aspect-ratio: 1 / 1;
-  border-radius: 0;
+  background: rgba(255, 255, 255, 0.03);
 }
 
 .skeleton-body {
-  padding: 0.85rem;
+  padding: 1rem;
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
+  gap: 0.7rem;
 }
 
 .skeleton-line {
   height: 12px;
-  border-radius: 4px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.05);
 }
 
+.skeleton-line:nth-child(1) {
+  width: 75%;
+  height: 14px;
+}
+
+.skeleton-line:nth-child(2) {
+  width: 45%;
+}
+
+.skeleton-line:nth-child(3) {
+  width: 55%;
+  margin-top: 0.35rem;
+}
+
+/* Better shimmer */
 .shimmer {
-  background: linear-gradient(90deg, var(--surface) 0%, var(--border) 40%, var(--surface) 80%);
-  background-size: 200% 100%;
-  animation: shimmer 1.4s ease-in-out infinite;
+  position: relative;
+  overflow: hidden;
 }
 
+.shimmer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+  animation: shimmer 1.8s infinite;
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
 @keyframes shimmer {
   0% {
     background-position: 200% center;
