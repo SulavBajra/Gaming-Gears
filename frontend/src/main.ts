@@ -1,12 +1,13 @@
-import './assets/main.css'
+import PrimeVue from 'primevue/config'
+import ConfirmationService from 'primevue/confirmationservice'
+import ToastService from 'primevue/toastservice'
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
-import PrimeVue from 'primevue/config'
-import ToastService from 'primevue/toastservice'
-import ConfirmationService from 'primevue/confirmationservice'
-import Aura from '@primeuix/themes/aura'
+import './assets/main.css'
 import { definePreset } from '@primeuix/themes'
+import Aura from '@primeuix/themes/aura'
+import VueGtag from 'vue-gtag'
 
 const MyPreset = definePreset(Aura, {
   components: {
@@ -47,6 +48,10 @@ const app = createApp(App)
 app.use(router)
 app.use(ToastService)
 app.use(ConfirmationService)
+app.use(VueGtag, {
+    config: { id: import.meta.env.VITE_GA_MEASUREMENT_ID },
+    enabled: import.meta.env.PROD, // only in production
+},
 app.use(PrimeVue, {
   theme: {
     preset: MyPreset,
