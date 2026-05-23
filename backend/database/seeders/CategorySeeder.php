@@ -56,7 +56,7 @@ class CategorySeeder extends Seeder
                 Category::firstOrCreate(
                     [
                         'parent_id' => $parent->id,
-                        'slug' => Str::slug($parentName),
+                        'slug' => Str::slug($childName),
                     ],
                     [
                         'name' => $childName,

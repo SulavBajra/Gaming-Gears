@@ -16,7 +16,8 @@ function getInitials(name: string): string {
 
 <template>
   <section class="brands-section">
-    <h2>Our brands</h2>
+    <p class="section-eyebrow">Partners</p>
+    <h2>Brands we carry</h2>
     <div class="carousel-wrapper">
       <div class="carousel-track">
         <RouterLink
@@ -40,20 +41,27 @@ function getInitials(name: string): string {
 
 <style scoped>
 .brands-section {
-  padding: 2.5rem 2rem;
+  padding: 3rem 2rem;
   text-align: center;
-  border-top: dashed #ffff;
-  padding-top: 1.5rem;
+}
+
+.section-eyebrow {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 0.5rem;
 }
 
 .brands-section h2 {
   font-family: 'Oswald', sans-serif;
-  font-size: 2.2rem;
-  font-weight: 500;
+  font-size: 1.8rem;
+  font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--ink);
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
 }
 
 .carousel-wrapper {
@@ -84,7 +92,7 @@ function getInitials(name: string): string {
 
 .carousel-track {
   display: flex;
-  gap: 16px;
+  gap: 12px;
   width: max-content;
   animation: scroll 20s linear infinite;
 }
@@ -97,41 +105,47 @@ function getInitials(name: string): string {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
-  padding: 1rem 1.25rem;
+  justify-content: center;
+  gap: 10px;
+  padding: 1.25rem 1rem;
   border: 1px solid var(--border);
   border-radius: 12px;
   background: var(--bg);
-  width: 200px;
-  height: 120px;
+  width: 140px;
+  height: 100px;
   flex-shrink: 0;
-  transition: border-color 0.15s;
+  text-decoration: none;
+  transition:
+    border-color 0.15s,
+    background 0.15s;
 }
 
 .brand-card:hover {
   border-color: var(--accent);
-  cursor: pointer;
+  background: color-mix(in srgb, var(--accent) 4%, var(--bg));
 }
 
 .brand-logo {
-  width: 70px;
-  height: 72px;
-  border-radius: 8px;
-  overflow: hidden;
+  width: 80px;
+  height: 48px;
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 }
 
 .brand-logo img {
   width: 100%;
   height: 100%;
   object-fit: contain;
+  object-position: center;
+  /* makes dark logos visible in dark mode */
+  filter: brightness(0) invert(var(--logo-invert, 0));
 }
 
 .brand-fallback {
-  width: 52px;
-  height: 52px;
+  width: 44px;
+  height: 44px;
   border-radius: 8px;
   background: color-mix(in srgb, var(--accent) 10%, transparent);
   border: 1px solid var(--border);
@@ -139,14 +153,15 @@ function getInitials(name: string): string {
   align-items: center;
   justify-content: center;
   font-family: 'Oswald', sans-serif;
-  font-size: 1rem;
-  font-weight: 500;
+  font-size: 0.9rem;
+  font-weight: 600;
   color: var(--accent);
 }
 
 .brand-name {
   font-family: 'DM Sans', sans-serif;
   font-size: 0.75rem;
+  font-weight: 500;
   color: var(--muted);
   white-space: nowrap;
 }

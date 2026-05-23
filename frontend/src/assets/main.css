@@ -23,6 +23,14 @@
   --p-inputtext-border-color: var(--border);
 }
 
+[data-theme='dark'] {
+  --logo-invert: 1;
+}
+
+[data-theme='light'] {
+  --logo-invert: 0;
+}
+
 .p-select,
 .p-inputtext {
   background-color: var(--bg) !important;
