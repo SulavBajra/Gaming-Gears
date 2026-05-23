@@ -82,7 +82,7 @@ onMounted(async () => {
 /* ── Skeleton ── */
 .skeleton-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-template-columns: repeat(4, 1fr);
   gap: 1.25rem;
   padding: 1.5rem;
 }
@@ -90,8 +90,8 @@ onMounted(async () => {
 .skeleton-card {
   border-radius: 10px;
   overflow: hidden;
-  border: 1px solid #ffffff10;
-  background-color: #ffffff08;
+  border: 1px solid var(--border);
+  background: var(--surface);
 }
 
 .skeleton-img {
@@ -112,21 +112,19 @@ onMounted(async () => {
   border-radius: 4px;
 }
 
-/* Shimmer animation */
 .shimmer {
-  background: linear-gradient(
-    90deg,
-    #ffffff08 0%,
-    #ffffff18 40%,
-    #ffffff08 80%
-  );
+  background: linear-gradient(90deg, var(--surface) 0%, var(--border) 40%, var(--surface) 80%);
   background-size: 200% 100%;
   animation: shimmer 1.4s ease-in-out infinite;
 }
 
 @keyframes shimmer {
-  0%   { background-position: 200% center; }
-  100% { background-position: -200% center; }
+  0% {
+    background-position: 200% center;
+  }
+  100% {
+    background-position: -200% center;
+  }
 }
 
 /* ── Existing styles ── */
@@ -155,5 +153,17 @@ onMounted(async () => {
   font-size: 1.2rem;
   text-decoration: none;
   color: var(--ink);
+}
+
+@media (max-width: 900px) {
+  .skeleton-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .skeleton-grid {
+    grid-template-columns: 1fr;
+  }
 }
 </style>
