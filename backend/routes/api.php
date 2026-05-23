@@ -20,7 +20,7 @@ Route::post('/login', LoginController::class)->name('api.login');
 Route::post('/register', RegisterController::class)->name('api.register');
 Route::get('/home', [ProductHomeController::class, 'index'])->name('api.home');
 Route::get('/shop/{product:slug}', [ShopController::class, 'show'])->name('api.shop');
-Route::get('/shop/category/{category:slug}', [ShopController::class, 'similar']);
+Route::get('/shop/category/{category}', [ShopController::class, 'similar']);
 Route::get('/shops/', [ShopController::class, 'index']);
 
 Route::get('/brands', function () {

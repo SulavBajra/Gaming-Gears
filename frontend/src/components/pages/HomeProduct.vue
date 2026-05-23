@@ -17,16 +17,32 @@ onMounted(async () => {
   }
 })
 </script>
+
 <template>
   <section class="categories">
     <h1 class="product-heading">Our Categories</h1>
     <CategoryGrid />
   </section>
+
   <section class="recent-products">
     <div>
       <h1 class="product-heading">Recent Products</h1>
-      <ProductGrid v-if="products.length" :products="products" />
+
+      <!-- Skeleton loader -->
+      <div v-if="loading" class="skeleton-grid">
+        <div v-for="n in 8" :key="n" class="skeleton-card">
+          <div class="skeleton-img shimmer" />
+          <div class="skeleton-body">
+            <div class="skeleton-line shimmer" style="width: 65%" />
+            <div class="skeleton-line shimmer" style="width: 40%" />
+            <div class="skeleton-line shimmer" style="width: 50%; margin-top: 0.75rem" />
+          </div>
+        </div>
+      </div>
+
+      <ProductGrid v-else-if="products.length" :products="products" />
     </div>
+
     <div class="route">
       <button class="view-all-btn">
         <RouterLink :to="'/shop'" class="view-all">Load More</RouterLink>
@@ -34,6 +50,7 @@ onMounted(async () => {
     </div>
   </section>
 </template>
+
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Iosevka+Charon:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&family=Lobster+Two:ital,wght@0,400;0,700;1,400;1,700&family=Oswald:wght@200..700&display=swap');
 
@@ -62,6 +79,57 @@ onMounted(async () => {
   text-align: center;
 }
 
+/* ── Skeleton ── */
+.skeleton-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1.25rem;
+  padding: 1.5rem;
+}
+
+.skeleton-card {
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid #ffffff10;
+  background-color: #ffffff08;
+}
+
+.skeleton-img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 0;
+}
+
+.skeleton-body {
+  padding: 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.skeleton-line {
+  height: 12px;
+  border-radius: 4px;
+}
+
+/* Shimmer animation */
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    #ffffff08 0%,
+    #ffffff18 40%,
+    #ffffff08 80%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0%   { background-position: 200% center; }
+  100% { background-position: -200% center; }
+}
+
+/* ── Existing styles ── */
 .route {
   text-align: center;
 }

@@ -63,17 +63,31 @@ onMounted(() => {
     <FilterBar @filter="onFilter" />
 
     <div class="content">
-      <div v-if="loading" :class="$style.spinner">
+      <div v-if="loading" class="spinner">
         <ProgressSpinner class="spinner-load" />
       </div>
-      <div v-else-if="products.length === 0" class="empty-state">No products found</div>
+      <div v-else-if="products.length === 0" class="empty-state">
+        <div class="empty-icon-ring">
+          <i class="ti ti-search-off" aria-hidden="true"></i>
+        </div>
+        <p class="empty-title">No products found</p>
+        <p class="empty-sub">
+          Try adjusting your filters or search term to find what you're looking for.
+        </p>
+        <div class="empty-actions">
+          <button class="btn-clear" @click="onFilter({ category: null, sort: null, search: '' })">
+            Clear filters
+          </button>
+          <RouterLink to="/shop" class="btn-browse">Browse all</RouterLink>
+        </div>
+      </div>
 
       <ProductGrid v-else :products="products" />
     </div>
 
     <div class="pagination-part">
       <Paginator
-        :class="$style.paginator"
+        class="pagination-part"
         v-if="meta && meta.last_page > 1"
         v-model:first="first"
         :rows="perPage"
@@ -84,7 +98,7 @@ onMounted(() => {
     </div>
   </section>
 </template>
-<style module>
+<style scoped>
 .shop-view {
   min-height: 100vh;
   display: flex;
@@ -97,15 +111,6 @@ onMounted(() => {
   flex-direction: column;
 }
 
-.empty-state {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: var(--text-muted, #888);
-  font-size: 1rem;
-}
-
 .spinner {
   display: flex;
   justify-content: center;
@@ -113,7 +118,94 @@ onMounted(() => {
   height: 60vh;
 }
 
-.paginator {
+.empty-state {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 4rem 2rem;
+  text-align: center;
+}
+
+.empty-icon-ring {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+  font-size: 1.75rem;
+}
+
+.empty-title {
+  font-family: 'Oswald', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--ink);
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.empty-sub {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.875rem;
+  color: var(--muted);
+  margin: 0;
+  max-width: 280px;
+  line-height: 1.6;
+}
+
+.empty-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.btn-clear {
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0.45rem 1rem;
+  border-radius: 5px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--ink);
+  cursor: pointer;
+  transition:
+    border-color 0.15s,
+    color 0.15s;
+}
+
+.btn-clear:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.btn-browse {
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0.45rem 1rem;
+  border-radius: 5px;
+  background: var(--accent);
+  color: var(--bg);
+  text-decoration: none;
+  transition: opacity 0.15s;
+}
+
+.btn-browse:hover {
+  opacity: 0.85;
+}
+
+.pagination-part {
   display: flex;
   justify-content: center;
 }

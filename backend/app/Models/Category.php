@@ -58,6 +58,11 @@ class Category extends Model
             ->withTimestamps();
     }
 
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
+    }
+
     /**
      * Get the options for generating the slug.
      */

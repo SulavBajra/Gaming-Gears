@@ -144,6 +144,7 @@ const viewProduct = (slug: string) => {
   color: var(--muted);
   font-family: 'DM Sans', sans-serif;
   font-size: 0.9rem;
+  min-height: 60vh; /* add this */
 }
 
 .wishlist-empty {
@@ -153,6 +154,7 @@ const viewProduct = (slug: string) => {
   gap: 0.6rem;
   margin-top: 4rem;
   text-align: center;
+  min-height: 60vh;
 }
 
 .empty-icon {

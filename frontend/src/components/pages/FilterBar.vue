@@ -55,7 +55,7 @@ const debouncedSearch = useDebounceFn(emitFilter, 400)
           />
         </div>
       </template>
-      <template class="center-filter" #center>
+      <template #center>
         <div class="price-filter">
           <Select
             v-model="selectedSort"
@@ -99,49 +99,24 @@ const debouncedSearch = useDebounceFn(emitFilter, 400)
   border: none;
 }
 
-.category-filter {
-  color: var(--accent);
-  display: flex;
-  gap: 5px;
-  align-items: center;
-}
-
-.category-select {
-  border-radius: 10px;
-  background-color: var(--bg);
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
-}
-
+.category-filter,
 .price-filter {
-  color: var(--accent);
   display: flex;
   gap: 5px;
   align-items: center;
 }
 
-.price-select {
-  border-radius: 10px;
-  background-color: var(--bg);
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
-}
-
+.category-select,
+.price-select,
 .search-filter {
   border-radius: 10px;
+  border: 1px solid var(--border);
   background-color: var(--bg);
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
 }
 
-.alphabetical-filter {
-  margin-left: 15px;
-  color: var(--accent);
-  display: flex;
-  gap: 5px;
-  align-items: center;
-}
-
-.alphabetical-select {
-  border-radius: 10px;
-  background-color: var(--bg);
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
+.category-select:hover,
+.price-select:hover,
+.search-filter:hover {
+  border-color: var(--accent);
 }
 </style>

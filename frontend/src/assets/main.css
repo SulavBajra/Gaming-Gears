@@ -3,3 +3,55 @@
   padding: 0px;
   height: 100vh;
 }*/
+
+[data-theme='light'] {
+  --p-select-background: var(--bg);
+  --p-select-color: var(--ink);
+  --p-select-border-color: var(--border);
+  --p-select-placeholder-color: var(--muted);
+  --p-select-overlay-background: var(--bg);
+  --p-select-overlay-color: var(--ink);
+  --p-select-overlay-border-color: var(--border);
+  --p-select-option-color: var(--ink);
+  --p-select-option-focus-background: var(--accent);
+  --p-select-option-focus-color: var(--bg);
+  --p-select-option-selected-background: var(--accent);
+  --p-select-option-selected-color: var(--bg);
+  --p-inputtext-background: var(--bg);
+  --p-inputtext-color: var(--ink);
+  --p-inputtext-placeholder-color: var(--muted);
+  --p-inputtext-border-color: var(--border);
+}
+
+.p-select,
+.p-inputtext {
+  background-color: var(--bg) !important;
+  color: var(--ink) !important;
+  border-color: var(--border) !important;
+}
+
+.p-select-label {
+  color: var(--ink) !important;
+}
+
+.p-select-placeholder {
+  color: var(--muted);
+}
+
+/* The dropdown panel that gets teleported to <body> */
+.p-select-overlay {
+  background-color: var(--bg) !important;
+  border-color: var(--border) !important;
+  color: var(--ink) !important;
+}
+
+.p-select-option {
+  color: var(--ink) !important;
+  background-color: var(--bg) !important;
+}
+
+.p-select-option:hover,
+.p-select-option.p-focus {
+  background-color: var(--accent) !important;
+  color: var(--bg) !important;
+}
