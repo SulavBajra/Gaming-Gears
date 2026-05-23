@@ -45,13 +45,18 @@ const MyPreset = definePreset(Aura, {
 } as any)
 
 const app = createApp(App)
+
 app.use(router)
 app.use(ToastService)
 app.use(ConfirmationService)
-app.use(VueGtag, {
+app.use(
+  VueGtag,
+  {
     config: { id: import.meta.env.VITE_GA_MEASUREMENT_ID },
-    enabled: import.meta.env.PROD, // only in production
-},
+    enabled: import.meta.env.PROD,
+  },
+  router,
+)
 app.use(PrimeVue, {
   theme: {
     preset: MyPreset,
@@ -60,4 +65,5 @@ app.use(PrimeVue, {
     },
   },
 })
+
 app.mount('#app')
