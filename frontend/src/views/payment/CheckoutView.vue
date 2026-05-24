@@ -9,6 +9,7 @@ import { useToaster } from '@/composables/useToast'
 import { ArrowRight, ArrowLeft, Lock } from '@lucide/vue'
 import ProgressSpinner from 'primevue/progressspinner'
 import Footer from '@/components/pages/Footer.vue'
+import { event } from 'vue-gtag'
 
 const router = useRouter()
 const { items, totalPrice, totalItems } = useCart()
@@ -38,6 +39,10 @@ const shipping = reactive({
 })
 
 onMounted(async () => {
+  event('begin_checkout', {
+    currency: 'NPR',
+    value: totalPrice.value,
+  })
   await getUserProfile()
   if (profile.value) {
     shipping.shipping_name =
@@ -63,6 +68,12 @@ async function proceedToPayment() {
       const { data } = await axiosClient.post('/api/checkout/intent', shipping)
       clientSecret.value = data.client_secret
       step.value = 'payment'
+      event('purchase', {
+        transaction_id: data.order_number ?? 'COD-' + Date.now(),
+        value: totalPrice.value,
+        currency: 'NPR',
+        payment_type: 'cash',
+      })
 
       await nextTick()
       await mountCardElement()
@@ -120,6 +131,12 @@ async function submitPayment() {
     processing.value = false
     return
   }
+  event('purchase', {
+    transaction_id: 'STRIPE-' + Date.now(),
+    value: totalPrice.value,
+    currency: 'NPR',
+    payment_type: 'card',
+  })
   showSuccess('Order placed successfully!')
   router.push({ name: 'shop' })
 }

@@ -1,4 +1,5 @@
 import { computed, ref } from 'vue'
+import { event } from 'vue-gtag'
 import axiosClient from '@/axios'
 import { useAuth } from '@/composables/useAuth'
 import { useToaster } from './useToast'
@@ -92,6 +93,17 @@ export function useCart() {
         quantity,
       })
       cart.value = data.data
+
+      event('add_to_cart', {
+        currency: 'NPR',
+        value: data.data.total_price,
+        items: [
+          {
+            item_id: productId,
+            quantity: quantity,
+          },
+        ],
+      })
       return true
     } catch {
       error.value = 'Could not add item to cart.'
