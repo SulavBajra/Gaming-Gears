@@ -11,19 +11,32 @@ const form = ref({
   password: '',
   password_confirmation: '',
 })
-const error = ref('')
+
+const errors = ref<Record<string, string[]>>({})
 const loading = ref(false)
 
 const submit = async () => {
-  error.value = ''
+  errors.value = {}
   loading.value = true
+
   try {
-    const response = await axiosClient.post('/api/register', form.value)
+    const response = await axiosClient.post('/api/register', {
+      ...form.value,
+      email: form.value.email.trim().toLowerCase(),
+    })
+
     const token = response.data.token
     localStorage.setItem('token', token)
+
     router.push('/login')
   } catch (e: any) {
-    error.value = e.response?.data?.message ?? 'Invalid credentials.'
+    if (e.response?.status === 422) {
+      errors.value = e.response.data.errors || {}
+    } else {
+      errors.value = {
+        general: ['Something went wrong. Please try again.'],
+      }
+    }
   } finally {
     loading.value = false
   }
@@ -57,6 +70,9 @@ const submit = async () => {
             required
             autocomplete="name"
           />
+          <p v-if="errors.name" class="error">
+            {{ errors.name[0] }}
+          </p>
         </div>
 
         <div class="field">
@@ -69,6 +85,9 @@ const submit = async () => {
             required
             autocomplete="email"
           />
+          <p v-if="errors.email" class="error">
+            {{ errors.email[0] }}
+          </p>
         </div>
 
         <div class="field">
@@ -81,6 +100,9 @@ const submit = async () => {
             required
             autocomplete="new-password"
           />
+          <p v-if="errors.password" class="error">
+            {{ errors.password[0] }}
+          </p>
         </div>
 
         <div class="field">
@@ -93,9 +115,14 @@ const submit = async () => {
             required
             autocomplete="new-password"
           />
+          <p v-if="errors.password_confirmation" class="error">
+            {{ errors.password_confirmation[0] }}
+          </p>
         </div>
 
-        <p v-if="error" class="error">{{ error }}</p>
+        <p v-if="errors.general" class="error">
+          {{ errors.general[0] }}
+        </p>
 
         <button type="submit" :disabled="loading">
           {{ loading ? 'Creating account…' : 'Create account' }}
