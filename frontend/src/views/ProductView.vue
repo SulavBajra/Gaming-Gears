@@ -5,6 +5,7 @@ import ProductGrid from '@/components/pages/ProductGrid.vue'
 import type { HomeProduct, ProductView } from '@/components/types'
 import { ShoppingCart, ChevronLeft, ChevronRight, Minus, Plus, Heart } from '@lucide/vue'
 import placeholder from '@/assets/placeholder.jpg'
+import { event } from 'vue-gtag'
 import { useAuth } from '@/composables/useAuth'
 import { useCart } from '@/composables/useCart'
 import axiosClient from '@/axios'
@@ -95,6 +96,19 @@ const fetchProduct = async (slug: string) => {
     product.value = productRes.data.data
     selectedVariantId.value = product.value?.variants?.[0]?.id ?? null
     const catSlug = product.value?.categories?.[0]?.slug
+    event('view_item', {
+      currency: 'NPR',
+      value: product.value?.price,
+      items: [
+        {
+          item_id: product.value?.id,
+          item_name: product.value?.name,
+          item_category: product.value?.categories?.[0]?.name,
+          item_brand: product.value?.brand?.name,
+          price: product.value?.price,
+        },
+      ],
+    })
     if (catSlug) {
       const sim = await axiosClient.get(`/api/shop/category/${catSlug}`)
       similarProducts.value = sim.data.data
