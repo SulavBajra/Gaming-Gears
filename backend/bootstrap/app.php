@@ -32,7 +32,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'role_or_permission' => RoleOrPermissionMiddleware::class,
         ]);
         $middleware->validateCsrfTokens(except: [
-            'stripe/webhook',
+            'api/stripe/webhook',
             'api/*',
         ]);
     })

@@ -16,6 +16,14 @@ use App\Models\Brand;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+Route::get('/debug-routes', function () {
+    $routes = collect(\Illuminate\Support\Facades\Route::getRoutes())
+        ->map(fn($r) => $r->uri())
+        ->filter(fn($uri) => str_contains($uri, 'stripe'))
+        ->values();
+    return response()->json($routes);
+});
+
 Route::post('/login', LoginController::class)->name('api.login');
 Route::post('/register', RegisterController::class)->name('api.register');
 Route::get('/home', [ProductHomeController::class, 'index'])->name('api.home');
