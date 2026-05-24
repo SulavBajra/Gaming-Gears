@@ -1,5 +1,5 @@
 FROM php:8.4-cli-alpine
-# build v3
+# build v4
 WORKDIR /var/www/html
 
 # System deps
@@ -28,26 +28,27 @@ RUN echo "APP_NAME=GamingGears" > .env \
 # Install PHP deps
 RUN composer install --no-dev --optimize-autoloader
 
+# Clear any build-time cache artifacts
+RUN rm -f bootstrap/cache/routes-v7.php \
+    && rm -f bootstrap/cache/config.php \
+    && rm -f bootstrap/cache/packages.php \
+    && rm -f bootstrap/cache/services.php
+
 # Build client + SSR bundle
 RUN npm install \
     && php artisan ziggy:generate \
     && npm run build:ssr
 
-# Remove build-time .env (real one comes from Render env vars at runtime)
+# Remove build-time .env
 RUN rm .env
 
 # Permissions
 RUN chown -R nobody:nobody storage bootstrap/cache \
     && chmod -R 775 storage bootstrap/cache
 
-EXPOSE 8080
+# Copy start script
+COPY start.sh /start.sh
+RUN chmod +x /start.sh
 
-CMD php artisan config:clear \
-    && php artisan config:cache \
-    && php artisan route:cache \
-    && php artisan migrate --force \
-    && php artisan db:seed --class=RolePermissionSeeder --force \
-    && php artisan db:seed --class=UserSeeder --force \
-    && php artisan db:seed --class=StatusSeeder --force \
-    && php artisan inertia:start-ssr & \
-    php artisan serve --host=0.0.0.0 --port=8080
+EXPOSE 8080
+CMD ["/start.sh"]
