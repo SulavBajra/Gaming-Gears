@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { Eye, EyeOff } from '@lucide/vue'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import axiosClient from '@/axios'
@@ -14,6 +15,7 @@ const { restorePendingCart } = useCart()
 const form = ref({ email: '', password: '' })
 const error = ref('')
 const loading = ref(false)
+const showPassword = ref(false)
 
 const submit = async () => {
   error.value = ''
@@ -68,14 +70,27 @@ const submit = async () => {
 
         <div class="field">
           <label for="password">Password</label>
-          <input
-            id="password"
-            v-model="form.password"
-            type="password"
-            placeholder="••••••••"
-            autocomplete="current-password"
-            required
-          />
+
+          <div class="password-wrapper">
+            <input
+              id="password"
+              v-model="form.password"
+              :type="showPassword ? 'text' : 'password'"
+              placeholder="••••••••"
+              autocomplete="current-password"
+              required
+            />
+
+            <button
+              type="button"
+              class="toggle-btn"
+              @click="showPassword = !showPassword"
+              :aria-label="showPassword ? 'Hide password' : 'Show password'"
+            >
+              <Eye v-if="!showPassword" size="18" />
+              <EyeOff v-else size="18" />
+            </button>
+          </div>
         </div>
 
         <div class="forgot-row">
@@ -267,6 +282,32 @@ button[type='submit']:disabled {
   text-decoration: none;
 }
 .register-link a:hover {
+  text-decoration: underline;
+}
+
+.password-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-wrapper input {
+  width: 100%;
+  padding-right: 60px;
+}
+
+.toggle-btn {
+  position: absolute;
+  right: 10px;
+  background: transparent;
+  border: none;
+  color: #c8a96e;
+  font-size: 12px;
+  cursor: pointer;
+  padding: 0;
+}
+
+.toggle-btn:hover {
   text-decoration: underline;
 }
 </style>

@@ -87,7 +87,7 @@ class ProductController extends Controller
                     : null,
                 'gallery' => $product->getMedia('gallery')->map(fn ($m) => [
                     'id' => $m->id,
-                    'url' => $m->getUrl()
+                    'url' => $m->getUrl(),
                 ]),
             ],
         ]);

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { Eye, EyeOff } from '@lucide/vue'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import axiosClient from '@/axios'
@@ -15,6 +16,8 @@ const form = ref({
 const errors = ref<Record<string, string[]>>({})
 const loading = ref(false)
 
+const showPassword = ref(false)
+const showConfirmPassword = ref(false)
 const submit = async () => {
   errors.value = {}
   loading.value = true
@@ -92,14 +95,28 @@ const submit = async () => {
 
         <div class="field">
           <label for="password">Password</label>
-          <input
-            id="password"
-            v-model="form.password"
-            type="password"
-            placeholder="••••••••"
-            required
-            autocomplete="new-password"
-          />
+
+          <div class="password-wrapper">
+            <input
+              id="password"
+              v-model="form.password"
+              :type="showPassword ? 'text' : 'password'"
+              placeholder="••••••••"
+              required
+              autocomplete="new-password"
+            />
+
+            <button
+              type="button"
+              class="toggle-btn"
+              @click="showPassword = !showPassword"
+              :aria-label="showPassword ? 'Hide password' : 'Show password'"
+            >
+              <Eye v-if="!showPassword" size="18" />
+              <EyeOff v-else size="18" />
+            </button>
+          </div>
+
           <p v-if="errors.password" class="error">
             {{ errors.password[0] }}
           </p>
@@ -107,14 +124,28 @@ const submit = async () => {
 
         <div class="field">
           <label for="password_confirmation">Confirm Password</label>
-          <input
-            id="password_confirmation"
-            v-model="form.password_confirmation"
-            type="password"
-            placeholder="••••••••"
-            required
-            autocomplete="new-password"
-          />
+
+          <div class="password-wrapper">
+            <input
+              id="password_confirmation"
+              v-model="form.password_confirmation"
+              :type="showConfirmPassword ? 'text' : 'password'"
+              placeholder="••••••••"
+              required
+              autocomplete="new-password"
+            />
+
+            <button
+              type="button"
+              class="toggle-btn"
+              @click="showConfirmPassword = !showConfirmPassword"
+              :aria-label="showConfirmPassword ? 'Hide password' : 'Show password'"
+            >
+              <Eye v-if="!showConfirmPassword" size="18" />
+              <EyeOff v-else size="18" />
+            </button>
+          </div>
+
           <p v-if="errors.password_confirmation" class="error">
             {{ errors.password_confirmation[0] }}
           </p>
@@ -144,6 +175,30 @@ const submit = async () => {
 </template>
 
 <style scoped>
+.password-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-wrapper input {
+  width: 100%;
+  padding-right: 60px;
+}
+
+.toggle-btn {
+  position: absolute;
+  right: 10px;
+  background: transparent;
+  border: none;
+  color: #c8a96e;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+}
+
 .login-wrap {
   min-height: 100vh;
   display: flex;

@@ -25,6 +25,7 @@ Route::get('/shops/', [ShopController::class, 'index']);
 
 Route::get('/brands', function () {
     $brands = Brand::where('is_active', true)->select('id', 'name', 'slug')->get();
+
     return response()->json(BrandResource::collection($brands));
 });
 Route::get('/user', function (Request $request) {

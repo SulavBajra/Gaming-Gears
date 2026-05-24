@@ -42,8 +42,8 @@ class CustomerStoreRequest extends FormRequest
             'date_of_birth' => [
                 'required',
                 'date',
-                'before_or_equal:' . now()->subYears(18)->toDateString(),
-                'after:' . now()->subYears(120)->toDateString(),
+                'before_or_equal:'.now()->subYears(18)->toDateString(),
+                'after:'.now()->subYears(120)->toDateString(),
             ],
 
             'gender' => [

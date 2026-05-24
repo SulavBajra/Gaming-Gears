@@ -29,7 +29,9 @@ RUN echo "APP_NAME=GamingGears" > .env \
 RUN composer install --no-dev --optimize-autoloader
 
 # Build client + SSR bundle
-RUN npm install && npm run build:ssr
+RUN npm install \
+    && php artisan ziggy:generate \
+    && npm run build:ssr
 
 # Remove build-time .env (real one comes from Render env vars at runtime)
 RUN rm .env

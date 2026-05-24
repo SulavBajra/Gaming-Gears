@@ -117,7 +117,6 @@ class OrderService
 
     public static function createFromIntent(int $userId, object $intent): Order
     {
-        // Idempotency guard — Stripe retries webhooks on failure
         $existing = Order::where('stripe_payment_intent_id', $intent->id)->first();
         if ($existing) {
             Log::info('Duplicate webhook ignored', ['payment_intent' => $intent->id]);
@@ -125,7 +124,14 @@ class OrderService
             return $existing;
         }
 
-        $user = User::with(['address:id,user_id,phone'])->where('id', $userId)->first();
+        // Fix: load all needed address fields + customer
+        $user = User::with([
+            'address:id,user_id,first_name,last_name,address_line_1,address_line_2,city,state',
+            'customer:id,user_id,phone',
+            'cart.items.product.media',
+            'cart.items.productVariant',
+        ])->findOrFail($userId);
+
         $orderStatusId = OrderStatus::where('code', 'confirmed')->value('id');
         $paymentStatusId = PaymentStatus::where('code', 'paid')->value('id');
 
@@ -140,14 +146,13 @@ class OrderService
                 ->get();
 
             if ($cartItems->isEmpty()) {
+                Log::warning('Cart is empty for webhook', ['user_id' => $user->id, 'intent' => $intent->id]);
                 throw new \Exception('Cart is empty');
             }
 
             $subtotal = $cartItems->sum(fn ($item) => $item->unit_price * $item->quantity);
-            // 0 for now but will be changed into shipping cost
-            $total = $subtotal + 0;
+            $total = $subtotal;
 
-            // 1. Create the order
             $order = Order::create([
                 'order_number' => static::generateOrderNumber($intent->id),
                 'user_id' => $user->id,
@@ -159,18 +164,20 @@ class OrderService
                 'stripe_payment_intent_id' => $intent->id,
                 'payment_method' => 'Stripe',
                 'customer_email' => $user->email,
-                'customer_name' => $user->address->first_name.$user->address->last_name,
-                'customer_phone' => $user->customer->phone ?? ' ',
-                // Address snapshots — pull from user profile or cart
-                'shipping_address' => static::resolveShippingAddress($user, $intent, null, null),
+                // Fix: add space between names
+                'customer_name' => $user->address->first_name.' '.$user->address->last_name,
+                'customer_phone' => $user->customer->phone ?? '',
+                // Fix: pass only 2 args
+                'shipping_address' => static::resolveShippingAddress($user, $intent),
                 'paid_at' => now(),
             ]);
 
             $items = [];
+            $products = [];
+
             foreach ($cartItems as $cartItem) {
                 $product = $cartItem->product;
                 $variant = $cartItem->productVariant;
-                $productImage = $product->getFirstMedia('thumbnail')?->getUrl() ?? null;
 
                 $items[] = [
                     'order_id' => $order->id,
@@ -180,13 +187,12 @@ class OrderService
                     'variant_name' => $variant?->name,
                     'quantity' => $cartItem->quantity,
                     'unit_price' => $cartItem->unit_price,
-                    'image' => $productImage,
-                    'product_snapshot' => json_encode(
-                        static::buildProductSnapshot($product, $variant)
-                    ),
+                    'image' => $product->getFirstMedia('thumbnail')?->getUrl(),
+                    'product_snapshot' => json_encode(static::buildProductSnapshot($product, $variant)),
                     'created_at' => now(),
                     'updated_at' => now(),
                 ];
+
                 $products[] = [
                     'product_variant_id' => $variant?->id,
                     'quantity' => $cartItem->quantity,
@@ -194,14 +200,13 @@ class OrderService
             }
 
             DB::table('order_items')->insert($items);
+
             foreach ($products as $product) {
-                $variantId = $product['product_variant_id'];
-                $quantity = $product['quantity'];
                 DB::table('product_variants')
-                    ->where('id', $variantId)
-                    ->decrement('stock_quantity', $quantity);
+                    ->where('id', $product['product_variant_id'])
+                    ->decrement('stock_quantity', $product['quantity']);
             }
-            // 3. Clear the cart
+
             $user->cart->items()->delete();
 
             DB::afterCommit(function () use ($user, $order) {
@@ -210,7 +215,7 @@ class OrderService
                 );
             });
 
-            Log::info('Order created', [
+            Log::info('Order created via Stripe', [
                 'order_id' => $order->id,
                 'order_number' => $order->order_number,
                 'payment_intent' => $intent->id,
@@ -222,6 +227,31 @@ class OrderService
         });
     }
 
+    // Fix: corrected condition
+    protected static function resolveShippingAddress(User $user, ?object $intent = null): array
+    {
+        if ($intent !== null && ! empty($intent->shipping)) {
+            $s = $intent->shipping;
+
+            return [
+                'name' => $s->name,
+                'line1' => $s->address->line1,
+                'line2' => $s->address->line2 ?? null,
+                'city' => $s->address->city,
+                'state' => $s->address->state ?? null,
+                'country' => $s->address->country,
+                'phone' => $s->phone ?? null,
+            ];
+        }
+
+        return [
+            'name' => $user->address->first_name.' '.$user->address->last_name,
+            'line1' => $user->address->address_line_1,
+            'line2' => $user->address->address_line_2 ?? null,
+            'city' => $user->address->city,
+            'state' => $user->address->state ?? null,
+        ];
+    }
     // ----------------------------------------------------------------
     // Helpers
     // ----------------------------------------------------------------
@@ -245,31 +275,6 @@ class OrderService
                 'id' => $variant->id,
                 'name' => $variant->name,
             ] : null,
-        ];
-    }
-
-    protected static function resolveShippingAddress(
-        User $user,
-        ?object $intent = null,
-    ): array {
-        if (! empty($intent->shipping) || $intent != null) {
-            $s = $intent->shipping;
-
-            return [
-                'name' => $s->name,
-                'line1' => $s->address->line1,
-                'line2' => $s->address->line2 ?? null,
-                'city' => $s->address->city,
-                'state' => $s->address->state ?? null,
-                'country' => $s->address->country,
-                'phone' => $s->phone ?? null,
-            ];
-        }
-
-        return $user->shipping_address ?? [
-            'name' => $user->name,
-            'line1' => $user->address->address_line_1,
-            'city' => $user->address->city,
         ];
     }
 
