@@ -7,7 +7,7 @@ RUN apk add --no-cache \
     curl zip unzip git nodejs npm \
     libpng-dev libzip-dev oniguruma-dev \
     libxml2-dev freetype-dev libjpeg-turbo-dev libsodium-dev \
-    libwebp-dev \
+    libwebp-dev postgresql-dev \
     && docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
     && docker-php-ext-install \
         pdo pdo_mysql pdo_pgsql mbstring zip gd xml bcmath pcntl exif sodium
