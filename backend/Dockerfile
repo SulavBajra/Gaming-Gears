@@ -10,7 +10,7 @@ RUN apk add --no-cache \
     libwebp-dev \
     && docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
     && docker-php-ext-install \
-        pdo pdo_mysql mbstring zip gd xml bcmath pcntl exif sodium
+        pdo pdo_mysql pdo_pgsql mbstring zip gd xml bcmath pcntl exif sodium
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
