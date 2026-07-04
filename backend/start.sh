@@ -1,4 +1,4 @@
-#!/bin/sh
+!/bin/sh
 set -e
 
 echo "==> Clearing caches..."
@@ -17,6 +17,7 @@ echo "==> Seeding..."
 php artisan db:seed --class=RolePermissionSeeder --force
 php artisan db:seed --class=UserSeeder --force
 php artisan db:seed --class=StatusSeeder --force
+php artisan db:seed --class=CategorySeeder --force
 
 echo "==> Starting SSR..."
 php artisan inertia:start-ssr &
