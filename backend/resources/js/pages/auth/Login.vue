@@ -11,7 +11,7 @@ import AuthBase from '@/layouts/AuthLayout.vue';
 import { register } from '@/routes';
 import { request } from '@/routes/password';
 import { ref } from 'vue';
-import { EyeIcon, EyeOffIcon } from 'lucide-vue-next';
+import { Eye, EyeOff } from 'lucide-vue-next';
 
 defineProps<{
     status?: string;
@@ -74,16 +74,7 @@ const showPassword = ref(false);
                             Forgot password?
                         </TextLink>
                     </div>
-                    
-                    <Input
-                        id="password"
-                        v-model="form.password"
-                        :type="showPassword ? 'text' : 'password'"
-                        required
-                        :tabindex="2"
-                        autocomplete="current-password"
-                        placeholder="Password"
-                    />
+
                     <div class="relative">
                         <Input
                             id="password"
