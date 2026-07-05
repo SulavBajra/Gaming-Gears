@@ -131,7 +131,7 @@ const chartOptions = {
 };
 
 const formatCurrency = (value: number): string =>
-    `Rs. ${value.toLocaleString()}`;
+    `रु. ${value.toLocaleString()}`;
 </script>
 
 <template>

@@ -64,7 +64,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 const formatPrice = (max: number | null): string => {
-    return `Rs. ${Number(max).toFixed(2)}`;
+    return `रु. ${Number(max).toFixed(2)}`;
 };
 
 const deleteProduct = (id: number) => {

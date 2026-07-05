@@ -28,7 +28,7 @@ defineProps<{
 const fmt = (val: any) =>
     new Intl.NumberFormat('ne-NP', {
         style: 'currency',
-        currency: 'NPR',
+        currency: 'रु',
         maximumFractionDigits: 0,
     }).format(val);
 </script>
@@ -73,6 +73,7 @@ const fmt = (val: any) =>
                 <p class="mt-1.5 text-2xl font-medium">{{ pending_orders }}</p>
             </div>
         </div>
+        <div>Adding bar Chart here</div>
 
         <div class="mt-6 overflow-hidden rounded-lg border">
             <div class="flex items-center justify-between border-b px-5 py-3">
