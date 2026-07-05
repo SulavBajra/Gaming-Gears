@@ -36,7 +36,7 @@ const data = {
             items: [
                 {
                     title: 'Inventory Analytics',
-                    route: 'products.index',
+                    route: 'products.analytics',
                 },
                 {
                     title: 'Manage Products',

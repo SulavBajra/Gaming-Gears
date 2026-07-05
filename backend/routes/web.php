@@ -14,6 +14,7 @@ Route::get('/', function () {
 
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('dashboard', DashboardController::class)->name('dashboard');
+    Route::get('products/analytics', [ProductController::class, 'analytics'])->name('products.analytics');
     Route::resource('products', ProductController::class);
     Route::resource('brands', BrandController::class);
     Route::resource('users', UserController::class)->missing(function () {
