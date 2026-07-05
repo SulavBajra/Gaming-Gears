@@ -10,6 +10,8 @@ import { Spinner } from '@/components/ui/spinner';
 import AuthBase from '@/layouts/AuthLayout.vue';
 import { register } from '@/routes';
 import { request } from '@/routes/password';
+import { ref } from 'vue';
+import { EyeIcon, EyeOffIcon } from 'lucide-vue-next';
 
 defineProps<{
     status?: string;
@@ -28,6 +30,8 @@ const submit = () => {
         onFinish: () => form.reset('password'),
     });
 };
+
+const showPassword = ref(false);
 </script>
 
 <template>
@@ -70,15 +74,37 @@ const submit = () => {
                             Forgot password?
                         </TextLink>
                     </div>
+                    
                     <Input
                         id="password"
                         v-model="form.password"
-                        type="password"
+                        :type="showPassword ? 'text' : 'password'"
                         required
                         :tabindex="2"
                         autocomplete="current-password"
                         placeholder="Password"
                     />
+                    <div class="relative">
+                        <Input
+                            id="password"
+                            v-model="form.password"
+                            :type="showPassword ? 'text' : 'password'"
+                            required
+                            :tabindex="2"
+                            autocomplete="current-password"
+                            placeholder="Password"
+                            class="pr-10"
+                        />
+                        <button
+                            type="button"
+                            tabindex="-1"
+                            class="absolute inset-y-0 right-0 flex items-center px-3 text-muted-foreground hover:text-foreground"
+                            @click="showPassword = !showPassword"
+                        >
+                            <Eye v-if="!showPassword" class="h-4 w-4" />
+                            <EyeOff v-else class="h-4 w-4" />
+                        </button>
+                    </div>
                     <InputError :message="form.errors.password" />
                 </div>
                 <div class="flex items-center justify-between">
