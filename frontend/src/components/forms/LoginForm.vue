@@ -93,9 +93,9 @@ const submit = async () => {
           </div>
         </div>
 
-        <div class="forgot-row">
+        <!-- <div class="forgot-row">
           <router-link to="/forgot-password">Forgot password?</router-link>
-        </div>
+        </div> -->
 
         <p v-if="error" class="error">{{ error }}</p>
 

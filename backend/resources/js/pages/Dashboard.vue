@@ -71,7 +71,6 @@ const fmt = (val: any) =>
                 <p class="mt-1.5 text-2xl font-medium">{{ pending_orders }}</p>
             </div>
         </div>
-        <div>Adding bar Chart here</div>
 
         <div class="mt-6 overflow-hidden rounded-lg border">
             <div class="flex items-center justify-between border-b px-5 py-3">
@@ -112,7 +111,6 @@ const fmt = (val: any) =>
                                 {{ order.payment_status }}
                             </span>
                         </TableCell>
-                        {{ console.log(order.payment_status) }}
                         <TableCell>{{ order.order_status }}</TableCell>
                         <TableCell>{{ order.created_at }}</TableCell>
                     </TableRow>
