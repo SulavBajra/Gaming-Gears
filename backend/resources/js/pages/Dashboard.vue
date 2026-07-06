@@ -26,7 +26,7 @@ defineProps<{
 }>();
 
 const fmt = (val: any) =>
-    `रु ${new Intl.NumberFormat('ne-NP', {
+    `रु ${new Intl.NumberFormat('us-US', {
         maximumFractionDigits: 0,
     }).format(val)}`;
 </script>
